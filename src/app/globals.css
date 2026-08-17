@@ -136,28 +136,30 @@ body {
 
 /* ---------- animations ---------- */
 
-/* the avatar's wander across the tracker map (waypoints as % of the card) */
+/* the avatar's wander across the tracker map: bottom entrance, middle-left
+   buildings, left tower, top-right complex, mid-right, center-left, back to
+   the last-ping spot (waypoints as % of the card) */
 @keyframes mh-track {
   0% {
     transform: translate(50%, 88%);
   }
   14% {
-    transform: translate(30%, 70%);
+    transform: translate(32%, 72%);
   }
   28% {
-    transform: translate(22%, 46%);
+    transform: translate(22%, 42%);
   }
   42% {
-    transform: translate(55%, 32%);
+    transform: translate(52%, 26%);
   }
   56% {
-    transform: translate(74%, 30%);
+    transform: translate(68%, 34%);
   }
   70% {
-    transform: translate(70%, 56%);
+    transform: translate(62%, 52%);
   }
   84% {
-    transform: translate(44%, 70%);
+    transform: translate(44%, 64%);
   }
   100% {
     transform: translate(50%, 86%);

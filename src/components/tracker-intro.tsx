@@ -23,14 +23,16 @@ const TRACK_MS = 9000; // must match the mh-track animation duration
 const BLINK_MS = 2600;
 const LOST_MS = 3200;
 
-/* wander waypoints, as % of the map card (avatar's feet land on each point) */
+/* sighting dots, positioned on the landmarks of /campus-map-art.png:
+   top building, top-right complex, left tower cluster (hot), central
+   monument plaza, middle-left buildings, bottom-right block (hot) */
 const DOTS: { x: string; y: string; hot?: boolean }[] = [
-  { x: "38%", y: "40%" },
-  { x: "58%", y: "34%" },
-  { x: "30%", y: "55%", hot: true },
-  { x: "66%", y: "52%" },
-  { x: "45%", y: "68%" },
-  { x: "56%", y: "62%", hot: true },
+  { x: "42%", y: "22%" },
+  { x: "68%", y: "30%" },
+  { x: "22%", y: "40%", hot: true },
+  { x: "50%", y: "50%", hot: true },
+  { x: "30%", y: "66%" },
+  { x: "64%", y: "76%" },
 ];
 
 export function TrackerIntro({ onDone }: { onDone: () => void }) {

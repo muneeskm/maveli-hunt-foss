@@ -154,11 +154,32 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
    answers, hints, broadcasts, phase, and settings, with Realtime pushing
    updates to every phone.
 
-> Note: the Supabase-backed store adapter is scaffolded (`src/lib/supabase.ts`)
-> and the schema/seed are ready, but the demo store is currently the active
-> implementation behind the `store.*` seam. Before the event, wire the
-> adapter methods to the tables (they mirror `src/lib/store.ts` 1:1) and
-> smoke-test on two phones.
+The Supabase-backed store is fully implemented (`src/lib/supabase-store.ts`,
+behind the `store.*` seam in `src/lib/store.ts`). It mirrors the demo API 1:1
+with an in-memory cache + Realtime subscriptions (scans, answers, hints,
+broadcasts, teams, game, settings), optimistic writes, and server-enforced
+first-scan-wins / first-winner-wins. When the env vars above are set, the app
+is in real mode automatically; without them it falls back to demo mode.
+
+Before the event, smoke-test real mode on two phones:
+
+- Register a team on phone A, log in with the same code on phone B.
+- Phone A solves a sighting -> phone B shows the evidence + unlock within ~1s.
+- Two phones scanning the same SOS QR -> only one scan is recorded.
+- Admin phase change -> team screens update everywhere without a refresh.
+- Try `End event`, `Restart game` (keeps teams), and `New game` (wipes teams)
+  on a throwaway project so you know exactly what each does to the data.
+
+Known behaviors to expect:
+
+- With a fresh Supabase project where `seed.sql` has NOT been run, the app
+  bootstraps the games + settings rows itself and falls back to the built-in
+  placeholder locations, so it never crashes - but run the seed anyway.
+- Team names are not unique (two teams may share a name); access codes are
+  unique and are what login uses.
+- RLS is intentionally open (anyone with the anon key can read/write); the
+  access code is the only gate, matching the no-auth design. Do not reuse
+  the anon key for anything else.
 
 ---
 

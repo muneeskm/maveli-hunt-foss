@@ -173,5 +173,19 @@ alter table public.answers
   add column if not exists location_id text references public.locations(id) on delete cascade;
 
 -- ============================================================================
--- END OF MIGRATIONS - append new blocks below as M003, M004, ...
+-- M003 - REAL-MODE POLISH
+--   1. Teams may share a name (registration parity with the demo store;
+--      access codes stay unique - that is what login uses).
+--   2. locations gains mapillary_note (extra comparison guidance shown on
+--      the sighting screen).
+-- ============================================================================
+
+alter table public.teams drop constraint if exists teams_name_key;
+
+alter table public.locations
+  add column if not exists mapillary_note text not null default '';
+
+
+-- ============================================================================
+-- END OF MIGRATIONS - append new blocks below as M004, M005, ...
 -- ============================================================================

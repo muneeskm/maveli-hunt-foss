@@ -1,4 +1,6 @@
 import { seedGame, seedLocations, seedSettings } from "./seed";
+import { supabaseMode } from "./supabase";
+import { supabaseStore } from "./supabase-store";
 import type {
   Answer,
   AnswerKind,
@@ -74,7 +76,7 @@ function notify() {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
-export const store = {
+export const demoStore = {
   /* ---------- game ---------- */
   game(): GameState {
     return readDB().game;
@@ -367,3 +369,10 @@ export const store = {
 };
 
 export { notify };
+
+/*
+ * The single seam: real mode (Supabase env vars set) uses the Supabase-backed
+ * store with realtime; demo mode (no env vars) uses localStorage so the whole
+ * flow works on one device before the backend is configured.
+ */
+export const store = supabaseMode ? supabaseStore : demoStore;
