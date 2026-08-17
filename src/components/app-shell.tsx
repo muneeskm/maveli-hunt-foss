@@ -52,12 +52,12 @@ export function AppShell({
         <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#b6b6b6] bg-[#fcfaf5]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             {/* 36x36 Highlighter Yellow logo square */}
-            <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+            <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/maveli-logo.png"
                 alt="Maveli"
-                className="h-6 w-6 sm:h-7 sm:w-7 object-cover"
+                className="h-[28px] w-[28px] object-cover"
               />
             </div>
             <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-[#1a3300]">
