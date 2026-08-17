@@ -191,8 +191,9 @@ Replace placeholder content before the event. Most of it lives in
 - [ ] 5 modified images (`photo_url`) - the same spots with ONE word changed
 - [ ] The 5 diff words + the gate answer order (`gate_answer`)
 - [ ] Mavelli's avatar: `public/mavelli-avatar.png` (already the real icon)
-- [ ] Campus map: `public/campus-map.png` (zoom-17 OSM tile stitch centered on
-      the college, 10.356114, 76.212631 - re-export if the campus changes)
+- [ ] Tracker map art: `public/campus-map-art.png` (fictional campus map, 3:5
+      portrait, 1080x1800px, dark theme + green accents to match the tracker
+      - see the intro screen for exact placement)
 - [ ] Club logo: `public/foss-logo.png` (shown on join + admin screens)
 - [ ] BitChat code (`bitchat_code`) and BitChat guide text
 - [ ] Volunteer phone + WhatsApp link

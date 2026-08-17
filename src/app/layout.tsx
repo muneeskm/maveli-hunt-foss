@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/space-grotesk";
 import "@fontsource-variable/jetbrains-mono";
+import "@fontsource/press-start-2p";
 import "./globals.css";
 
 export const metadata: Metadata = {

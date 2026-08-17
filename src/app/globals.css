@@ -136,31 +136,42 @@ body {
 
 /* ---------- animations ---------- */
 
-/* the avatar's wander across the real campus map (2.5D plane) */
+/* the avatar's wander across the tracker map (waypoints as % of the card) */
 @keyframes mh-track {
   0% {
-    transform: translate(46%, 90%);
+    transform: translate(50%, 88%);
   }
   14% {
-    transform: translate(30%, 72%);
+    transform: translate(30%, 70%);
   }
   28% {
-    transform: translate(20%, 45%);
+    transform: translate(22%, 46%);
   }
   42% {
-    transform: translate(55%, 30%);
+    transform: translate(55%, 32%);
   }
   56% {
-    transform: translate(75%, 16%);
+    transform: translate(74%, 30%);
   }
   70% {
-    transform: translate(70%, 55%);
+    transform: translate(70%, 56%);
   }
   84% {
-    transform: translate(45%, 68%);
+    transform: translate(44%, 70%);
   }
   100% {
-    transform: translate(52%, 85%);
+    transform: translate(50%, 86%);
+  }
+}
+
+/* pixel sighting-dot pulse (flat, stepped - no blur glow) */
+@keyframes mh-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
   }
 }
 
@@ -241,43 +252,25 @@ body {
   animation: mh-track 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
 }
 
-/* 2.5D extruded-board scene: grid floor + tilted map slab with a front edge */
-.map-tilt {
-  perspective: 1100px;
-  perspective-origin: 50% 32%;
-  transform-style: preserve-3d;
+/* pixel font (retro HUD) */
+.font-pixel {
+  font-family: "Press Start 2P", ui-monospace, monospace;
 }
 
-.map-floor {
+/* flat pixel-art map scene: sighting dots pulse over the full-bleed map art */
+.pixel-dot {
   position: absolute;
-  inset: 0;
-  background-color: #0b120c;
-  background-image:
-    linear-gradient(rgba(62, 165, 56, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(62, 165, 56, 0.08) 1px, transparent 1px);
-  background-size: 26px 26px;
-  transform: rotateX(56deg);
-  transform-origin: 50% 100%;
+  width: 7px;
+  height: 7px;
+  transform: translate(-50%, -50%);
+  animation: mh-pulse 2.4s steps(2, start) infinite;
 }
 
-.map-board {
-  position: absolute;
-  inset: 5% 4% 11%;
-  transform: rotateX(38deg) scale(1.06);
-  transform-origin: 50% 100%;
-  transform-style: preserve-3d;
-}
-
-.map-thickness {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 20px;
-  transform-origin: top center;
-  transform: rotateX(90deg);
-  background: linear-gradient(to bottom, #1a3b1e, #0d2210);
-  border: 1px solid rgba(62, 165, 56, 0.22);
+.pixel-dot-hot {
+  width: 8px;
+  height: 8px;
+  background: #e0863d;
+  animation-duration: 1.6s;
 }
 
 .anim-blink {
@@ -325,6 +318,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .intro-track,
+  .pixel-dot,
   .anim-blink,
   .anim-flicker,
   .anim-rise,
