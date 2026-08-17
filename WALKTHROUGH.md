@@ -67,9 +67,12 @@ Do this once before the event. The placeholder content is:
 
 ### 3.1 Intro + registration
 
-1. Open the site on a phone-sized viewport. The campus map shows and
-   Mavelli's avatar wanders across it. After ~9s the avatar blinks, then a
-   "WARNING: LOCATION NOT FOUND" overlay covers the map. Tap to skip.
+1. Open the site on a phone-sized viewport. The intro shows the campus map
+   art (`public/campus-map-art.png`) full-bleed with the tracker HUD
+   overlaid: pulsing sighting dots, Mavelli's pixel avatar wandering across
+   the map, speech bubble. After ~2.4s the avatar blinks (signal unstable),
+   then ~1s of a "WARNING: LOCATION NOT FOUND" overlay, then hands off to
+   join. Whole intro is ~3.7s; tap the overlay to skip.
 2. Second visit on the same phone skips the intro.
 3. On "Join the search": register a team (name + 2 members). You should see
    the access code screen (6 chars, e.g. `9898A4`) with a copy button.
@@ -247,9 +250,11 @@ from `supabase/seed.sql`; demo mode reads answers from
 - [ ] 5 modified images (`photo_url`) - the same spots with ONE word changed
 - [ ] The 5 diff words + the gate answer order (`gate_answer`)
 - [ ] Mavelli's avatar: `public/mavelli-avatar.png` (already the real icon)
-- [ ] Tracker map art: `public/campus-map-art.png` (fictional campus map, 3:5
-      portrait, 1080x1800px, dark theme + green accents to match the tracker
-      - see the intro screen for exact placement)
+- [ ] Campus map art: `public/campus-map-art.png` (accurate pixel map of the
+      campus, portrait ~1:2, dark theme + green accents). The intro shows it
+      full-bleed; sighting dots and the avatar wander are positioned by
+      percentage, so re-tuning the image doesn't break the layout (dots may
+      need a nudge if landmarks move).
 - [ ] Club logo: `public/foss-logo.png` (shown on join + admin screens)
 - [ ] BitChat code (`bitchat_code`) and BitChat guide text
 - [ ] Volunteer phone + WhatsApp link

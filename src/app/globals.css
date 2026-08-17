@@ -136,33 +136,34 @@ body {
 
 /* ---------- animations ---------- */
 
-/* the avatar's wander across the tracker map: bottom entrance, middle-left
-   buildings, left tower, top-right complex, mid-right, center-left, back to
-   the last-ping spot (waypoints as % of the card) */
+/* DOM avatar wander over the campus map art: entrance (bottom), up the
+   left side past the tower cluster, across the top block, down through the
+   central plaza, past the middle-left buildings, and back to the field at
+   the bottom (waypoints as % of the card, matching campus-map-art.png) */
 @keyframes mh-track {
   0% {
-    transform: translate(50%, 88%);
+    transform: translate(50%, 86%);
   }
-  14% {
-    transform: translate(32%, 72%);
+  16% {
+    transform: translate(34%, 72%);
   }
-  28% {
-    transform: translate(22%, 42%);
+  32% {
+    transform: translate(24%, 52%);
   }
-  42% {
-    transform: translate(52%, 26%);
+  46% {
+    transform: translate(30%, 34%);
   }
-  56% {
-    transform: translate(68%, 34%);
+  60% {
+    transform: translate(50%, 22%);
   }
-  70% {
-    transform: translate(62%, 52%);
+  72% {
+    transform: translate(62%, 40%);
   }
-  84% {
-    transform: translate(44%, 64%);
+  86% {
+    transform: translate(50%, 60%);
   }
   100% {
-    transform: translate(50%, 86%);
+    transform: translate(46%, 78%);
   }
 }
 
@@ -250,16 +251,16 @@ body {
   }
 }
 
-.intro-track {
-  animation: mh-track 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
-}
-
 /* pixel font (retro HUD) */
 .font-pixel {
   font-family: "Press Start 2P", ui-monospace, monospace;
 }
 
-/* flat pixel-art map scene: sighting dots pulse over the full-bleed map art */
+.intro-track {
+  animation: mh-track 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+/* flat pixel sighting dots over the video */
 .pixel-dot {
   position: absolute;
   width: 7px;

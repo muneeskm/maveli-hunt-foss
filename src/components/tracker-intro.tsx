@@ -3,43 +3,39 @@
 import { useEffect, useRef, useState } from "react";
 
 /*
- * Opening sequence, tracker style - flat pixel-art map.
+ * Tracker intro - flat map.
  *
- * The map card shows a full-bleed image (/campus-map-art.png) that the event
- * team provides: a fictional pixel-art campus map, portrait 3:5 (e.g.
- * 1080x1800px), drawn to match the black/green tracker theme. Sighting dots
- * pulse on top, Mavelli's pixel avatar wanders across the map, then the
- * signal goes unstable (avatar blinks), and a "LOCATION NOT FOUND" warning
- * overlays the map before handing off to "Join the search".
+ * The map card shows /campus-map-art.png full-bleed: an accurate hand-made
+ * pixel map of Christ College of Engineering. Sighting dots pulse on the
+ * real landmarks, Mavelli's pixel avatar wanders a path across the map, the
+ * signal goes unstable (avatar blinks), then a "LOCATION NOT FOUND" warning
+ * overlays before handing off to "Join the search".
  *
- * Assets:
- *   /campus-map-art.png      - user-provided map art (1080x1800px, 3:5)
- *   /mavelli-avatar-pixel.png - pixelated Mahabali avatar (transparent bg)
+ * The whole sequence is ~3.7s: 2.4s wander + 0.3s unstable blink + 1s of
+ * the LOCATION NOT FOUND overlay, then hand off.
  */
 
 type Step = "track" | "blink" | "lost";
 
-const TRACK_MS = 9000; // must match the mh-track animation duration
-const BLINK_MS = 2600;
-const LOST_MS = 3200;
+const TRACK_MS = 2400;
+const BLINK_MS = 300;
+const LOST_MS = 1000;
 
 /* sighting dots, positioned on the landmarks of /campus-map-art.png:
-   top building, top-right complex, left tower cluster (hot), central
-   monument plaza, middle-left buildings, bottom-right block (hot) */
+   top block, top-right complex, left tower cluster (hot), central plaza
+   (hot), middle-left buildings, bottom-right block */
 const DOTS: { x: string; y: string; hot?: boolean }[] = [
-  { x: "42%", y: "22%" },
-  { x: "68%", y: "30%" },
-  { x: "22%", y: "40%", hot: true },
-  { x: "50%", y: "50%", hot: true },
-  { x: "30%", y: "66%" },
-  { x: "64%", y: "76%" },
+  { x: "40%", y: "12%" },
+  { x: "70%", y: "18%" },
+  { x: "24%", y: "34%", hot: true },
+  { x: "56%", y: "50%", hot: true },
+  { x: "32%", y: "60%" },
+  { x: "68%", y: "74%" },
 ];
 
 export function TrackerIntro({ onDone }: { onDone: () => void }) {
   const [step, setStep] = useState<Step>("track");
   const [elapsed, setElapsed] = useState(0);
-  // keep onDone in a ref so the step timers are never cleared by re-renders
-  // (the parent re-creates the callback identity on its own re-renders)
   const onDoneRef = useRef(onDone);
   onDoneRef.current = onDone;
 
@@ -49,9 +45,9 @@ export function TrackerIntro({ onDone }: { onDone: () => void }) {
     return () => window.clearInterval(t);
   }, []);
 
+  // step timers (fallback timers mirror the animation, so reduced-motion
+  // users - and anyone - still advance through the sequence)
   useEffect(() => {
-    // fallback timer mirrors the animation so reduced-motion users (where
-    // animationend never fires) still advance through the sequence
     if (step === "track") {
       const t = window.setTimeout(() => setStep("blink"), TRACK_MS);
       return () => window.clearTimeout(t);
@@ -91,7 +87,7 @@ export function TrackerIntro({ onDone }: { onDone: () => void }) {
 
         {/* ---- tracker map scene ---- */}
         <div className="relative mt-4 h-[72dvh] max-h-[640px] overflow-hidden rounded-2xl border border-line bg-ink-3">
-          {/* map art (full-bleed, user-provided) */}
+          {/* campus map art (full-bleed, accurate pixel map) */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/campus-map-art.png"
