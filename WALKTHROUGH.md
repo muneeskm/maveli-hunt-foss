@@ -109,7 +109,7 @@ Do this once before the event. The placeholder content is:
 4. Visit `/scan/fin-omega` (simulates the final marker QR). The gate opens:
    five slots. Enter the words in the exact instruction order:
    `NORTH`, `TEMPLE`, `CLOCK`, `BANYAN`, `THREE`.
-5. Wrong order errors (5 fails = 30s lockout). Correct order shows
+5. Wrong order errors (5 fails = 60s lockout, server-enforced). Correct order shows
    "MAVELLI IS SAFE", sets the winner, and the leaderboard ranks the team 01.
 6. Scanning the SOS QR again shows "SOS already received"; scanning the
    final QR again shows the gate directly.

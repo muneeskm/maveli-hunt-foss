@@ -74,10 +74,10 @@ export function TrackerIntro({ onDone }: { onDone: () => void }) {
         <div className="flex items-end justify-between">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-moss">
-              FOSS Mavelli Hunt
+              The Maveli Files
             </p>
             <h1 className="font-pixel mt-2 text-[13px] uppercase tracking-wide text-mist">
-              Mavelli tracker
+              Investigation Tracker
             </h1>
           </div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-moss">

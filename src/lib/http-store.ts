@@ -211,10 +211,26 @@ export const httpStore = {
     const clean = code.trim().toUpperCase();
     return this.teams().find((t) => t.code === clean);
   },
-  async createTeam(name: string, member1: string, member2: string): Promise<Team> {
+  async createTeam(
+    name: string,
+    member1: string,
+    member2: string,
+    member1Sem = "",
+    member1Class = "",
+    member2Sem = "",
+    member2Class = "",
+  ): Promise<Team> {
     const { team } = await api<{ team: Team }>("/api/team/create", {
       method: "POST",
-      body: JSON.stringify({ name, member1, member2 }),
+      body: JSON.stringify({
+        name,
+        member1,
+        member2,
+        member1Sem,
+        member1Class,
+        member2Sem,
+        member2Class,
+      }),
     });
     if (typeof window !== "undefined") window.localStorage.setItem(SESSION_KEY, team.code);
     teamCache.team = team;
@@ -222,8 +238,24 @@ export const httpStore = {
     void refreshTeamState(team.code);
     return team;
   },
-  addTeam(name: string, member1: string, member2: string): Promise<Team> {
-    return this.createTeam(name, member1, member2);
+  addTeam(
+    name: string,
+    member1: string,
+    member2: string,
+    member1Sem = "",
+    member1Class = "",
+    member2Sem = "",
+    member2Class = "",
+  ): Promise<Team> {
+    return this.createTeam(
+      name,
+      member1,
+      member2,
+      member1Sem,
+      member1Class,
+      member2Sem,
+      member2Class,
+    );
   },
 
   /* ---------- session ---------- */

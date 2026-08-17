@@ -215,5 +215,63 @@ end $$;
 
 
 -- ============================================================================
--- END OF MIGRATIONS - append new blocks below as M005, M006, ...
+-- M005 - TEAM REGISTRATION: SEMESTER & CLASS
+--   1. Add member1_sem, member1_class, member2_sem, member2_class columns to
+--      public.teams to store full member academic details.
+--   2. Grant registration permissions on teams so team creation succeeds
+--      smoothly across all server/anon key configurations.
 -- ============================================================================
+
+alter table public.teams
+  add column if not exists member1_sem text not null default '',
+  add column if not exists member1_class text not null default '',
+  add column if not exists member2_sem text not null default '',
+  add column if not exists member2_class text not null default '';
+
+grant select, insert on public.teams to anon, authenticated;
+
+do $$
+begin
+  drop policy if exists "teams select" on public.teams;
+  drop policy if exists "teams insert" on public.teams;
+  create policy "teams select" on public.teams for select using (true);
+  create policy "teams insert" on public.teams for insert with check (true);
+end $$;
+
+
+-- ============================================================================
+-- M006 - PERMISSIONS & ACCESS FIX (Fixes 42501 permission denied)
+--   Restores grants and open policies on all public event tables so that API
+--   routes (and anon/service keys) can read game state, locations, answers,
+--   scans, hints, and broadcasts without error.
+-- ============================================================================
+
+grant usage on schema public to anon, authenticated, service_role;
+grant all on all tables in schema public to anon, authenticated, service_role;
+grant all on all sequences in schema public to anon, authenticated, service_role;
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['games','teams','locations','scans','answers','hints','broadcasts','settings','audit_log']
+  loop
+    execute format('alter table public.%I enable row level security', t);
+    execute format('drop policy if exists "open select" on public.%I', t);
+    execute format('drop policy if exists "open insert" on public.%I', t);
+    execute format('drop policy if exists "open update" on public.%I', t);
+    execute format('drop policy if exists "open delete" on public.%I', t);
+    execute format('drop policy if exists "%s select" on public.%I', t, t);
+    execute format('drop policy if exists "%s insert" on public.%I', t, t);
+    execute format('drop policy if exists "%s update" on public.%I', t, t);
+    execute format('create policy "open select" on public.%I for select using (true)', t);
+    execute format('create policy "open insert" on public.%I for insert with check (true)', t);
+    execute format('create policy "open update" on public.%I for update using (true) with check (true)', t);
+  end loop;
+end $$;
+
+
+-- ============================================================================
+-- END OF MIGRATIONS - append new blocks below as M007, M008, ...
+-- ============================================================================
+

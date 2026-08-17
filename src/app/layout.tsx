@@ -5,12 +5,13 @@ import "@fontsource/press-start-2p";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FOSS Mavelli Hunt",
+  title: "The Maveli Files",
   description:
-    "Mavelli has disappeared. Track the sightings, follow the trail, and join the rescue.",
+    "Maveli has disappeared. Track the sightings, follow the trail, and join the rescue.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/icon.svg",
+    icon: "/maveli-logo.png",
+    apple: "/maveli-logo.png",
   },
 };
 

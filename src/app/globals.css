@@ -182,9 +182,11 @@ body {
   0%,
   100% {
     opacity: 1;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.25;
+    opacity: 0.35;
+    transform: scale(0.96);
   }
 }
 
@@ -277,7 +279,7 @@ body {
 }
 
 .anim-blink {
-  animation: mh-blink 1s steps(2, start) infinite;
+  animation: mh-blink 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .anim-flicker {

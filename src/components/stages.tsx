@@ -17,6 +17,7 @@ import {
 } from "@phosphor-icons/react";
 import { Btn, Panel, SectionLabel } from "@/components/ui";
 import { EvidenceBoard } from "@/components/evidence-board";
+import { NodeTreeTimeline } from "@/components/node-tree-timeline";
 import { BitchatStep } from "@/components/bitchat-step";
 import { ReconstructionGate } from "@/components/gate";
 import { QRScannerButton } from "@/components/qr-scanner";
@@ -80,16 +81,23 @@ export function StandbyStage() {
   return (
     <div className="space-y-5">
       <Panel className="border-leaf/40 p-6 text-center">
-        <Leaf size={40} weight="fill" className="mx-auto text-leaf" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/maveli-logo.png"
+          alt="The Maveli Files"
+          className="mx-auto h-16 w-16 rounded-full border border-line-2 object-cover shadow-lg shadow-leaf/20"
+        />
         <h1 className="mt-3 text-xl font-black uppercase tracking-tight text-mist">
-          The hunt begins soon
+          Squad Registered · Stand By
         </h1>
         <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-relaxed text-fog">
-          Mavelli is still on campus, but the tracker goes live at the start of
-          Day 1. Your team is registered. Keep your phones close.
+          Maveli was last spotted near Cake Farm. The investigation tracker will activate when the hunt commences. Keep your access code safe.
         </p>
       </Panel>
-      <EvidenceBoard />
+      <NodeTreeTimeline
+        title="Investigation Trail (7 Nodes)"
+        subtitle="First Sighting: Cake Farm"
+      />
     </div>
   );
 }

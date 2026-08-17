@@ -13,6 +13,7 @@ import type {
   LocationType,
   Phase,
   Scan,
+  ScanResult,
   Settings,
   Team,
 } from "./types";
@@ -39,7 +40,18 @@ const GATE_LOCK_WINDOW_MS = 10 * 60 * 1000;
 
 /* ---------- row types ---------- */
 
-type TeamRow = { id: string; name: string; code: string; member1: string; member2: string; created_at: string };
+type TeamRow = {
+  id: string;
+  name: string;
+  code: string;
+  member1: string;
+  member2: string;
+  member1_sem?: string | null;
+  member1_class?: string | null;
+  member2_sem?: string | null;
+  member2_class?: string | null;
+  created_at: string;
+};
 type ScanRow = { team_id: string; location_id: string; at: string };
 type AnswerRow = { team_id: string; kind: AnswerKind; location_id: string | null; value: string; correct: boolean; at: string };
 type HintRow = { team_id: string; location_id: string; at: string };
@@ -60,7 +72,15 @@ type AuditRow = { actor: string; action: string; target: string; at: string };
 /* ---------- mappers ---------- */
 
 export const teamFromRow = (r: TeamRow): Team => ({
-  id: r.id, name: r.name, code: r.code, member1: r.member1, member2: r.member2,
+  id: r.id,
+  name: r.name,
+  code: r.code,
+  member1: r.member1,
+  member1Sem: r.member1_sem ?? undefined,
+  member1Class: r.member1_class ?? undefined,
+  member2: r.member2,
+  member2Sem: r.member2_sem ?? undefined,
+  member2Class: r.member2_class ?? undefined,
   createdAt: Date.parse(r.created_at),
 });
 const scanFromRow = (r: ScanRow): Scan => ({ teamId: r.team_id, locationId: r.location_id, at: Date.parse(r.at) });
@@ -109,7 +129,7 @@ export async function getTeamByCode(code: string): Promise<Team | null> {
   const clean = normalizeCode(code);
   const { data, error } = await db()
     .from("teams")
-    .select("id,name,code,member1,member2,created_at")
+    .select("*")
     .eq("code", clean)
     .maybeSingle();
   if (error) throw error;
@@ -119,7 +139,7 @@ export async function getTeamByCode(code: string): Promise<Team | null> {
 export async function getTeamById(id: string): Promise<Team | null> {
   const { data, error } = await db()
     .from("teams")
-    .select("id,name,code,member1,member2,created_at")
+    .select("*")
     .eq("id", id)
     .maybeSingle();
   if (error) throw error;
@@ -127,7 +147,7 @@ export async function getTeamById(id: string): Promise<Team | null> {
 }
 
 export async function getAllTeams(): Promise<Team[]> {
-  const { data, error } = await db().from("teams").select("id,name,code,member1,member2,created_at").order("created_at");
+  const { data, error } = await db().from("teams").select("*").order("created_at");
   if (error) throw error;
   return (data ?? []).map((r) => teamFromRow(r as TeamRow));
 }
@@ -314,8 +334,24 @@ export async function buildTeamState(code: string): Promise<TeamStatePayload> {
 
 /* ---------- team mutations ---------- */
 
-export async function createTeam(name: string, member1: string, member2: string): Promise<Team> {
-  const clean = { name: name.trim(), member1: member1.trim(), member2: member2.trim() };
+export async function createTeam(
+  name: string,
+  member1: string,
+  member2: string,
+  member1Sem = "",
+  member1Class = "",
+  member2Sem = "",
+  member2Class = "",
+): Promise<Team> {
+  const clean = {
+    name: name.trim(),
+    member1: member1.trim(),
+    member2: member2.trim(),
+    member1Sem: member1Sem.trim(),
+    member1Class: member1Class.trim(),
+    member2Sem: member2Sem.trim(),
+    member2Class: member2Class.trim(),
+  };
   const id = randomUUID();
   let code = makeCode();
   // codes are unique; retry on collision
@@ -324,13 +360,56 @@ export async function createTeam(name: string, member1: string, member2: string)
     if (!clash) break;
     code = makeCode();
   }
+
+  // 1. First attempt: insert with dedicated semester & class columns (M005)
+  try {
+    const { data, error } = await db()
+      .from("teams")
+      .insert({
+        id,
+        name: clean.name,
+        code,
+        member1: clean.member1,
+        member2: clean.member2,
+        member1_sem: clean.member1Sem,
+        member1_class: clean.member1Class,
+        member2_sem: clean.member2Sem,
+        member2_class: clean.member2Class,
+      })
+      .select("*")
+      .single();
+    if (!error && data) {
+      return teamFromRow(data as TeamRow);
+    }
+  } catch {
+    // column may not exist yet if M005 is pending in SQL editor; fall through
+  }
+
+  // 2. Fallback: insert into base schema while formatting member strings for readability
+  const m1Display =
+    clean.member1Sem || clean.member1Class
+      ? `${clean.member1} (${[clean.member1Sem, clean.member1Class].filter(Boolean).join(" ")})`
+      : clean.member1;
+  const m2Display =
+    clean.member2Sem || clean.member2Class
+      ? `${clean.member2} (${[clean.member2Sem, clean.member2Class].filter(Boolean).join(" ")})`
+      : clean.member2;
+
   const { data, error } = await db()
     .from("teams")
-    .insert({ id, name: clean.name, code, member1: clean.member1, member2: clean.member2 })
-    .select("id,name,code,member1,member2,created_at")
+    .insert({ id, name: clean.name, code, member1: m1Display, member2: m2Display })
+    .select("*")
     .single();
   if (error) throw error;
-  return teamFromRow(data as TeamRow);
+  return {
+    ...teamFromRow(data as TeamRow),
+    member1: clean.member1,
+    member1Sem: clean.member1Sem,
+    member1Class: clean.member1Class,
+    member2: clean.member2,
+    member2Sem: clean.member2Sem,
+    member2Class: clean.member2Class,
+  };
 }
 
 function makeCode(): string {
@@ -343,33 +422,101 @@ function makeCode(): string {
 export async function recordScanByCode(
   code: string,
   token: string,
-): Promise<
-  | { ok: false; reason: "no_team" | "unknown" | "duplicate" }
-  | { ok: true; location: GameLocation; word?: string; wordClue?: string }
-> {
+): Promise<ScanResult> {
   const team = await getTeamByCode(code);
   if (!team) return { ok: false, reason: "no_team" };
   const locations = await getLocations();
   const location = locations.find((l) => l.token === token);
   if (!location) return { ok: false, reason: "unknown" };
-  const existing = await db()
-    .from("scans")
-    .select("id")
-    .eq("team_id", team.id)
-    .eq("location_id", location.id)
-    .maybeSingle();
-  if (existing.data) return { ok: false, reason: "duplicate" };
-  await db()
-    .from("scans")
-    .upsert({ team_id: team.id, location_id: location.id, at: new Date().toISOString() }, {
-      onConflict: "team_id,location_id",
-      ignoreDuplicates: true,
-    })
-    .then(({ error }) => {
-      if (error) console.error("recordScan", error);
-    });
+
+  // Fetch all existing scans for this team
+  let teamScans: Scan[] = [];
+  try {
+    const { data } = await db()
+      .from("scans")
+      .select("team_id,location_id,at")
+      .eq("team_id", team.id);
+    if (data) {
+      teamScans = data.map((r) => scanFromRow(r as ScanRow));
+    }
+  } catch (err) {
+    console.error("fetch team scans error", err);
+  }
+
+  const scannedLocationIds = new Set(teamScans.map((s) => s.locationId));
+
+  // Check duplicate
+  if (scannedLocationIds.has(location.id)) {
+    return { ok: false, reason: "duplicate" };
+  }
+
+  // Enforce sequential order
+  const sightings = locations
+    .filter((l) => l.type === "sighting")
+    .sort((a, b) => a.order - b.order);
+
+  if (location.type === "sighting" && location.order > 1) {
+    const missingPrior = sightings
+      .filter((s) => s.order < location.order)
+      .find((s) => !scannedLocationIds.has(s.id));
+    if (missingPrior) {
+      return {
+        ok: false,
+        reason: "out_of_order",
+        expectedOrder: missingPrior.order,
+        expectedLocationName: missingPrior.name,
+        targetOrder: location.order,
+        targetLocationName: location.name,
+      };
+    }
+  } else if (location.type === "sos") {
+    const missingSighting = sightings.find((s) => !scannedLocationIds.has(s.id));
+    if (missingSighting) {
+      return {
+        ok: false,
+        reason: "out_of_order",
+        expectedOrder: missingSighting.order,
+        expectedLocationName: missingSighting.name,
+        targetOrder: 6,
+        targetLocationName: location.name,
+      };
+    }
+  }
+
+  const at = new Date().toISOString();
+  try {
+    await db()
+      .from("scans")
+      .upsert(
+        { team_id: team.id, location_id: location.id, at },
+        { onConflict: "team_id,location_id", ignoreDuplicates: true },
+      );
+  } catch (err) {
+    console.error("recordScan upsert error", err);
+  }
+
   if (location.type === "sighting") {
-    return { ok: true, location: locationPublic(location), word: location.word, wordClue: location.wordClue };
+    // Auto-record correct answer so evidence board registers it immediately
+    if (location.word) {
+      try {
+        await db().from("answers").insert({
+          team_id: team.id,
+          kind: "spotdiff",
+          location_id: location.id,
+          value: location.word,
+          correct: true,
+          at,
+        });
+      } catch (err) {
+        console.error("auto answer insert error", err);
+      }
+    }
+    return {
+      ok: true,
+      location: locationPublic(location),
+      word: location.word,
+      wordClue: location.wordClue,
+    };
   }
   return { ok: true, location: locationPublic(location) };
 }

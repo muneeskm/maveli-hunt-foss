@@ -23,11 +23,19 @@ type ScanView =
   | { kind: "checking" }
   | { kind: "unknown" }
   | {
+      kind: "out_of_order";
+      expectedOrder: number;
+      expectedLocationName: string;
+      targetOrder: number;
+      targetLocationName: string;
+    }
+  | {
       kind: "sighting";
       word: string;
       wordClue: string;
       name: string;
       order: number;
+      photoUrl?: string;
       duplicate: boolean;
     }
   | { kind: "sos-locking" }
@@ -49,14 +57,11 @@ export default function ScanPage() {
   const { team, game, settings, answers } = useGame();
   const [view, setView] = useState<ScanView>({ kind: "checking" });
   const [sosAt, setSosAt] = useState<number | null>(null);
-  const [revealed, setRevealed] = useState(false);
+  const [revealed, setRevealed] = useState(true);
   const decided = useRef<{ token: string } | null>(null);
   const inFlight = useRef<string | null>(null);
 
-  // Decide the view once per token. The ref guards make the decision
-  // idempotent across StrictMode double-effects AND re-renders (the team
-  // object identity changes on every render, so the effect must not re-run
-  // its decision or it would clobber later view transitions like the alarm).
+  // Decide the view once per token.
   useEffect(() => {
     if (!team) {
       router.replace(`/?scan=${encodeURIComponent(`/scan/${token}`)}`);
@@ -73,26 +78,33 @@ export default function ScanPage() {
         decided.current = { token };
         return;
       }
-      // The server records the scan (first scan per team wins) and, for a
-      // sighting, returns the word the team just earned - the client never
-      // knows it in advance.
+
       const res = await store.recordScan(team.id, token);
 
       let v: ScanView;
-      if (loc.type === "sighting") {
+      if (!res.ok && res.reason === "out_of_order") {
+        v = {
+          kind: "out_of_order",
+          expectedOrder: res.expectedOrder,
+          expectedLocationName: res.expectedLocationName,
+          targetOrder: res.targetOrder,
+          targetLocationName: res.targetLocationName,
+        };
+      } else if (loc.type === "sighting") {
         v = {
           kind: "sighting",
-          word: res.ok && res.word ? res.word : "",
-          wordClue: res.ok && res.wordClue ? res.wordClue : "",
+          word: res.ok && res.word ? res.word : (loc.word || ""),
+          wordClue: res.ok && res.wordClue ? res.wordClue : (loc.wordClue || ""),
           name: loc.name,
           order: loc.order,
-          duplicate: !res.ok,
+          photoUrl: loc.photoUrl,
+          duplicate: !res.ok && res.reason === "duplicate",
         };
       } else if (loc.type === "sos") {
         v = res.ok ? { kind: "sos-locking" } : { kind: "sos-dup" };
         if (v.kind === "sos-locking") setSosAt(Date.now());
       } else {
-        v = { kind: "final", duplicate: !res.ok };
+        v = { kind: "final", duplicate: !res.ok && res.reason === "duplicate" };
       }
 
       decided.current = { token };
@@ -122,13 +134,19 @@ export default function ScanPage() {
       <div className="mx-auto flex max-w-md items-center justify-between px-4 py-3">
         <Link
           href="/tracker"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-leaf"
+          className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-leaf"
         >
-          Mavelli tracker
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/maveli-logo.png"
+            alt="The Maveli Files"
+            className="h-6 w-6 rounded-full border border-line-2 object-cover"
+          />
+          The Maveli Files
         </Link>
         <Link
           href="/leaderboard"
-          className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog"
+          className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog hover:text-mist"
         >
           Leaderboard
         </Link>
@@ -150,6 +168,48 @@ export default function ScanPage() {
     );
   }
 
+  if (view.kind === "out_of_order") {
+    return (
+      <div className="min-h-[100dvh] bg-ink">
+        {bar}
+        <main className="mx-auto flex min-h-[calc(100dvh-57px)] max-w-md flex-col justify-center px-5 py-10">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-amber-400">
+              <WarningCircle size={15} weight="bold" /> Out of Order
+            </span>
+            <h1 className="mt-4 text-2xl font-black uppercase tracking-tight text-mist sm:text-3xl">
+              Whoa there, Time Traveler! ⏳
+            </h1>
+          </div>
+
+          <Panel className="mt-6 border-amber-500/30 bg-ink-2 p-6 text-center shadow-lg">
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-moss">
+              Sequence Error
+            </p>
+            <p className="mt-3 text-base leading-relaxed text-mist">
+              You just scanned{" "}
+              <strong className="text-amber-300">{view.targetLocationName}</strong>{" "}
+              (Node 0{view.targetOrder}), but you haven&apos;t uncovered{" "}
+              <strong className="text-leaf">Sighting 0{view.expectedOrder}</strong>{" "}
+              ({view.expectedLocationName}) yet!
+            </p>
+
+            <div className="mt-4 rounded-lg border border-line bg-ink-3 p-3.5 text-xs italic text-fog">
+              💡 Maveli says: &quot;Hold your horses! My footprints move forward in
+              time, not quantum entanglement. Follow the trail in sequence!&quot;
+            </div>
+          </Panel>
+
+          <div className="mt-6 space-y-3">
+            <Btn onClick={continueTracker} className="w-full">
+              Head to Sighting 0{view.expectedOrder} <ArrowRight size={18} />
+            </Btn>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (view.kind === "unknown") {
     return (
       <div className="min-h-[100dvh] bg-ink">
@@ -160,8 +220,8 @@ export default function ScanPage() {
             Not a hunt QR
           </h1>
           <p className="mx-auto mt-2 max-w-[32ch] text-sm text-fog">
-            This code does not belong to the Mavelli Hunt. Check the marker
-            and try again.
+            This code does not belong to The Maveli Files. Check the marker and
+            try again.
           </p>
           <Btn onClick={continueTracker} className="mt-6">
             Back to the tracker
@@ -176,29 +236,43 @@ export default function ScanPage() {
     return (
       <div className="min-h-[100dvh] bg-ink">
         {bar}
-        <main className="mx-auto flex max-w-md min-h-[calc(100dvh-57px)] flex-col justify-center px-5 py-10">
+        <main className="mx-auto flex min-h-[calc(100dvh-57px)] max-w-md flex-col justify-center px-5 py-10">
           <div className="text-center">
-            <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-leaf">
+            <span className="inline-flex items-center gap-2 rounded-full border border-leaf/40 bg-leaf/10 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-leaf">
               <span className="h-2 w-2 rounded-full bg-leaf" />
-              {isFirst ? "Evidence recovered" : "Already recovered"}
+              {isFirst ? "Evidence Recovered" : "Already Recovered"}
             </span>
-            <h1 className="mt-3 text-2xl font-black uppercase tracking-tight text-mist">
+            <h1 className="mt-3 text-2xl font-black uppercase tracking-tight text-mist sm:text-3xl">
               {view.name}
             </h1>
           </div>
 
-          <Panel className="mt-6 p-6 text-center">
+          {view.photoUrl && (
+            <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-xl border border-line-2 shadow-md">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={view.photoUrl}
+                alt={view.name}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+            </div>
+          )}
+
+          <Panel className="mt-5 p-6 text-center">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-fog">
-              Word {String(view.order).padStart(2, "0")}
+              Decrypted Word 0{view.order}
             </p>
             {revealed ? (
               <div className="anim-mask mt-3">
                 <p className="font-mono text-4xl font-black tracking-[0.24em] text-leaf">
-                  {view.word}
+                  {view.word || "RECORDED"}
                 </p>
-                <p className="mx-auto mt-3 max-w-[36ch] text-sm leading-relaxed text-fog">
-                  {view.wordClue}
-                </p>
+                {view.wordClue && (
+                  <p className="mx-auto mt-3 max-w-[36ch] text-sm leading-relaxed text-fog">
+                    {view.wordClue}
+                  </p>
+                )}
               </div>
             ) : (
               <>
@@ -216,14 +290,14 @@ export default function ScanPage() {
             )}
           </Panel>
 
-          <p className="mt-5 text-center text-sm leading-relaxed text-fog">
+          <p className="mt-4 text-center text-sm leading-relaxed text-fog">
             {isFirst
-              ? "Mavelli was here. But where did he go next?"
-              : "Your team already recovered this evidence. The word is on your evidence board."}
+              ? "Word automatically saved to your squad's Evidence Board!"
+              : "Your team already recovered this evidence. Continue to the next node."}
           </p>
 
           <Btn onClick={continueTracker} className="mt-6">
-            Continue to the tracker <ArrowRight size={18} />
+            Continue to Tracker <ArrowRight size={18} />
           </Btn>
         </main>
       </div>

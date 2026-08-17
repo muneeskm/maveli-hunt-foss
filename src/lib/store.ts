@@ -121,7 +121,15 @@ export const demoStore = {
     const clean = code.trim().toUpperCase();
     return readDB().teams.find((t) => t.code === clean);
   },
-  createTeam(name: string, member1: string, member2: string): Promise<Team> {
+  createTeam(
+    name: string,
+    member1: string,
+    member2: string,
+    member1Sem = "",
+    member1Class = "",
+    member2Sem = "",
+    member2Class = "",
+  ): Promise<Team> {
     const db = readDB();
     let code = accessCode();
     while (db.teams.some((t) => t.code === code)) code = accessCode();
@@ -130,15 +138,35 @@ export const demoStore = {
       name: name.trim(),
       code,
       member1: member1.trim(),
+      member1Sem: member1Sem.trim() || undefined,
+      member1Class: member1Class.trim() || undefined,
       member2: member2.trim(),
+      member2Sem: member2Sem.trim() || undefined,
+      member2Class: member2Class.trim() || undefined,
       createdAt: Date.now(),
     };
     db.teams.push(team);
     writeDB(db);
     return Promise.resolve(team);
   },
-  addTeam(name: string, member1: string, member2: string): Promise<Team> {
-    return this.createTeam(name, member1, member2);
+  addTeam(
+    name: string,
+    member1: string,
+    member2: string,
+    member1Sem = "",
+    member1Class = "",
+    member2Sem = "",
+    member2Class = "",
+  ): Promise<Team> {
+    return this.createTeam(
+      name,
+      member1,
+      member2,
+      member1Sem,
+      member1Class,
+      member2Sem,
+      member2Class,
+    );
   },
 
   /* ---------- session ---------- */
@@ -177,7 +205,54 @@ export const demoStore = {
       (s) => s.teamId === teamId && s.locationId === location.id,
     );
     if (existing) return Promise.resolve({ ok: false, reason: "duplicate" });
+
+    // Enforce order
+    const sightings = this.locations()
+      .filter((l) => l.type === "sighting")
+      .sort((a, b) => a.order - b.order);
+    const teamScans = db.scans.filter((s) => s.teamId === teamId);
+    const scannedLocIds = new Set(teamScans.map((s) => s.locationId));
+
+    if (location.type === "sighting" && location.order > 1) {
+      const missingPrior = sightings
+        .filter((s) => s.order < location.order)
+        .find((s) => !scannedLocIds.has(s.id));
+      if (missingPrior) {
+        return Promise.resolve({
+          ok: false,
+          reason: "out_of_order",
+          expectedOrder: missingPrior.order,
+          expectedLocationName: missingPrior.name,
+          targetOrder: location.order,
+          targetLocationName: location.name,
+        });
+      }
+    } else if (location.type === "sos") {
+      const missingSighting = sightings.find((s) => !scannedLocIds.has(s.id));
+      if (missingSighting) {
+        return Promise.resolve({
+          ok: false,
+          reason: "out_of_order",
+          expectedOrder: missingSighting.order,
+          expectedLocationName: missingSighting.name,
+          targetOrder: 6,
+          targetLocationName: location.name,
+        });
+      }
+    }
+
     db.scans.push({ teamId, locationId: location.id, at: Date.now() });
+    // Also record answer for sighting
+    if (location.type === "sighting" && location.word) {
+      db.answers.push({
+        teamId,
+        kind: "spotdiff",
+        locationId: location.id,
+        value: location.word,
+        correct: true,
+        at: Date.now(),
+      });
+    }
     writeDB(db);
     return Promise.resolve({
       ok: true,

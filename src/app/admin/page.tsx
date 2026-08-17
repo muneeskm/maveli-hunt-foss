@@ -78,15 +78,15 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-ink px-6 text-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/foss-logo.png"
-        alt="FOSS CCE"
-        className="h-14 w-14 rounded-full object-cover"
+        src="/maveli-logo.png"
+        alt="The Maveli Files"
+        className="h-16 w-16 rounded-full border border-line-2 object-cover shadow-lg shadow-leaf/20"
       />
       <h1 className="mt-3 text-xl font-black uppercase tracking-tight text-mist">
-        Mavelli control
+        The Maveli Files
       </h1>
       <p className="mt-1 text-sm text-fog">
-        Admin access for the hunt.
+        Admin Control Dashboard
       </p>
       <div className="mt-6 w-full max-w-xs space-y-3">
         <Field
@@ -130,12 +130,12 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <div className="flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/foss-logo.png"
-              alt="FOSS CCE"
-              className="h-8 w-8 rounded-full object-cover"
+              src="/maveli-logo.png"
+              alt="The Maveli Files"
+              className="h-9 w-9 rounded-full border border-line-2 object-cover"
             />
             <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-mist sm:block">
-              Mavelli control
+              The Maveli Files · Admin
             </span>
             <PhasePill phase={db.game.phase} />
           </div>
@@ -505,44 +505,79 @@ function ProgressDots({ n, total }: { n: number; total: number }) {
 
 function QRTab({ locations }: { locations: ReturnType<typeof store.locations> }) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  // Day 1 sightings use typed words now - only the SOS poster and the final
-  // marker carry QR codes.
-  const qrLocations = locations.filter((l) => l.type !== "sighting");
+  const sortedLocations = [...locations].sort((a, b) => a.order - b.order);
 
   return (
     <div className="space-y-4">
       <Panel className="p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <SectionHeader>QR print sheet</SectionHeader>
+            <SectionHeader>Investigation QR codes</SectionHeader>
             <p className="mt-1 text-sm text-fog">
-              Only the SOS poster and the final marker carry QR codes (Day 1
-              sightings use typed words). Print this sheet (A4) and cut out
-              each card.
+              QR codes for all 7 checkpoints (Sightings 1–5, SOS Transmission, and Final Sanctuary).
+              Print on A4 or test scan URLs directly below.
             </p>
           </div>
           <Btn onClick={() => window.print()}>
-            <Printer size={18} /> Print
+            <Printer size={18} /> Print QR cards
           </Btn>
         </div>
       </Panel>
 
-      <div className="print-sheet grid grid-cols-2 gap-3">
-        {qrLocations.map((l) => (
-          <div key={l.id} className="print-card panel p-4 text-center">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">
-              {l.name}
-            </p>
-            <p className="font-mono text-[10px] text-moss">{l.token}</p>
-            <QRCode
-              value={`${origin}/scan/${l.token}`}
-              size={120}
-              className="mx-auto mt-3"
-              fgColor="#070907"
-              bgColor="#ffffff"
-            />
-          </div>
-        ))}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {sortedLocations.map((l) => {
+          const scanUrl = `${origin}/scan/${l.token}`;
+
+          return (
+            <Panel
+              key={l.id}
+              className="flex flex-col items-center justify-between p-5 text-center transition-all hover:border-leaf/50"
+            >
+              <div className="w-full">
+                <div className="flex items-center justify-between border-b border-line pb-2 text-left">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-leaf">
+                    Node 0{l.order}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase text-moss">
+                    {l.type}
+                  </span>
+                </div>
+
+                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-mist">
+                  {l.name}
+                </p>
+                <p className="font-mono text-[10px] text-fog">{l.token}</p>
+              </div>
+
+              {/* QR Code Container */}
+              <div className="my-4 rounded-xl border border-line bg-white p-3 shadow-inner">
+                <QRCode
+                  value={scanUrl}
+                  size={140}
+                  className="mx-auto"
+                  fgColor="#03150a"
+                  bgColor="#ffffff"
+                />
+              </div>
+
+              <div className="w-full space-y-2">
+                <div className="rounded bg-ink-3 px-2 py-1 font-mono text-[10px] text-moss truncate">
+                  {scanUrl}
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <a
+                    href={scanUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-leaf hover:underline"
+                  >
+                    Open test link ↗
+                  </a>
+                </div>
+              </div>
+            </Panel>
+          );
+        })}
       </div>
     </div>
   );

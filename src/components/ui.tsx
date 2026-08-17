@@ -101,6 +101,30 @@ export function Field({
   );
 }
 
+export function SelectField({
+  label,
+  hint,
+  children,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement> & {
+  label?: string;
+  hint?: string;
+}) {
+  return (
+    <label className="block">
+      {label && (
+        <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+          {label}
+        </span>
+      )}
+      <select className="field appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239aa79c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pr-9" {...props}>
+        {children}
+      </select>
+      {hint && <span className="mt-1.5 block text-xs text-moss">{hint}</span>}
+    </label>
+  );
+}
+
 const PHASE_LABEL: Record<Phase, string> = {
   setup: "STAND BY",
   day1: "DAY 1 - TRACKING",

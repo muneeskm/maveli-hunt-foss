@@ -1,9 +1,9 @@
 {
-  "name": "FOSS Mavelli Hunt",
-  "short_name": "Mavelli",
+  "name": "The Maveli Files",
+  "short_name": "Maveli Files",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070907",
   "theme_color": "#070907",
-  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+  "icons": [{ "src": "/maveli-logo.png", "sizes": "512x512", "type": "image/png" }]
 }

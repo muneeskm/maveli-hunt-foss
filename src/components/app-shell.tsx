@@ -91,13 +91,13 @@ export function AppShell({
       {teamId && (
         <div className="pointer-events-none fixed inset-0 z-50">
           <button
-          type="button"
-          onClick={() => setContactOpen(true)}
-          aria-label="Contact volunteers"
-          className="pointer-events-auto absolute bottom-5 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-leaf text-[#03150a] active:scale-95"
-          style={{ marginBottom: "env(safe-area-inset-bottom)" }}
-        >
-          <Phone size={24} weight="fill" />
+            type="button"
+            onClick={() => setContactOpen(true)}
+            aria-label="Contact volunteers"
+            className="pointer-events-auto absolute bottom-5 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-leaf text-white shadow-xl shadow-leaf/25 active:scale-95 transition-transform"
+            style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+          >
+            <Phone size={24} weight="fill" className="text-white" />
           </button>
         </div>
       )}
@@ -121,7 +121,7 @@ export function AppShell({
               <button
                 type="button"
                 onClick={() => setContactOpen(false)}
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-fog"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-fog hover:text-mist"
                 aria-label="Close"
               >
                 <X size={20} />
@@ -131,16 +131,20 @@ export function AppShell({
               A volunteer will guide you without giving the answer away.
             </p>
             <div className="grid grid-cols-2 gap-3">
-              <a href={`tel:${tel}`} className="btn btn-primary">
-                <Phone size={18} weight="fill" /> Call
+              <a
+                href={`tel:${tel}`}
+                className="btn flex items-center justify-center gap-2 rounded-xl bg-leaf py-3 text-sm font-bold text-white shadow-md transition-colors hover:bg-leaf-dim active:scale-98"
+              >
+                <Phone size={18} weight="fill" className="text-white" />
+                <span className="text-white">Call</span>
               </a>
               <a
                 href={settings.volunteerWhatsapp}
                 target="_blank"
                 rel="noreferrer"
-                className="btn btn-ghost"
+                className="btn btn-ghost flex items-center justify-center gap-2"
               >
-                <WhatsappLogo size={18} weight="fill" /> WhatsApp
+                <WhatsappLogo size={18} weight="fill" className="text-leaf" /> WhatsApp
               </a>
             </div>
           </Panel>

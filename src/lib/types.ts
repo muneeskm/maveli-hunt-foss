@@ -17,12 +17,22 @@ export interface GameLocation {
   mapillaryNote?: string; // extra guidance for the Mapillary comparison
 }
 
+export interface TeamMemberInfo {
+  name: string;
+  sem: string;
+  class: string;
+}
+
 export interface Team {
   id: string;
   name: string;
   code: string;
   member1: string;
+  member1Sem?: string;
+  member1Class?: string;
   member2: string;
+  member2Sem?: string;
+  member2Class?: string;
   createdAt: number;
 }
 
@@ -107,4 +117,12 @@ export type SubmitResult =
 /* Result of a QR scan (server-recorded in real mode). */
 export type ScanResult =
   | { ok: false; reason: "no_team" | "unknown" | "duplicate" | "error" }
+  | {
+      ok: false;
+      reason: "out_of_order";
+      expectedOrder: number;
+      expectedLocationName: string;
+      targetOrder: number;
+      targetLocationName: string;
+    }
   | { ok: true; location: GameLocation; word?: string; wordClue?: string };
