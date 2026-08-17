@@ -1,27 +1,23 @@
 import type { GameLocation, GameState, Settings } from "./types";
 
 /*
- * PLACEHOLDER CONTENT.
- * Organizers replace words, images, Mapillary links, and the gate answer
- * before the event. Real content is loaded directly into Supabase
- * (schema.db + seed.sql) - not through a dashboard editor in v1.
+ * PUBLIC CONTENT (safe to ship to every client).
+ *
+ * This file must NEVER contain answers: the 5 words, the gate answer order,
+ * the BitChat code, or the admin code. Those live only in the database
+ * (supabase/seed.sql) and are verified server-side by the API routes
+ * (src/app/api/*) using the service-role key. Demo mode fills the blanks
+ * from src/lib/demo-content.ts, which is imported ONLY by the demo store and
+ * is tree-shaken out of real-mode builds.
  *
  * DAY 1 MECHANIC (all sightings):
  *   Every sighting shows a Mapillary view of a real campus spot. The site
  *   shows a MODIFIED copy of the same image where ONE word was changed
  *   (e.g. Mapillary: "Christ College of Engineering" vs site:
  *   "Christ College of Engineering (Autonomous)"). Teams find the difference
- *   and TYPE the word ("Autonomous") to recover the evidence.
- *
- * The 5 words are fragments of a hidden instruction. Scan order (1-5)
- * differs from the gate order, so the evidence board alone cannot answer
- * the gate.
+ *   and TYPE the word ("Autonomous") to recover the evidence. The server
+ *   checks the word; clients never see it until the team earns it.
  */
-
-export const SEED_WORDS = ["TEMPLE", "NORTH", "THREE", "BANYAN", "CLOCK"] as const;
-
-// Gate order: "NORTH TEMPLE CLOCK BANYAN THREE"
-export const SEED_GATE_ANSWER = ["NORTH", "TEMPLE", "CLOCK", "BANYAN", "THREE"];
 
 export const SEED_GATE_SLOTS = [
   "Word 1",
@@ -38,8 +34,8 @@ export const seedLocations = (): GameLocation[] => [
     type: "sighting",
     name: "Sighting 01 - The Main Gate",
     token: "s1-kappa",
-    word: "TEMPLE",
-    wordClue: "A place of worship. He is not inside it, but near it.",
+    word: "", // answer lives server-side (locations.word)
+    wordClue: "", // answer lives server-side
     photoUrl: "https://picsum.photos/seed/mavelli-website-1/1200/900",
     mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_1",
     clueText:
@@ -55,8 +51,8 @@ export const seedLocations = (): GameLocation[] => [
     type: "sighting",
     name: "Sighting 02 - The Compass Corner",
     token: "s2-epsilon",
-    word: "NORTH",
-    wordClue: "A direction. Check a compass before you move on.",
+    word: "",
+    wordClue: "",
     photoUrl: "https://picsum.photos/seed/mavelli-website-2/1200/900",
     mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_2",
     clueText:
@@ -71,8 +67,8 @@ export const seedLocations = (): GameLocation[] => [
     type: "sighting",
     name: "Sighting 03 - The Arches",
     token: "s3-lambda",
-    word: "THREE",
-    wordClue: "A small number. Count your steps from the landmark.",
+    word: "",
+    wordClue: "",
     photoUrl: "https://picsum.photos/seed/mavelli-website-3/1200/900",
     mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_3",
     clueText:
@@ -87,8 +83,8 @@ export const seedLocations = (): GameLocation[] => [
     type: "sighting",
     name: "Sighting 04 - The Old Tree",
     token: "s4-sigma",
-    word: "BANYAN",
-    wordClue: "A tree with hanging roots. It shades the courtyard.",
+    word: "",
+    wordClue: "",
     photoUrl: "https://picsum.photos/seed/mavelli-website-4/1200/900",
     mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_4",
     clueText:
@@ -103,8 +99,8 @@ export const seedLocations = (): GameLocation[] => [
     type: "sighting",
     name: "Sighting 05 - The Clock Tower",
     token: "s5-tau",
-    word: "CLOCK",
-    wordClue: "It tells time. It stands tall near the entrance.",
+    word: "",
+    wordClue: "",
     photoUrl: "https://picsum.photos/seed/mavelli-website-5/1200/900",
     mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_5",
     clueText:
@@ -146,7 +142,7 @@ export const seedLocations = (): GameLocation[] => [
 export const seedGame = (): GameState => ({
   phase: "setup",
   winnerTeamId: null,
-  gateAnswer: [...SEED_GATE_ANSWER],
+  gateAnswer: [], // answer lives server-side (games.gate_answer)
   gateSlots: [...SEED_GATE_SLOTS],
   startedAt: Date.now(),
 });
@@ -157,8 +153,8 @@ export const seedSettings = (): Settings => ({
   instagramUrl: "https://instagram.com", // TODO: Mavelli's Instagram handle
   bitchatGuide:
     "Mavelli has been broadcasting on BitChat. Open the BitChat app, find the account named in the SOS, and read the latest message. It contains a code. Enter that code here.",
-  bitchatCode: "MERIDIAN", // TODO: replace before the event
-  adminCode: "mavelli-admin", // TODO: change for the event
+  bitchatCode: "", // secret - lives server-side (settings.bitchat_code)
+  adminCode: "", // secret - lives server-side (settings.admin_code)
   sosLockSeconds: 4,
   mapillaryNote:
     "Open Mapillary (app or mapillary.com) and find the view for this spot. Compare it with the photo on this site and type the one word that differs.",

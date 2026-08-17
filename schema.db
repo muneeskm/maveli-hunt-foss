@@ -187,5 +187,33 @@ alter table public.locations
 
 
 -- ============================================================================
--- END OF MIGRATIONS - append new blocks below as M004, M005, ...
+-- M004 - PRIVACY LOCKDOWN (answers must stay private)
+--   The answers (locations.word, games.gate_answer, settings codes,
+--   teams.code, every answers row) must never be readable by clients. The app
+--   now talks to Supabase ONLY through the Next.js API routes
+--   (src/app/api/*) using the service-role key. Anon access is revoked
+--   entirely: the open RLS policies from M001 are dropped and all privileges
+--   are revoked from the anon/authenticated roles. The service role bypasses
+--   RLS and is unaffected. RLS remains enabled with zero policies = deny all.
+-- ============================================================================
+
+do $$
+declare
+  t text;
+begin
+  foreach t in array array['games','teams','locations','scans','answers','hints','broadcasts','settings','audit_log']
+  loop
+    execute format('drop policy if exists "open read" on public.%I', t);
+    execute format('drop policy if exists "open write" on public.%I', t);
+    execute format('revoke all on table public.%I from anon, authenticated', t);
+  end loop;
+  execute 'revoke all on all sequences in schema public from anon, authenticated';
+end $$;
+
+-- Realtime publication memberships from M001 are harmless (anon cannot read
+-- anything anymore) and are left in place for a future auth-based realtime.
+
+
+-- ============================================================================
+-- END OF MIGRATIONS - append new blocks below as M005, M006, ...
 -- ============================================================================

@@ -1,30 +1,38 @@
-import { seedGame, seedLocations, seedSettings } from "./seed";
-import { supabaseMode } from "./supabase";
-import { supabaseStore } from "./supabase-store";
+import { demoGame, demoLocations, demoSettings } from "./demo-content";
+import { realMode } from "./mode";
+import { httpStore } from "./http-store";
 import type {
   Answer,
-  AnswerKind,
   Broadcast,
   DB,
   GameLocation,
   GameState,
   Hint,
+  LeaderboardRow,
+  Phase,
   Scan,
+  ScanResult,
   Settings,
+  SubmitResult,
   Team,
 } from "./types";
 import { accessCode, uid } from "./utils";
+import { ranking } from "./game";
 
 /*
- * DEMO MODE STORE (localStorage).
+ * DEMO MODE STORE (localStorage) + the single store facade.
  *
- * This is the single seam where real persistence plugs in. The Supabase adapter
- * (lib/supabase.ts) mirrors these methods against the real backend for
- * multi-device + realtime. Demo mode exists so the entire flow can be built,
- * tested, and demoed on one device before the Supabase project is configured.
+ *   export const store = realMode ? httpStore : demoStore;
  *
- * Data is grouped under one localStorage key so it survives and is easy to wipe:
- *   mh:v1 = { game, teams, scans, answers, hints, broadcasts, settings }
+ * Demo mode exists so the entire flow can be built, tested, and demoed on one
+ * device with no backend: all data lives in localStorage. The demo answers
+ * (words, gate answer, BitChat code, admin code) come from demo-content.ts,
+ * which is ONLY imported here - real-mode builds tree-shake it away and the
+ * deployed bundle is verified not to contain the answers.
+ *
+ * Both stores share one interface: synchronous reads from a cache/localStorage
+ * and async mutations that resolve to the same result shapes, so components
+ * never need to know which backend is active.
  */
 
 const KEY = "mh:v1";
@@ -34,13 +42,13 @@ const CHANGE_EVENT = "mh:change";
 
 function emptyDB(): DB {
   return {
-    game: seedGame(),
+    game: demoGame(),
     teams: [],
     scans: [],
     answers: [],
     hints: [],
     broadcasts: [],
-    settings: seedSettings(),
+    settings: demoSettings(),
   };
 }
 
@@ -71,7 +79,7 @@ function writeDB(db: DB) {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
-function notify() {
+export function notify() {
   if (typeof window === "undefined") return;
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
@@ -81,23 +89,25 @@ export const demoStore = {
   game(): GameState {
     return readDB().game;
   },
-  setPhase(phase: GameState["phase"]) {
+  setPhase(phase: Phase): Promise<void> {
     const db = readDB();
     db.game.phase = phase;
     writeDB(db);
+    return Promise.resolve();
   },
-  setWinner(teamId: string | null) {
+  setWinner(teamId: string | null): Promise<void> {
     const db = readDB();
     db.game.winnerTeamId = teamId;
     writeDB(db);
+    return Promise.resolve();
   },
 
   /* ---------- locations ---------- */
   locations(): GameLocation[] {
-    return seedLocations();
+    return demoLocations();
   },
   locationByToken(token: string): GameLocation | undefined {
-    return seedLocations().find((l) => l.token === token);
+    return demoLocations().find((l) => l.token === token);
   },
 
   /* ---------- teams ---------- */
@@ -111,7 +121,7 @@ export const demoStore = {
     const clean = code.trim().toUpperCase();
     return readDB().teams.find((t) => t.code === clean);
   },
-  createTeam(name: string, member1: string, member2: string): Team {
+  createTeam(name: string, member1: string, member2: string): Promise<Team> {
     const db = readDB();
     let code = accessCode();
     while (db.teams.some((t) => t.code === code)) code = accessCode();
@@ -125,9 +135,9 @@ export const demoStore = {
     };
     db.teams.push(team);
     writeDB(db);
-    return team;
+    return Promise.resolve(team);
   },
-  addTeam(name: string, member1: string, member2: string): Team {
+  addTeam(name: string, member1: string, member2: string): Promise<Team> {
     return this.createTeam(name, member1, member2);
   },
 
@@ -138,60 +148,63 @@ export const demoStore = {
     if (!code) return undefined;
     return this.teamByCode(code);
   },
-  login(code: string): Team | undefined {
+  login(code: string): Promise<Team | undefined> {
     const team = this.teamByCode(code);
-    if (!team) return undefined;
+    if (!team) return Promise.resolve(undefined);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(SESSION_KEY, team.code);
     }
-    return team;
+    return Promise.resolve(team);
   },
   logout() {
     if (typeof window !== "undefined") {
       window.localStorage.removeItem(SESSION_KEY);
     }
   },
+  sessionPending(): boolean {
+    return false; // demo data is synchronous
+  },
 
   /* ---------- scans ---------- */
   teamScans(teamId: string): Scan[] {
     return readDB().scans.filter((s) => s.teamId === teamId);
   },
-  recordScan(teamId: string, token: string) {
+  recordScan(teamId: string, token: string): Promise<ScanResult> {
     const location = this.locationByToken(token);
     const db = readDB();
-    if (!location) return { ok: false as const, reason: "unknown" };
+    if (!location) return Promise.resolve({ ok: false, reason: "unknown" });
     const existing = db.scans.find(
       (s) => s.teamId === teamId && s.locationId === location.id,
     );
-    if (existing) return { ok: false as const, reason: "duplicate" };
+    if (existing) return Promise.resolve({ ok: false, reason: "duplicate" });
     db.scans.push({ teamId, locationId: location.id, at: Date.now() });
     writeDB(db);
-    return { ok: true as const, location };
+    return Promise.resolve({
+      ok: true,
+      location,
+      word: location.word,
+      wordClue: location.wordClue,
+    });
   },
-  grantLocation(teamId: string, locationId: string) {
+  grantLocation(teamId: string, locationId: string): Promise<void> {
     const db = readDB();
     const existing = db.scans.find(
       (s) => s.teamId === teamId && s.locationId === locationId,
     );
-    if (existing) return;
-    db.scans.push({ teamId, locationId, at: Date.now() });
-    writeDB(db);
+    if (!existing) {
+      db.scans.push({ teamId, locationId, at: Date.now() });
+      writeDB(db);
+    }
+    return Promise.resolve();
   },
 
   /* ---------- answers ---------- */
   teamAnswers(teamId: string): Answer[] {
     return readDB().answers.filter((a) => a.teamId === teamId);
   },
-  /*
-   * Day 1 spot-the-difference submission. The answer is the ONE word that
-   * differs between the Mapillary view and the site's copy of the image.
-   * Case-insensitive; wrong attempts are logged (kind 'spotdiff') so admins
-   * can see who is stuck. A correct answer also records the scan, which
-   * advances the team's stage and fills the evidence board.
-   */
-  submitSpotDiff(teamId: string, locationId: string, value: string): Answer {
+  submitSpotDiff(teamId: string, locationId: string, value: string): Promise<SubmitResult> {
     const db = readDB();
-    const location = seedLocations().find((l) => l.id === locationId);
+    const location = demoLocations().find((l) => l.id === locationId);
     const correct =
       !!location &&
       location.word !== "" &&
@@ -212,9 +225,9 @@ export const demoStore = {
       if (!existing) db.scans.push({ teamId, locationId: location.id, at: Date.now() });
     }
     writeDB(db);
-    return answer;
+    return Promise.resolve({ ok: true, correct, answer });
   },
-  submitBitchat(teamId: string, value: string): Answer {
+  submitBitchat(teamId: string, value: string): Promise<SubmitResult> {
     const db = readDB();
     const correct =
       value.trim().toUpperCase() === db.settings.bitchatCode.trim().toUpperCase();
@@ -227,9 +240,9 @@ export const demoStore = {
     };
     db.answers.push(answer);
     writeDB(db);
-    return answer;
+    return Promise.resolve({ ok: true, correct, answer });
   },
-  submitReconstruction(teamId: string, words: string[]): Answer {
+  submitReconstruction(teamId: string, words: string[]): Promise<SubmitResult> {
     const db = readDB();
     const normalized = words.map((w) => w.trim().toUpperCase());
     const correct =
@@ -247,28 +260,46 @@ export const demoStore = {
       db.game.winnerTeamId = teamId;
     }
     writeDB(db);
-    return answer;
+    return Promise.resolve({ ok: true, correct, answer });
+  },
+
+  /* ---------- collected words ---------- */
+  collectedWords(teamId: string): Record<string, { word: string; wordClue: string }> {
+    const db = readDB();
+    const found = new Set(
+      db.scans.filter((s) => s.teamId === teamId).map((s) => s.locationId),
+    );
+    const out: Record<string, { word: string; wordClue: string }> = {};
+    for (const l of demoLocations()) {
+      if (l.type === "sighting" && found.has(l.id)) {
+        out[l.id] = { word: l.word, wordClue: l.wordClue };
+      }
+    }
+    return out;
   },
 
   /* ---------- hints (Level 1) ---------- */
   teamHints(teamId: string): Hint[] {
     return readDB().hints.filter((h) => h.teamId === teamId);
   },
-  pushHint(teamId: string, locationId: string) {
+  pushHint(teamId: string, locationId: string): Promise<void> {
     const db = readDB();
     const existing = db.hints.find(
       (h) => h.teamId === teamId && h.locationId === locationId,
     );
-    if (existing) return;
-    db.hints.push({ teamId, locationId, at: Date.now() });
-    writeDB(db);
+    if (!existing) {
+      db.hints.push({ teamId, locationId, at: Date.now() });
+      writeDB(db);
+    }
+    return Promise.resolve();
   },
-  resetTeam(teamId: string) {
+  resetTeam(teamId: string): Promise<void> {
     const db = readDB();
     db.scans = db.scans.filter((s) => s.teamId !== teamId);
     db.answers = db.answers.filter((a) => a.teamId !== teamId);
     db.hints = db.hints.filter((h) => h.teamId !== teamId);
     writeDB(db);
+    return Promise.resolve();
   },
 
   /* ---------- admin ---------- */
@@ -276,12 +307,12 @@ export const demoStore = {
     if (typeof window === "undefined") return false;
     return window.localStorage.getItem(ADMIN_SESSION_KEY) === "1";
   },
-  adminLogin(code: string): boolean {
+  adminLogin(code: string): Promise<boolean> {
     const ok = code.trim() === this.settings().adminCode;
     if (ok && typeof window !== "undefined") {
       window.localStorage.setItem(ADMIN_SESSION_KEY, "1");
     }
-    return ok;
+    return Promise.resolve(ok);
   },
   adminLogout() {
     if (typeof window !== "undefined") {
@@ -305,7 +336,7 @@ export const demoStore = {
   broadcasts(): Broadcast[] {
     return readDB().broadcasts;
   },
-  addBroadcast(message: string, audience: Broadcast["audience"], teamId?: string) {
+  addBroadcast(message: string, audience: Broadcast["audience"], teamId?: string): Promise<void> {
     const db = readDB();
     db.broadcasts.push({
       id: uid("bc"),
@@ -315,41 +346,54 @@ export const demoStore = {
       at: Date.now(),
     });
     writeDB(db);
+    return Promise.resolve();
   },
 
   /* ---------- settings ---------- */
   settings(): Settings {
     return readDB().settings;
   },
-  updateSettings(patch: Partial<Settings>) {
+  updateSettings(patch: Partial<Settings>): Promise<void> {
     const db = readDB();
     db.settings = { ...db.settings, ...patch };
     writeDB(db);
+    return Promise.resolve();
+  },
+
+  /* ---------- leaderboard + gate lock ---------- */
+  leaderboard(): LeaderboardRow[] {
+    const db = readDB();
+    return ranking(db.teams, db.scans, db.answers, demoLocations(), db.game.winnerTeamId);
+  },
+  gateLockSeconds(): number {
+    return 0; // demo locks client-side in the gate component
   },
 
   /* ---------- lifecycle ---------- */
-  restartGame() {
+  restartGame(): Promise<void> {
     const db = readDB();
-    db.game = seedGame();
+    db.game = demoGame();
     db.scans = [];
     db.answers = [];
     db.hints = [];
     db.broadcasts = [];
     writeDB(db);
+    return Promise.resolve();
   },
-  newGame() {
+  newGame(): Promise<void> {
     const db = readDB();
-    db.game = seedGame();
+    db.game = demoGame();
     db.teams = [];
     db.scans = [];
     db.answers = [];
     db.hints = [];
     db.broadcasts = [];
     writeDB(db);
+    return Promise.resolve();
   },
 
-  exportJSON(): string {
-    return JSON.stringify(readDB(), null, 2);
+  exportJSON(): Promise<string> {
+    return Promise.resolve(JSON.stringify(readDB(), null, 2));
   },
 
   /* ---------- realtime-ish ---------- */
@@ -368,11 +412,10 @@ export const demoStore = {
   },
 };
 
-export { notify };
-
 /*
- * The single seam: real mode (Supabase env vars set) uses the Supabase-backed
- * store with realtime; demo mode (no env vars) uses localStorage so the whole
- * flow works on one device before the backend is configured.
+ * The single seam: real mode (NEXT_PUBLIC_SUPABASE_URL set at build time)
+ * uses the server-proxy store; demo mode uses localStorage. Because realMode
+ * is a build-time constant, the unused store (and its imports) is tree-shaken
+ * out of the production bundle - demo answers never ship in real builds.
  */
-export const store = supabaseMode ? supabaseStore : demoStore;
+export const store = realMode ? httpStore : demoStore;

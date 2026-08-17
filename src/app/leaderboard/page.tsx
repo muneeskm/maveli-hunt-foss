@@ -5,16 +5,7 @@ import { LeaderboardView } from "@/components/leaderboard-view";
 import { useGame } from "@/hooks/use-game";
 
 export default function LeaderboardPage() {
-  const {
-    team,
-    game,
-    settings,
-    broadcasts,
-    scans,
-    answers,
-    locations,
-    teams,
-  } = useGame();
+  const { team, game, settings, broadcasts, leaderboard } = useGame();
 
   return (
     <AppShell
@@ -25,10 +16,7 @@ export default function LeaderboardPage() {
       settings={settings}
     >
       <LeaderboardView
-        teams={teams}
-        scans={scans}
-        answers={answers}
-        locations={locations}
+        rows={leaderboard}
         winnerTeamId={game.winnerTeamId}
         highlightTeamId={team?.id}
         showAll

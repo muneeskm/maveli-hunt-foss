@@ -15,7 +15,7 @@ const LOCK_SECONDS = 30;
  * order - the board alone is not enough, the word clues matter.
  */
 export function ReconstructionGate() {
-  const { team, game, answers } = useGame();
+  const { team, game, answers, gateLockSeconds } = useGame();
   const [words, setWords] = useState<string[]>(() =>
     game.gateSlots.map(() => ""),
   );
@@ -23,6 +23,16 @@ export function ReconstructionGate() {
   const [locked, setLocked] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  // server-side lock (real mode): the server refuses attempts for 60s after
+  // 5 wrong answers, even across devices
+  useEffect(() => {
+    if (gateLockSeconds > 0) {
+      setFailCount(MAX_FAILS);
+      setLocked(true);
+    }
+  }, [gateLockSeconds]);
 
   const solved = useMemo(
     () => answers.some((a) => a.kind === "reconstruction" && a.correct),
@@ -55,21 +65,34 @@ export function ReconstructionGate() {
     setError(null);
   };
 
-  const submit = () => {
-    if (locked || !team) return;
+  const submit = async () => {
+    if (locked || busy || !team) return;
     if (words.some((w) => w.trim() === "")) {
       setError("All five words are required.");
       return;
     }
-    const answer = store.submitReconstruction(team.id, words);
-    if (answer.correct) return;
-    const next = failCount + 1;
-    setFailCount(next);
-    setError(
-      "That order does not reconstruct the instruction. Re-read the word clues on the evidence board.",
-    );
-    if (next >= MAX_FAILS) {
-      setLocked(true);
+    setBusy(true);
+    try {
+      const res = await store.submitReconstruction(team.id, words);
+      if (res.ok && res.correct) return;
+      if (res.lockSeconds && res.lockSeconds > 0) {
+        setFailCount(MAX_FAILS);
+        setLocked(true);
+        setError(null);
+        return;
+      }
+      const next = failCount + 1;
+      setFailCount(next);
+      setError(
+        res.ok
+          ? "That order does not reconstruct the instruction. Re-read the word clues on the evidence board."
+          : res.message,
+      );
+      if (next >= MAX_FAILS) {
+        setLocked(true);
+      }
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -122,8 +145,8 @@ export function ReconstructionGate() {
             {error}
           </p>
         )}
-        <Btn onClick={submit} disabled={locked} className="mt-4 w-full">
-          {locked ? `Locked for ${countdown}s` : "Confirm the instruction"}
+        <Btn onClick={submit} disabled={locked || busy} className="mt-4 w-full">
+          {locked ? `Locked for ${countdown}s` : busy ? "Checking..." : "Confirm the instruction"}
         </Btn>
       </Panel>
     </div>

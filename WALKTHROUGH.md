@@ -8,8 +8,9 @@ How to run, test end to end, point it at Supabase, and deploy on Vercel.
 
 A mobile-first hunt tracker for the FOSS Mavelli Hunt event. Black + green +
 white theme. Teams register with a name + 2 member names, get a 6-character
-access code, and every member signs in with that code. Progress syncs in
-real time (Supabase Realtime in production, localStorage in demo mode).
+access code, and every member signs in with that code. Progress syncs
+across phones within seconds (server polling in production, localStorage in
+demo mode).
 
 Flow:
 
@@ -140,46 +141,74 @@ Day 1 has NO QR codes: sightings unlock by typing the diff word.
 
 1. Create a free project at supabase.com.
 2. SQL Editor -> paste the contents of **`schema.db`** -> Run. Safe to
-   re-run; it is cumulative and idempotent.
-3. Paste the contents of **`supabase/seed.sql`** -> Run.
-4. Project Settings -> API: copy the project URL and the anon key.
+   re-run; it is cumulative and idempotent (M004 revokes all anon access).
+3. Paste the contents of **`supabase/seed.sql`** -> Run (placeholder content;
+   replace before the event, see section 7).
+4. Project Settings -> API: copy the project URL and the **service role
+   key** (NOT the anon key - anon is revoked and unused).
 5. Create `.env.local`:
 
 ```env
+# mode switch (public, build-time)
 NEXT_PUBLIC_SUPABASE_URL=https://YOURPROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+
+# server-only secrets - never prefix with NEXT_PUBLIC_, never commit
+SUPABASE_URL=https://YOURPROJECT.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 ```
 
-6. Restart the dev server. The app now uses Supabase for teams, scans,
-   answers, hints, broadcasts, phase, and settings, with Realtime pushing
-   updates to every phone.
+6. Restart the dev server. The app is now in real mode.
 
-The Supabase-backed store is fully implemented (`src/lib/supabase-store.ts`,
-behind the `store.*` seam in `src/lib/store.ts`). It mirrors the demo API 1:1
-with an in-memory cache + Realtime subscriptions (scans, answers, hints,
-broadcasts, teams, game, settings), optimistic writes, and server-enforced
-first-scan-wins / first-winner-wins. When the env vars above are set, the app
-is in real mode automatically; without them it falls back to demo mode.
+### How real mode works (and why it is safe)
 
-Before the event, smoke-test real mode on two phones:
+The client never touches Supabase directly. Every read and write goes
+through the Next.js API routes (`src/app/api/*`), which verify answers with
+the service-role key on the server:
 
-- Register a team on phone A, log in with the same code on phone B.
-- Phone A solves a sighting -> phone B shows the evidence + unlock within ~1s.
+- Words, the gate answer, the BitChat code and the admin code exist ONLY in
+  the database - they are never in the client bundle and never in API
+  responses (a team only sees the words it has earned).
+- The gate locks server-side after 5 wrong attempts (60s), so the answer
+  endpoint cannot be brute-forced; the BitChat code and words are long
+  enough that guessing is infeasible.
+- Anon/authenticated roles have zero access to any table (schema.db M004).
+  Even a leaked anon key is useless. The service role key bypasses RLS, so
+  it must live only in server env vars.
+- Sync is a tiny `GET /api/team/state` poll every 4s per phone (plus admin
+  polling). Anon-key realtime was retired because it cannot filter answers
+  per team - privacy beats push.
+
+### Two-phone smoke test (do before the event)
+
+- Register a team on phone A, sign in with the same code on phone B.
+- Phone A solves a sighting -> phone B shows the word + next unlock within
+  ~5s (max one poll interval).
 - Two phones scanning the same SOS QR -> only one scan is recorded.
-- Admin phase change -> team screens update everywhere without a refresh.
-- Try `End event`, `Restart game` (keeps teams), and `New game` (wipes teams)
-  on a throwaway project so you know exactly what each does to the data.
+- Admin phase change -> team screens update within ~5s.
+- Wrong gate answers 5 times -> the gate locks for 60s on every phone
+  (server-enforced).
+- Try `End event`, `Restart game` (keeps teams), and `New game` (wipes
+  teams) on a throwaway project so you know exactly what each does.
+
+### Verify the deployed bundle leaks nothing
+
+After `npm run build` with real-mode env vars set, confirm no answers are
+in the output:
+
+```bash
+grep -rl -E "TEMPLE|MERIDIAN|mavelli-admin|BANYAN" .next/static 2>/dev/null | head
+# -> no output expected (demo content is tree-shaken out of real builds)
+```
 
 Known behaviors to expect:
 
-- With a fresh Supabase project where `seed.sql` has NOT been run, the app
-  bootstraps the games + settings rows itself and falls back to the built-in
-  placeholder locations, so it never crashes - but run the seed anyway.
+- A fresh project where `seed.sql` has NOT been run still works: the server
+  bootstraps the games/settings rows and falls back to the built-in public
+  location content.
 - Team names are not unique (two teams may share a name); access codes are
   unique and are what login uses.
-- RLS is intentionally open (anyone with the anon key can read/write); the
-  access code is the only gate, matching the no-auth design. Do not reuse
-  the anon key for anything else.
+- If a team is wiped by `New game`, its phones lose the session on the next
+  poll and land back on "Join the search".
 
 ---
 
@@ -192,21 +221,27 @@ Known behaviors to expect:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://YOURPROJECT.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_ANON_KEY
+SUPABASE_URL=https://YOURPROJECT.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
 ```
 
-   (Optional for demo-mode-only testing: leave them empty. The site runs
-   fully in localStorage mode without them.)
+   `NEXT_PUBLIC_` vars are exposed to the client build - the URL is fine.
+   `SUPABASE_SERVICE_ROLE_KEY` must NEVER have a `NEXT_PUBLIC_` prefix.
+   (Demo-mode-only testing: leave them empty. The site runs fully in
+   localStorage mode without them.)
 5. Deploy. Default domain will be like `maveli-hunt.vercel.app`.
 6. **After deploying, re-print the QR sheet from the deployed admin** so the
    QR URLs point at the deployed origin, not localhost.
+7. Run the bundle-leak grep from section 5 against the deployed site's JS
+   (or locally with the same env vars) - it must come back empty.
 
 ---
 
 ## 7. Pre-event content checklist
 
-Replace placeholder content before the event. Most of it lives in
-`supabase/seed.sql` (or `src/lib/seed.ts` for demo mode):
+Replace placeholder content before the event. Real mode reads everything
+from `supabase/seed.sql`; demo mode reads answers from
+`src/lib/demo-content.ts` (public content from `src/lib/seed.ts`):
 
 - [ ] 5 Mapillary views (`mapillary_url` per sighting) - real campus spots
 - [ ] 5 modified images (`photo_url`) - the same spots with ONE word changed

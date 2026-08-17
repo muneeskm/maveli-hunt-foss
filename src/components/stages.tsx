@@ -97,27 +97,38 @@ export function StandbyStage() {
 /* ---------- Day 1 sighting (Mapillary diff-word) ---------- */
 
 export function SightingStage({ location }: { location: GameLocation }) {
-  const { team, hints, scans } = useGame();
+  const { team, hints, scans, words } = useGame();
   const [value, setValue] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   const solved = team
     ? scans.some((s) => s.teamId === team.id && s.locationId === location.id)
     : false;
   const hasHint = hints.some((h) => h.locationId === location.id);
+  const word = words[location.id];
 
-  const submit = () => {
-    if (!team) return;
+  const submit = async () => {
+    if (!team || busy) return;
     if (!value.trim()) {
       setError("Type the one word that differs.");
       return;
     }
-    const answer = store.submitSpotDiff(team.id, location.id, value);
-    if (answer.correct) {
-      setError(null);
-      setValue("");
-      return;
+    setBusy(true);
+    try {
+      const res = await store.submitSpotDiff(team.id, location.id, value);
+      if (res.ok && res.correct) {
+        setError(null);
+        setValue("");
+        return;
+      }
+      setError(
+        res.ok
+          ? "That word does not match. Compare the two images again."
+          : res.message,
+      );
+    } finally {
+      setBusy(false);
     }
-    setError("That word does not match. Compare the two images again.");
   };
 
   return (
@@ -174,10 +185,10 @@ export function SightingStage({ location }: { location: GameLocation }) {
             Evidence recovered
           </p>
           <p className="mt-2 font-mono text-3xl font-black tracking-[0.24em] text-leaf">
-            {location.word}
+            {word?.word ?? "?????"}
           </p>
           <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-relaxed text-fog">
-            {location.wordClue}
+            {word?.wordClue}
           </p>
         </Panel>
       ) : (
@@ -210,8 +221,8 @@ export function SightingStage({ location }: { location: GameLocation }) {
                 {error}
               </p>
             )}
-            <Btn onClick={submit} className="w-full">
-              Verify word
+            <Btn onClick={submit} disabled={busy} className="w-full">
+              {busy ? "Checking..." : "Verify word"}
             </Btn>
           </div>
         </Panel>

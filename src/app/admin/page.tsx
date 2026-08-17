@@ -53,17 +53,25 @@ export default function AdminPage() {
 function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const submit = () => {
+  const submit = async () => {
+    if (busy) return;
     if (!code.trim()) {
       setError("Enter the control code.");
       return;
     }
-    if (!store.adminLogin(code)) {
-      setError("Wrong code. This login is logged.");
-      return;
+    setBusy(true);
+    try {
+      const ok = await store.adminLogin(code);
+      if (!ok) {
+        setError("Wrong code. This login is logged.");
+        return;
+      }
+      onAuthed();
+    } finally {
+      setBusy(false);
     }
-    onAuthed();
   };
 
   return (
@@ -94,8 +102,8 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
             {error}
           </p>
         )}
-        <Btn onClick={submit} className="w-full">
-          Unlock control
+        <Btn onClick={submit} disabled={busy} className="w-full">
+          {busy ? "Checking..." : "Unlock control"}
         </Btn>
       </div>
     </div>
@@ -727,8 +735,9 @@ function SettingsTab({ db }: { db: DB }) {
 /* ---------- danger ---------- */
 
 function DangerTab({ db }: { db: DB }) {
-  const exportJSON = () => {
-    const blob = new Blob([store.exportJSON()], { type: "application/json" });
+  const exportJSON = async () => {
+    const json = await store.exportJSON();
+    const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

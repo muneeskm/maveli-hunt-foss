@@ -17,6 +17,10 @@ export function useGame() {
     hints: team ? store.teamHints(team.id) : [],
     broadcasts: store.broadcasts(),
     locations: store.locations(),
+    words: team ? store.collectedWords(team.id) : {},
+    leaderboard: store.leaderboard(),
+    gateLockSeconds: store.gateLockSeconds(),
+    sessionPending: store.sessionPending(),
     refresh: force,
   };
 }

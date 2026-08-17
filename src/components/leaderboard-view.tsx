@@ -2,29 +2,26 @@
 
 import { Trophy } from "@phosphor-icons/react";
 import { Chip, Panel, SectionLabel } from "@/components/ui";
-import { rankLabel, ranking } from "@/lib/game";
-import { store } from "@/lib/store";
+import { rankLabel } from "@/lib/game";
 import { cn, formatTime } from "@/lib/utils";
-import type { Team } from "@/lib/types";
+import type { LeaderboardRow } from "@/lib/types";
 
+/*
+ * Leaderboard. Rows come precomputed from the store (in real mode the
+ * server ranks with ALL teams' scans/answers - the client never holds other
+ * teams' data - and in demo mode the store computes the same ranking).
+ */
 export function LeaderboardView({
-  teams,
-  scans,
-  answers,
-  locations,
+  rows,
   winnerTeamId,
   highlightTeamId,
   showAll,
 }: {
-  teams: Team[];
-  scans: ReturnType<typeof store.teamScans>;
-  answers: ReturnType<typeof store.teamAnswers>;
-  locations: ReturnType<typeof store.locations>;
+  rows: LeaderboardRow[];
   winnerTeamId: string | null;
   highlightTeamId?: string;
   showAll?: boolean;
 }) {
-  const rows = ranking(teams, scans, answers, locations, winnerTeamId);
   const visible = showAll ? rows : rows.slice(0, 10);
 
   return (

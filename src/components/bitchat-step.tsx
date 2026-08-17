@@ -23,17 +23,21 @@ export function BitchatStep() {
 
   if (!team) return null;
 
-  const submit = () => {
+  const submit = async () => {
     if (!code.trim()) {
       setError("Enter the code from Mavelli's message.");
       return;
     }
-    const answer = store.submitBitchat(team.id, code);
-    if (answer.correct) {
+    const res = await store.submitBitchat(team.id, code);
+    if (res.ok && res.correct) {
       setError(null);
       return;
     }
-    setError("That code does not match the transmission. Re-read the BitChat message.");
+    setError(
+      res.ok
+        ? "That code does not match the transmission. Re-read the BitChat message."
+        : res.message,
+    );
   };
 
   if (solved) {

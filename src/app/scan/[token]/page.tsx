@@ -50,9 +50,10 @@ export default function ScanPage() {
   const [view, setView] = useState<ScanView>({ kind: "checking" });
   const [sosAt, setSosAt] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
-  const decided = useRef<{ token: string; view: ScanView } | null>(null);
+  const decided = useRef<{ token: string } | null>(null);
+  const inFlight = useRef<string | null>(null);
 
-  // Decide the view once per token. The ref guard makes the decision
+  // Decide the view once per token. The ref guards make the decision
   // idempotent across StrictMode double-effects AND re-renders (the team
   // object identity changes on every render, so the effect must not re-run
   // its decision or it would clobber later view transitions like the alarm).
@@ -61,38 +62,44 @@ export default function ScanPage() {
       router.replace(`/?scan=${encodeURIComponent(`/scan/${token}`)}`);
       return;
     }
-    if (decided.current && decided.current.token === token) return;
+    if (decided.current?.token === token) return;
+    if (inFlight.current === token) return;
+    inFlight.current = token;
 
+    const run = async () => {
+      const loc = store.locationByToken(token);
+      if (!loc) {
+        setView({ kind: "unknown" });
+        decided.current = { token };
+        return;
+      }
+      // The server records the scan (first scan per team wins) and, for a
+      // sighting, returns the word the team just earned - the client never
+      // knows it in advance.
+      const res = await store.recordScan(team.id, token);
 
-    const loc = store.locationByToken(token);
-    if (!loc) {
-      const v: ScanView = { kind: "unknown" };
-      decided.current = { token, view: v };
+      let v: ScanView;
+      if (loc.type === "sighting") {
+        v = {
+          kind: "sighting",
+          word: res.ok && res.word ? res.word : "",
+          wordClue: res.ok && res.wordClue ? res.wordClue : "",
+          name: loc.name,
+          order: loc.order,
+          duplicate: !res.ok,
+        };
+      } else if (loc.type === "sos") {
+        v = res.ok ? { kind: "sos-locking" } : { kind: "sos-dup" };
+        if (v.kind === "sos-locking") setSosAt(Date.now());
+      } else {
+        v = { kind: "final", duplicate: !res.ok };
+      }
+
+      decided.current = { token };
       setView(v);
-      return;
-    }
+    };
 
-    const res = store.recordScan(team.id, token);
-
-    let v: ScanView;
-    if (loc.type === "sighting") {
-      v = {
-        kind: "sighting",
-        word: loc.word,
-        wordClue: loc.wordClue,
-        name: loc.name,
-        order: loc.order,
-        duplicate: !res.ok,
-      };
-    } else if (loc.type === "sos") {
-      v = res.ok ? { kind: "sos-locking" } : { kind: "sos-dup" };
-      if (v.kind === "sos-locking") setSosAt(Date.now());
-    } else {
-      v = { kind: "final", duplicate: !res.ok };
-    }
-
-    decided.current = { token, view: v };
-    setView(v);
+    void run();
   }, [team, token, router]);
 
   // SOS drama: lock the signal for sosLockSeconds, then raise the alarm.

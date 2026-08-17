@@ -22,7 +22,7 @@ type IntroStep = "intro" | "join";
 export default function HomePage() {
   const router = useRouter();
   const mounted = useMounted();
-  const { team } = useGame();
+  const { team, sessionPending } = useGame();
   const [step, setStep] = useState<IntroStep>("intro");
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const [created, setCreated] = useState<Team | null>(null);
@@ -64,6 +64,19 @@ export default function HomePage() {
 
   if (!mounted) return null;
   if (team && !created) return null; // redirecting to tracker
+  if (!team && sessionPending) {
+    // real mode: session code exists, first state poll still loading
+    return (
+      <div className="flex min-h-[100dvh] items-center justify-center bg-ink">
+        <div className="text-center">
+          <span className="anim-blink mx-auto block h-2 w-2 rounded-full bg-leaf" />
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
+            Syncing your team...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (step === "intro") {
     return <TrackerIntro onDone={skipIntro} />;
@@ -92,24 +105,39 @@ function JoinScreen({
   const [code, setCode] = useState("");
   const [codeError, setCodeError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const create = () => {
+  const create = async () => {
+    if (busy) return;
     if (!teamName.trim() || !member1.trim() || !member2.trim()) {
       setFormError("Team name and both member names are required.");
       return;
     }
-    const team = store.createTeam(teamName, member1, member2);
-    store.login(team.code);
-    setCreated(team);
+    setBusy(true);
+    try {
+      const team = await store.createTeam(teamName, member1, member2);
+      await store.login(team.code);
+      setCreated(team);
+    } catch (e) {
+      setFormError((e as Error).message ?? "Could not register. Try again.");
+    } finally {
+      setBusy(false);
+    }
   };
 
-  const join = () => {
-    const team = store.login(code);
-    if (!team) {
-      setCodeError("No team found with that code. Check with your partner.");
-      return;
+  const join = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const team = await store.login(code);
+      if (!team) {
+        setCodeError("No team found with that code. Check with your partner.");
+        return;
+      }
+      onDone();
+    } finally {
+      setBusy(false);
     }
-    onDone();
   };
 
   const copy = async () => {
@@ -233,8 +261,8 @@ function JoinScreen({
                 {formError}
               </p>
             )}
-            <Btn onClick={create} className="w-full">
-              <Users size={18} /> Register team
+            <Btn onClick={create} disabled={busy} className="w-full">
+              <Users size={18} /> {busy ? "Registering..." : "Register team"}
             </Btn>
           </div>
         ) : (
@@ -255,8 +283,8 @@ function JoinScreen({
                 {codeError}
               </p>
             )}
-            <Btn onClick={join} className="w-full">
-              Sign in <ArrowRight size={18} />
+            <Btn onClick={join} disabled={busy} className="w-full">
+              {busy ? "Signing in..." : "Sign in"} <ArrowRight size={18} />
             </Btn>
           </div>
         )}

@@ -98,3 +98,13 @@ export interface LeaderboardRow {
   correctReconstructionAt: number | null;
   rank: number;
 }
+
+/* Result of an answer submission (server-verified in real mode). */
+export type SubmitResult =
+  | { ok: true; correct: boolean; answer: Answer; lockSeconds?: number }
+  | { ok: false; message: string; lockSeconds?: number };
+
+/* Result of a QR scan (server-recorded in real mode). */
+export type ScanResult =
+  | { ok: false; reason: "no_team" | "unknown" | "duplicate" | "error" }
+  | { ok: true; location: GameLocation; word?: string; wordClue?: string };

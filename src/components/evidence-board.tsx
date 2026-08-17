@@ -5,7 +5,7 @@ import { Panel, SectionLabel } from "@/components/ui";
 import { useGame } from "@/hooks/use-game";
 
 export function EvidenceBoard({ compact }: { compact?: boolean }) {
-  const { team, scans, locations } = useGame();
+  const { team, scans, locations, words } = useGame();
   if (!team) return null;
 
   const sightings = locations
@@ -39,10 +39,10 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
               </span>
               <div className="min-w-0 flex-1">
                 <div className="font-mono text-sm font-bold tracking-[0.2em] text-mist">
-                  {done ? loc.word : "?????"}
+                  {done ? words[loc.id]?.word ?? "?????" : "?????"}
                 </div>
                 <div className="mt-0.5 text-xs leading-relaxed text-fog">
-                  {done ? loc.wordClue : "Evidence not recovered"}
+                  {done ? words[loc.id]?.wordClue ?? "Evidence not recovered" : "Evidence not recovered"}
                 </div>
               </div>
               <span
