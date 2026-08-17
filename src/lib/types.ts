@@ -7,13 +7,14 @@ export interface GameLocation {
   order: number; // sighting order 1-5; sos/final use 6/7
   type: LocationType;
   name: string;
-  token: string; // QR secret, encoded in the scan URL
-  word: string; // sighting only
+  token: string; // QR secret, encoded in the scan URL (sos/final only)
+  word: string; // sighting only: the ONE word that differs between images
   wordClue: string; // contextual hint about the word's role in the final instruction
-  photoUrl: string; // sighting only
+  photoUrl: string; // sighting only: the site's (modified) copy of the image
+  mapillaryUrl: string; // sighting only: link to the original Mapillary view
   clueText: string;
   hintText: string; // Level 1 hint, admin-pushed
-  mapillaryNote?: string; // shown on the Mapillary sighting only
+  mapillaryNote?: string; // extra guidance for the Mapillary comparison
 }
 
 export interface Team {
@@ -31,11 +32,12 @@ export interface Scan {
   at: number;
 }
 
-export type AnswerKind = "bitchat" | "reconstruction" | "manual";
+export type AnswerKind = "spotdiff" | "bitchat" | "reconstruction" | "manual";
 
 export interface Answer {
   teamId: string;
   kind: AnswerKind;
+  locationId?: string; // which sighting a spotdiff submission refers to
   value: string;
   correct: boolean;
   at: number;

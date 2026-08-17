@@ -56,7 +56,13 @@ export default function TrackerPage() {
       {stage.key === "rescued" && <RescuedStage />}
       {stage.key === "ended" && <EndedStage />}
 
-      <div className="mt-8 text-center">
+      <div className="mt-8 flex flex-col items-center gap-2 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/foss-logo.png"
+          alt="FOSS CCE"
+          className="h-8 w-8 rounded-full object-cover"
+        />
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-moss">
           FOSS Mavelli Hunt
         </p>

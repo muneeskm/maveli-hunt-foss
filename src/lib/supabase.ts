@@ -7,7 +7,7 @@ import { createClient } from "@supabase/supabase-js";
  *
  * The demo store (lib/store.ts) is the single seam: every page calls `store.*`.
  * The Supabase-backed implementation mirrors those methods against the tables
- * in supabase/schema.sql and subscribes to realtime channels for scans,
+ * in schema.db (repo root) and subscribes to realtime channels for scans,
  * answers, broadcasts, and phase changes.
  */
 

@@ -8,7 +8,6 @@ import {
   Check,
   DownloadSimple,
   Flag,
-  Leaf,
   Phone,
   Printer,
   SignOut,
@@ -69,7 +68,12 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
 
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-ink px-6 text-center">
-      <Leaf size={36} weight="fill" className="text-leaf" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/foss-logo.png"
+        alt="FOSS CCE"
+        className="h-14 w-14 rounded-full object-cover"
+      />
       <h1 className="mt-3 text-xl font-black uppercase tracking-tight text-mist">
         Mavelli control
       </h1>
@@ -116,7 +120,12 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       <header className="sticky top-0 z-40 border-b border-line bg-ink/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <Leaf size={20} weight="fill" className="text-leaf" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/foss-logo.png"
+              alt="FOSS CCE"
+              className="h-8 w-8 rounded-full object-cover"
+            />
             <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-mist sm:block">
               Mavelli control
             </span>
@@ -488,6 +497,9 @@ function ProgressDots({ n, total }: { n: number; total: number }) {
 
 function QRTab({ locations }: { locations: ReturnType<typeof store.locations> }) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
+  // Day 1 sightings use typed words now - only the SOS poster and the final
+  // marker carry QR codes.
+  const qrLocations = locations.filter((l) => l.type !== "sighting");
 
   return (
     <div className="space-y-4">
@@ -496,7 +508,9 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
           <div>
             <SectionHeader>QR print sheet</SectionHeader>
             <p className="mt-1 text-sm text-fog">
-              One QR per marker. Print this sheet (A4) and cut out each card.
+              Only the SOS poster and the final marker carry QR codes (Day 1
+              sightings use typed words). Print this sheet (A4) and cut out
+              each card.
             </p>
           </div>
           <Btn onClick={() => window.print()}>
@@ -506,7 +520,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
       </Panel>
 
       <div className="print-sheet grid grid-cols-2 gap-3">
-        {locations.map((l) => (
+        {qrLocations.map((l) => (
           <div key={l.id} className="print-card panel p-4 text-center">
             <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-mist">
               {l.name}
@@ -519,11 +533,6 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
               fgColor="#070907"
               bgColor="#ffffff"
             />
-            {l.type === "sighting" && (
-              <p className="mt-2 font-mono text-xs font-bold tracking-[0.18em] text-leaf">
-                WORD: {l.word}
-              </p>
-            )}
           </div>
         ))}
       </div>

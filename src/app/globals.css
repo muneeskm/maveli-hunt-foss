@@ -11,12 +11,13 @@
   --color-mist: #f2f5f2;
   --color-fog: #9aa79c;
   --color-moss: #52685a;
-  --color-leaf: #00e676;
-  --color-leaf-dim: #0fb864;
-  --color-leaf-deep: #1a7a43;
+  /* club identity green (sampled from the FOSS CCE logo) */
+  --color-leaf: #3ea538;
+  --color-leaf-dim: #2e7d2b;
+  --color-leaf-deep: #1f5a1e;
 
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
+  --font-sans: "Space Grotesk Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 html {
@@ -82,7 +83,7 @@ body {
 }
 
 .btn-primary:active {
-  background: #35f08f;
+  background: #4fb84a;
 }
 
 .btn-ghost {
@@ -135,15 +136,31 @@ body {
 
 /* ---------- animations ---------- */
 
-@keyframes mh-ping {
+/* the avatar's wander across the real campus map (2.5D plane) */
+@keyframes mh-track {
   0% {
-    transform: scale(0.35);
-    opacity: 0.9;
+    transform: translate(46%, 90%);
   }
-  80%,
+  14% {
+    transform: translate(30%, 72%);
+  }
+  28% {
+    transform: translate(20%, 45%);
+  }
+  42% {
+    transform: translate(55%, 30%);
+  }
+  56% {
+    transform: translate(75%, 16%);
+  }
+  70% {
+    transform: translate(70%, 55%);
+  }
+  84% {
+    transform: translate(45%, 68%);
+  }
   100% {
-    transform: scale(2.6);
-    opacity: 0;
+    transform: translate(52%, 85%);
   }
 }
 
@@ -220,8 +237,47 @@ body {
   }
 }
 
-.anim-ping-ring {
-  animation: mh-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+.intro-track {
+  animation: mh-track 9s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+/* 2.5D extruded-board scene: grid floor + tilted map slab with a front edge */
+.map-tilt {
+  perspective: 1100px;
+  perspective-origin: 50% 32%;
+  transform-style: preserve-3d;
+}
+
+.map-floor {
+  position: absolute;
+  inset: 0;
+  background-color: #0b120c;
+  background-image:
+    linear-gradient(rgba(62, 165, 56, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 165, 56, 0.08) 1px, transparent 1px);
+  background-size: 26px 26px;
+  transform: rotateX(56deg);
+  transform-origin: 50% 100%;
+}
+
+.map-board {
+  position: absolute;
+  inset: 5% 4% 11%;
+  transform: rotateX(38deg) scale(1.06);
+  transform-origin: 50% 100%;
+  transform-style: preserve-3d;
+}
+
+.map-thickness {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 20px;
+  transform-origin: top center;
+  transform: rotateX(90deg);
+  background: linear-gradient(to bottom, #1a3b1e, #0d2210);
+  border: 1px solid rgba(62, 165, 56, 0.22);
 }
 
 .anim-blink {
@@ -268,7 +324,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim-ping-ring,
+  .intro-track,
   .anim-blink,
   .anim-flicker,
   .anim-rise,

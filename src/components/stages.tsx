@@ -6,7 +6,6 @@ import {
   ArrowRight,
   Check,
   Copy,
-  Detective,
   InstagramLogo,
   Leaf,
   MapPin,
@@ -14,6 +13,7 @@ import {
   ShieldWarning,
   Trophy,
   Users,
+  WarningCircle,
 } from "@phosphor-icons/react";
 import { Btn, Panel, SectionLabel } from "@/components/ui";
 import { EvidenceBoard } from "@/components/evidence-board";
@@ -21,6 +21,7 @@ import { BitchatStep } from "@/components/bitchat-step";
 import { ReconstructionGate } from "@/components/gate";
 import { QRScannerButton } from "@/components/qr-scanner";
 import { useGame } from "@/hooks/use-game";
+import { store } from "@/lib/store";
 import type { GameLocation } from "@/lib/types";
 
 /* ---------- team badge ---------- */
@@ -93,42 +94,128 @@ export function StandbyStage() {
   );
 }
 
-/* ---------- Day 1 sighting ---------- */
+/* ---------- Day 1 sighting (Mapillary diff-word) ---------- */
 
 export function SightingStage({ location }: { location: GameLocation }) {
-  const { hints } = useGame();
+  const { team, hints, scans } = useGame();
+  const [value, setValue] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const solved = team
+    ? scans.some((s) => s.teamId === team.id && s.locationId === location.id)
+    : false;
   const hasHint = hints.some((h) => h.locationId === location.id);
+
+  const submit = () => {
+    if (!team) return;
+    if (!value.trim()) {
+      setError("Type the one word that differs.");
+      return;
+    }
+    const answer = store.submitSpotDiff(team.id, location.id, value);
+    if (answer.correct) {
+      setError(null);
+      setValue("");
+      return;
+    }
+    setError("That word does not match. Compare the two images again.");
+  };
 
   return (
     <div className="space-y-5">
       <SectionLabel>{location.name}</SectionLabel>
 
-      <div className="overflow-hidden rounded-2xl border border-line bg-surface">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={location.photoUrl}
-          alt={location.name}
-          className="aspect-[4/3] w-full object-cover"
-        />
-      </div>
-
-      {location.mapillaryNote && (
-        <Panel className="p-4">
-          <div className="flex items-center gap-2">
-            <MapPin size={16} weight="fill" className="text-leaf" />
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-leaf">
-              Mapillary
-            </span>
-          </div>
-          <p className="mt-2 text-sm leading-relaxed text-fog">
-            {location.mapillaryNote}
-          </p>
-        </Panel>
-      )}
-
       <Panel className="p-4">
         <p className="text-[15px] leading-relaxed text-mist">{location.clueText}</p>
       </Panel>
+
+      <Panel className="p-4">
+        <div className="flex items-center gap-2">
+          <MapPin size={16} weight="fill" className="shrink-0 text-leaf" />
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-leaf">
+            Mapillary view
+          </span>
+        </div>
+        <p className="mt-2 text-sm leading-relaxed text-fog">
+          {location.mapillaryNote ??
+            "Open the Mapillary view of this spot. It is the original - one word was changed in our copy."}
+        </p>
+        <a
+          href={location.mapillaryUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="btn btn-ghost mt-4 w-full"
+        >
+          <MapPin size={18} /> Open Mapillary view
+        </a>
+      </Panel>
+
+      <div>
+        <div className="mb-1.5 flex items-center justify-between">
+          <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+            This site&apos;s copy
+          </span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-moss">
+            One word differs
+          </span>
+        </div>
+        <div className="overflow-hidden rounded-2xl border border-line bg-surface">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={location.photoUrl}
+            alt={`${location.name} - site copy`}
+            className="aspect-[4/3] w-full object-cover"
+          />
+        </div>
+      </div>
+
+      {solved ? (
+        <Panel className="border-leaf/40 p-5 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-leaf">
+            Evidence recovered
+          </p>
+          <p className="mt-2 font-mono text-3xl font-black tracking-[0.24em] text-leaf">
+            {location.word}
+          </p>
+          <p className="mx-auto mt-2 max-w-[36ch] text-sm leading-relaxed text-fog">
+            {location.wordClue}
+          </p>
+        </Panel>
+      ) : (
+        <Panel className="p-4">
+          <p className="font-semibold text-mist">Type the word that differs</p>
+          <p className="mt-1 text-sm leading-relaxed text-fog">
+            Compare the Mapillary view with this site&apos;s copy. Enter the one
+            word that was changed.
+          </p>
+          <div className="mt-3 space-y-3">
+            <input
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+                setError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submit();
+              }}
+              className="field text-center font-mono text-lg font-bold uppercase tracking-[0.24em]"
+              placeholder="THE WORD"
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellCheck={false}
+              aria-label="The word that differs"
+            />
+            {error && (
+              <p className="flex items-start gap-2 text-sm text-red-300">
+                <WarningCircle size={18} className="mt-0.5 shrink-0" />
+                {error}
+              </p>
+            )}
+            <Btn onClick={submit} className="w-full">
+              Verify word
+            </Btn>
+          </div>
+        </Panel>
+      )}
 
       {hasHint && (
         <Panel className="border-leaf/40 p-4">
@@ -140,27 +227,6 @@ export function SightingStage({ location }: { location: GameLocation }) {
       )}
 
       <EvidenceBoard />
-
-      <Panel className="p-4">
-        <div className="flex items-center gap-2">
-          <Detective size={18} className="shrink-0 text-leaf" />
-          <p className="font-semibold text-mist">
-            Find evidence marker {String(location.order).padStart(2, "0")}
-          </p>
-        </div>
-        <p className="mt-1 text-sm leading-relaxed text-fog">
-          A marker with the same design as this photo is placed somewhere in
-          the area. Scan the QR on it to recover the evidence.
-        </p>
-        <div className="mt-4">
-          <QRScannerButton />
-        </div>
-        {location.order === 1 && (
-          <p className="mt-3 text-xs leading-relaxed text-moss">
-            Use the Mapillary view to identify the exact spot first.
-          </p>
-        )}
-      </Panel>
     </div>
   );
 }

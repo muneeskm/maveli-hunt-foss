@@ -1,38 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowRight,
-  Check,
-  Copy,
-  Leaf,
-  MapPin,
-  Users,
-  WarningCircle,
-} from "@phosphor-icons/react";
+import { ArrowRight, Check, Copy, Users, WarningCircle } from "@phosphor-icons/react";
 import { Btn, Field, Panel } from "@/components/ui";
+import { TrackerIntro } from "@/components/tracker-intro";
 import { useGame, useMounted } from "@/hooks/use-game";
 import { store } from "@/lib/store";
 import type { Team } from "@/lib/types";
 
 const INTRO_SEEN_KEY = "mh:intro-seen";
-const LOCATING_MS = 3200;
-const NOTFOUND_MS = 1400;
-const WARNING_MS = 2600;
 
-type IntroStep = "locating" | "notfound" | "warning" | "join";
+type IntroStep = "intro" | "join";
 
 /*
- * Landing page. First visit: the tracker pings Mavelli's last known position,
- * reports NOT FOUND, raises the warning, then hands over to "Join the search".
- * Returning members (or the same phone) skip straight to the join screen.
+ * Landing page. First visit plays the tracker sequence: a campus map with
+ * Mavelli's avatar wandering, then the signal goes unstable, then
+ * "WARNING: LOCATION NOT FOUND" overlays the map. Returning members (or the
+ * same phone) skip straight to "Join the search".
  */
 export default function HomePage() {
   const router = useRouter();
   const mounted = useMounted();
   const { team } = useGame();
-  const [step, setStep] = useState<IntroStep>("locating");
+  const [step, setStep] = useState<IntroStep>("intro");
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const [created, setCreated] = useState<Team | null>(null);
 
@@ -49,33 +40,18 @@ export default function HomePage() {
     if (mounted && team && !created) router.replace("/tracker");
   }, [mounted, team, created, router]);
 
-  // Intro sequencing; returning phones skip it.
+  // Returning phones skip the intro sequence.
   useEffect(() => {
-    if (step === "locating" || step === "notfound" || step === "warning") {
-      if (typeof window !== "undefined" && window.sessionStorage.getItem(INTRO_SEEN_KEY)) {
-        setStep("join");
-        return;
-      }
-    }
-    const timings: Record<Exclude<IntroStep, "join">, number> = {
-      locating: LOCATING_MS,
-      notfound: NOTFOUND_MS,
-      warning: WARNING_MS,
-    };
-    const ms = timings[step as Exclude<IntroStep, "join">];
-    if (!ms) return;
-    const t = window.setTimeout(() => {
-      setStep((s) => (s === "locating" ? "notfound" : s === "notfound" ? "warning" : "join"));
-    }, ms);
-    return () => window.clearTimeout(t);
-  }, [step]);
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) setStep("join");
+  }, []);
 
-  const skipIntro = () => {
+  const skipIntro = useCallback(() => {
     if (typeof window !== "undefined") {
       window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
     }
     setStep("join");
-  };
+  }, []);
 
   const go = (path: string) => router.replace(path);
 
@@ -89,72 +65,8 @@ export default function HomePage() {
   if (!mounted) return null;
   if (team && !created) return null; // redirecting to tracker
 
-  if (step === "locating") {
-    return (
-      <div
-        className="flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center"
-        onClick={skipIntro}
-      >
-        <div className="relative flex h-40 w-40 items-center justify-center">
-          <span className="anim-ping-ring absolute inset-0 rounded-full border-2 border-leaf/40" />
-          <span className="anim-ping-ring absolute inset-0 rounded-full border-2 border-leaf/20 [animation-delay:0.7s]" />
-          <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-leaf/50 bg-ink-3">
-            <span className="anim-blink h-3 w-3 rounded-full bg-leaf" />
-          </div>
-        </div>
-        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-          FOSS Mavelli Hunt
-        </p>
-        <h1 className="mt-2 text-2xl font-black uppercase tracking-tight text-mist">
-          Mavelli tracker
-        </h1>
-        <p className="mt-4 flex items-center gap-1.5 text-sm text-fog">
-          <MapPin size={16} className="text-leaf" /> Last known location:
-          scanning campus...
-        </p>
-      </div>
-    );
-  }
-
-  if (step === "notfound") {
-    return (
-      <div
-        className="flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center"
-        onClick={skipIntro}
-      >
-        <p className="anim-flicker font-mono text-5xl font-black uppercase tracking-[0.18em] text-leaf">
-          Not found!
-        </p>
-        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-          Last signal {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} local
-        </p>
-      </div>
-    );
-  }
-
-  if (step === "warning") {
-    return (
-      <div
-        className="flex min-h-[100dvh] flex-col items-center justify-center px-6 text-center"
-        onClick={skipIntro}
-      >
-        <div className="hazard h-2 w-full max-w-xs rounded-full" />
-        <WarningCircle
-          size={40}
-          weight="fill"
-          className="anim-blink mt-8 text-leaf"
-        />
-        <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-          Warning
-        </p>
-        <h1 className="mt-2 text-2xl font-black uppercase tracking-tight text-mist">
-          Mavelli is missing
-        </h1>
-        <p className="mx-auto mt-4 max-w-[34ch] text-sm leading-relaxed text-fog">
-          A search has been opened. Teams are forming now.
-        </p>
-      </div>
-    );
+  if (step === "intro") {
+    return <TrackerIntro onDone={skipIntro} />;
   }
 
   // ---- join ----
@@ -214,7 +126,12 @@ function JoinScreen({
   if (created) {
     return (
       <div className="flex min-h-[100dvh] flex-col items-center justify-center px-6 py-10 text-center">
-        <Leaf size={36} weight="fill" className="text-leaf" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/foss-logo.png"
+          alt="FOSS CCE"
+          className="h-14 w-14 rounded-full object-cover"
+        />
         <h1 className="mt-3 text-2xl font-black uppercase tracking-tight text-mist">
           Team registered
         </h1>
@@ -253,7 +170,12 @@ function JoinScreen({
   return (
     <div className="flex min-h-[100dvh] flex-col justify-center px-5 py-10">
       <div className="mx-auto w-full max-w-sm">
-        <Leaf size={34} weight="fill" className="text-leaf" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/foss-logo.png"
+          alt="FOSS CCE"
+          className="h-12 w-12 rounded-full object-cover"
+        />
         <h1 className="mt-3 text-2xl font-black uppercase tracking-tight text-mist">
           Join the search
         </h1>

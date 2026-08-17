@@ -94,7 +94,7 @@ export function AppShell({
           type="button"
           onClick={() => setContactOpen(true)}
           aria-label="Contact volunteers"
-          className="pointer-events-auto absolute bottom-5 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-leaf text-[#03150a] shadow-lg shadow-leaf/20 active:scale-95"
+          className="pointer-events-auto absolute bottom-5 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-leaf text-[#03150a] active:scale-95"
           style={{ marginBottom: "env(safe-area-inset-bottom)" }}
         >
           <Phone size={24} weight="fill" />

@@ -180,6 +180,38 @@ export const store = {
   teamAnswers(teamId: string): Answer[] {
     return readDB().answers.filter((a) => a.teamId === teamId);
   },
+  /*
+   * Day 1 spot-the-difference submission. The answer is the ONE word that
+   * differs between the Mapillary view and the site's copy of the image.
+   * Case-insensitive; wrong attempts are logged (kind 'spotdiff') so admins
+   * can see who is stuck. A correct answer also records the scan, which
+   * advances the team's stage and fills the evidence board.
+   */
+  submitSpotDiff(teamId: string, locationId: string, value: string): Answer {
+    const db = readDB();
+    const location = seedLocations().find((l) => l.id === locationId);
+    const correct =
+      !!location &&
+      location.word !== "" &&
+      value.trim().toUpperCase() === location.word.toUpperCase();
+    const answer: Answer = {
+      teamId,
+      kind: "spotdiff",
+      locationId,
+      value: value.trim(),
+      correct,
+      at: Date.now(),
+    };
+    db.answers.push(answer);
+    if (correct && location) {
+      const existing = db.scans.find(
+        (s) => s.teamId === teamId && s.locationId === location.id,
+      );
+      if (!existing) db.scans.push({ teamId, locationId: location.id, at: Date.now() });
+    }
+    writeDB(db);
+    return answer;
+  },
   submitBitchat(teamId: string, value: string): Answer {
     const db = readDB();
     const correct =

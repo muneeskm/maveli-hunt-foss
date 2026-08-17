@@ -2,12 +2,20 @@ import type { GameLocation, GameState, Settings } from "./types";
 
 /*
  * PLACEHOLDER CONTENT.
- * Organizers replace words, clues, photos, and the gate answer tomorrow.
- * Real content is loaded directly into Supabase (seed script / SQL) - not through
- * a dashboard editor in v1. Everything below is a functional stand-in.
+ * Organizers replace words, images, Mapillary links, and the gate answer
+ * before the event. Real content is loaded directly into Supabase
+ * (schema.db + seed.sql) - not through a dashboard editor in v1.
  *
- * The 5 words are fragments of a hidden instruction. Scan order (1-5) differs
- * from the gate order, so the evidence board alone cannot answer the gate.
+ * DAY 1 MECHANIC (all sightings):
+ *   Every sighting shows a Mapillary view of a real campus spot. The site
+ *   shows a MODIFIED copy of the same image where ONE word was changed
+ *   (e.g. Mapillary: "Christ College of Engineering" vs site:
+ *   "Christ College of Engineering (Autonomous)"). Teams find the difference
+ *   and TYPE the word ("Autonomous") to recover the evidence.
+ *
+ * The 5 words are fragments of a hidden instruction. Scan order (1-5)
+ * differs from the gate order, so the evidence board alone cannot answer
+ * the gate.
  */
 
 export const SEED_WORDS = ["TEMPLE", "NORTH", "THREE", "BANYAN", "CLOCK"] as const;
@@ -28,68 +36,82 @@ export const seedLocations = (): GameLocation[] => [
     id: "s1",
     order: 1,
     type: "sighting",
-    name: "Sighting 01 - The Mapillary View",
+    name: "Sighting 01 - The Main Gate",
     token: "s1-kappa",
     word: "TEMPLE",
     wordClue: "A place of worship. He is not inside it, but near it.",
-    photoUrl: "https://picsum.photos/seed/mavelli-sighting-1/1200/900",
+    photoUrl: "https://picsum.photos/seed/mavelli-website-1/1200/900",
+    mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_1",
     clueText:
-      "Mavelli was last seen somewhere around the campus. The only image we recovered is a Mapillary street view. Open the Mapillary app or website, find this exact view, and identify the landmark it shows. That is where evidence marker 01 is waiting.",
+      "Mavelli was last seen near the main gate. Open the Mapillary view of this spot, then compare it with the photo on this site. One word has been changed. Type the word that differs to recover the evidence.",
     hintText:
-      "Look for a tall landmark with a distinctive shape. The Mapillary view was captured from a road on the east side of the campus.",
-    mapillaryNote: "This view was captured on Mapillary.",
+      "Look at the signage in the photo. One word on the board is different from the Mapillary capture.",
+    mapillaryNote:
+      "The Mapillary view is the original. The site photo is a modified copy - one word was changed.",
   },
   {
     id: "s2",
     order: 2,
     type: "sighting",
-    name: "Sighting 02",
+    name: "Sighting 02 - The Compass Corner",
     token: "s2-epsilon",
     word: "NORTH",
     wordClue: "A direction. Check a compass before you move on.",
-    photoUrl: "https://picsum.photos/seed/mavelli-sighting-2/1200/900",
+    photoUrl: "https://picsum.photos/seed/mavelli-website-2/1200/900",
+    mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_2",
     clueText:
-      "Mavelli was seen here carrying a small compass. He kept glancing at the needle and muttering about which way to go next.",
-    hintText: "The building on the left faces north. Look at the wall clock's shadow.",
+      "Mavelli was seen here carrying a small compass. Open the Mapillary view of this spot and compare it with the photo here. One word has been changed. Type it to recover the evidence.",
+    hintText: "The direction marker on the wall differs between the two images.",
+    mapillaryNote:
+      "Compare every sign and marker. Only one word differs.",
   },
   {
     id: "s3",
     order: 3,
     type: "sighting",
-    name: "Sighting 03",
+    name: "Sighting 03 - The Arches",
     token: "s3-lambda",
     word: "THREE",
     wordClue: "A small number. Count your steps from the landmark.",
-    photoUrl: "https://picsum.photos/seed/mavelli-sighting-3/1200/900",
+    photoUrl: "https://picsum.photos/seed/mavelli-website-3/1200/900",
+    mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_3",
     clueText:
-      "A student saw Mavelli here counting out loud. Three of something, then a pause, then three again. He seemed to be measuring.",
-    hintText: "Count the arches. Then count the benches in the shade.",
+      "A student saw Mavelli here counting out loud. Open the Mapillary view and compare it with the photo here. One word has been changed. Type it to recover the evidence.",
+    hintText: "The plaque under the arches has one extra word on this site.",
+    mapillaryNote:
+      "The Mapillary view is the original. The site photo is a modified copy - one word was changed.",
   },
   {
     id: "s4",
     order: 4,
     type: "sighting",
-    name: "Sighting 04",
+    name: "Sighting 04 - The Old Tree",
     token: "s4-sigma",
     word: "BANYAN",
     wordClue: "A tree with hanging roots. It shades the courtyard.",
-    photoUrl: "https://picsum.photos/seed/mavelli-sighting-4/1200/900",
+    photoUrl: "https://picsum.photos/seed/mavelli-website-4/1200/900",
+    mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_4",
     clueText:
-      "Mavelli was seen resting in the shade of an old tree. The gardener says he spoke to it like an old friend.",
-    hintText: "Look for the oldest tree on campus. It has more roots than branches.",
+      "Mavelli was seen resting in the shade of an old tree. Open the Mapillary view and compare it with the photo here. One word has been changed. Type it to recover the evidence.",
+    hintText: "The board beside the tree names the species differently in the two images.",
+    mapillaryNote:
+      "The Mapillary view is the original. The site photo is a modified copy - one word was changed.",
   },
   {
     id: "s5",
     order: 5,
     type: "sighting",
-    name: "Sighting 05",
+    name: "Sighting 05 - The Clock Tower",
     token: "s5-tau",
     word: "CLOCK",
     wordClue: "It tells time. It stands tall near the entrance.",
-    photoUrl: "https://picsum.photos/seed/mavelli-sighting-5/1200/900",
+    photoUrl: "https://picsum.photos/seed/mavelli-website-5/1200/900",
+    mapillaryUrl: "https://www.mapillary.com/app/?pKey=REPLACE_WITH_REAL_VIEW_5",
     clueText:
-      "The last sighting. Mavelli stood in front of this landmark for a long time, checked his watch against it, and then walked away into the dark.",
-    hintText: "It chimes every hour, and it faces the main gate.",
+      "The last sighting. Mavelli stood in front of this landmark for a long time, checking his watch against it. Open the Mapillary view and compare it with the photo here. One word has been changed. Type it to recover the final evidence.",
+    hintText: "The inscription at the base of the tower differs by one word.",
+    mapillaryNote:
+      "The Mapillary view is the original. The site photo is a modified copy - one word was changed.",
   },
   {
     id: "sos",
@@ -100,6 +122,7 @@ export const seedLocations = (): GameLocation[] => [
     word: "",
     wordClue: "",
     photoUrl: "",
+    mapillaryUrl: "",
     clueText:
       "Search this block. Somewhere inside it, Mavelli's emergency signal is broadcasting. Find the transmission poster and scan the code on it.",
     hintText: "Check the notice boards near the stairwells.",
@@ -113,6 +136,7 @@ export const seedLocations = (): GameLocation[] => [
     word: "",
     wordClue: "",
     photoUrl: "",
+    mapillaryUrl: "",
     clueText:
       "This is where Mavelli is hiding. Reconstruct the instruction from the five words you collected and prove it at the gate.",
     hintText: "",
@@ -137,5 +161,5 @@ export const seedSettings = (): Settings => ({
   adminCode: "mavelli-admin", // TODO: change for the event
   sosLockSeconds: 4,
   mapillaryNote:
-    "Open Mapillary (app or mapillary.com), search this campus, and find the view that matches the photo above.",
+    "Open Mapillary (app or mapillary.com) and find the view for this spot. Compare it with the photo on this site and type the one word that differs.",
 });
