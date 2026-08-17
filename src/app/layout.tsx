@@ -1,8 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/space-grotesk";
-import "@fontsource-variable/jetbrains-mono";
-import "@fontsource/press-start-2p";
+import { Bricolage_Grotesque, Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage-grotesque",
+  weight: ["800"],
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  variable: "--font-roboto-mono",
+  weight: ["400", "500"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "The Maveli Files",
@@ -16,7 +35,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#070907",
+  themeColor: "#fcfaf5",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -28,8 +47,13 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={`${bricolageGrotesque.variable} ${inter.variable} ${robotoMono.variable}`}
+    >
+      <body className="bg-[#fcfaf5] text-[#1a3300] font-sans antialiased selection:bg-[#ffe95c] selection:text-[#1a3300]">
+        {children}
+      </body>
     </html>
   );
 }

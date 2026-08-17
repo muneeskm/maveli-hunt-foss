@@ -33,11 +33,11 @@ export default function TrackerPage() {
   if (!team) {
     if (sessionPending) {
       return (
-        <div className="flex min-h-[100dvh] items-center justify-center bg-ink">
+        <div className="flex min-h-[100dvh] items-center justify-center bg-[#fcfaf5]">
           <div className="text-center">
-            <span className="anim-blink mx-auto block h-2 w-2 rounded-full bg-leaf" />
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-              Syncing your team...
+            <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#1a3300]" />
+            <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+              Syncing squad...
             </p>
           </div>
         </div>
@@ -83,9 +83,9 @@ export default function TrackerPage() {
         <img
           src="/maveli-logo.png"
           alt="The Maveli Files"
-          className="h-10 w-10 rounded-full border border-line-2 object-cover shadow-sm"
+          className="h-10 w-10 rounded-full border border-[#b6b6b6] object-cover shadow-sm"
         />
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-moss">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[#666666]">
           The Maveli Files
         </p>
       </div>

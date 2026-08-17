@@ -9,14 +9,22 @@ import {
   Info,
   Key,
   ShieldCheck,
+  Sparkle,
   TreeStructure,
   UserPlus,
   Users,
   Warning,
   WarningCircle,
-  X,
 } from "@phosphor-icons/react";
-import { Btn, Chip, Field, Panel, SelectField } from "@/components/ui";
+import {
+  Btn,
+  Chip,
+  Field,
+  HighlightWord,
+  Panel,
+  SelectField,
+  TaglineBadge,
+} from "@/components/ui";
 import { TrackerIntro } from "@/components/tracker-intro";
 import { NodeTreeTimeline } from "@/components/node-tree-timeline";
 import { useGame, useMounted } from "@/hooks/use-game";
@@ -36,20 +44,16 @@ export default function HomePage() {
   const [returnTo, setReturnTo] = useState<string | null>(null);
   const [created, setCreated] = useState<Team | null>(null);
 
-  // Capture ?scan= backflow target once, client-side.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const scan = new URLSearchParams(window.location.search).get("scan");
     if (scan) setReturnTo(scan);
   }, []);
 
-  // Already signed in on arrival: go straight to the tracker.
-  // Skipped while the just-created team's access-code screen is showing.
   useEffect(() => {
     if (mounted && team && !created) router.replace("/tracker");
   }, [mounted, team, created, router]);
 
-  // Returning phones skip the intro sequence.
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) setStep("join");
@@ -72,14 +76,14 @@ export default function HomePage() {
   };
 
   if (!mounted) return null;
-  if (team && !created) return null; // redirecting to tracker
+  if (team && !created) return null;
   if (!team && sessionPending) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-ink">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#fcfaf5]">
         <div className="text-center">
-          <span className="anim-blink mx-auto block h-2 w-2 rounded-full bg-leaf" />
-          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.24em] text-fog">
-            Syncing your team...
+          <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#1a3300]" />
+          <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+            Syncing squad...
           </p>
         </div>
       </div>
@@ -90,7 +94,6 @@ export default function HomePage() {
     return <TrackerIntro onDone={skipIntro} />;
   }
 
-  // ---- join / registration ----
   return (
     <JoinScreen
       created={created}
@@ -208,47 +211,39 @@ function JoinScreen({
   /* ---------- Post-Registration Success View ---------- */
   if (created) {
     return (
-      <main className="min-h-[100dvh] bg-ink px-4 py-8 sm:px-6 sm:py-12">
+      <main className="min-h-[100dvh] bg-[#fcfaf5] px-4 py-8 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-lg">
           {/* Header */}
           <div className="text-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/maveli-logo.png"
-              alt="The Maveli Files"
-              className="mx-auto h-16 w-16 rounded-full border border-line-2 object-cover shadow-lg shadow-leaf/20"
-            />
-            <div className="mt-3 flex items-center justify-center gap-2">
-              <Chip tone="leaf">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-leaf" />
-                Team Registered
-              </Chip>
-            </div>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-mist sm:text-3xl">
-              Save Your Access Code
+            <TaglineBadge className="mx-auto">
+              <Sparkle weight="fill" size={13} /> SQUAD ENROLLED
+            </TaglineBadge>
+
+            <h1 className="font-display mt-4 text-3xl font-extrabold text-[#1a3300] sm:text-4xl leading-tight">
+              Save your squad <HighlightWord>credentials.</HighlightWord>
             </h1>
-            <p className="mt-1 text-sm text-fog">
-              Your squad is locked in for The Maveli Files.
+            <p className="mt-2 font-sans text-base text-[#1a3300]/80">
+              Your squad is officially locked in for The Maveli Files.
             </p>
           </div>
 
-          {/* Access Code Box */}
-          <div className="mt-6 rounded-2xl border-2 border-leaf/60 bg-surface/95 p-6 text-center shadow-xl shadow-leaf/10 backdrop-blur-md">
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-fog">
-              Team Access Code
+          {/* Access Code Box (Highlighter Yellow Sticky Note) */}
+          <div className="mt-6 rounded-[14px] border border-[rgba(26,51,0,0.2)] bg-[#ffe95c] p-6 text-center shadow-sm">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+              Squad Access Code
             </p>
             <div className="mt-3 flex items-center justify-center gap-3">
-              <span className="font-mono text-3xl font-black tracking-[0.28em] text-leaf sm:text-4xl">
+              <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#1a3300] sm:text-5xl">
                 {created.code}
               </span>
               <button
                 type="button"
                 onClick={copy}
                 aria-label="Copy access code"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-line-2 bg-ink-3 text-fog transition-colors hover:border-leaf hover:text-mist active:scale-95"
+                className="flex h-11 w-11 items-center justify-center rounded-[6px] border border-[#1a3300] bg-white text-[#1a3300] hover:bg-[#fcfaf5] active:translate-y-[1px] transition-all"
               >
                 {copied ? (
-                  <Check size={20} className="text-leaf" weight="bold" />
+                  <Check size={20} className="text-[#1a3300]" weight="bold" />
                 ) : (
                   <Copy size={20} />
                 )}
@@ -256,44 +251,42 @@ function JoinScreen({
             </div>
 
             {copied && (
-              <p className="mt-2 font-mono text-[11px] font-semibold text-leaf">
-                Access code copied to clipboard!
+              <p className="mt-2 font-mono text-xs font-semibold text-[#1a3300]">
+                ✓ Access code copied to clipboard!
               </p>
             )}
 
             {/* Critical Save Notice */}
-            <div className="mt-5 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-left text-xs leading-relaxed text-amber-200/90">
+            <div className="mt-5 rounded-[8px] border border-[rgba(26,51,0,0.15)] bg-white/80 p-3.5 text-left text-xs leading-relaxed text-[#1a3300]">
               <div className="flex items-start gap-2.5">
-                <Warning size={18} className="mt-0.5 shrink-0 text-amber-400" weight="fill" />
+                <Warning size={18} className="mt-0.5 shrink-0 text-[#1a3300]" weight="fill" />
                 <p>
-                  <strong className="font-semibold text-amber-100">
-                    Important: Save or screenshot this code now!
-                  </strong>{" "}
-                  Both members will use this code to log in and track the hunt across phones.
+                  <strong>Important: Screenshot or save this code now.</strong>{" "}
+                  Both members will use this code to log into the hunt tracker across their phones.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Team Summary Card */}
-          <Panel className="mt-5 p-5">
-            <div className="flex items-center justify-between border-b border-line pb-3">
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-fog">
+          {/* Team Summary Card (Mint Pastel Surface) */}
+          <Panel tone="mint" className="mt-5">
+            <div className="flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-3">
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]/80">
                 Registered Squad
               </span>
-              <span className="font-semibold text-mist">{created.name}</span>
+              <span className="font-sans text-sm font-bold text-[#1a3300]">{created.name}</span>
             </div>
 
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-line-2/60 bg-ink-3 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-moss">
+              <div className="rounded-[8px] border border-[rgba(26,51,0,0.12)] bg-white/70 p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#1a3300]/70">
                   Member 1 (Lead)
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-mist">
+                <p className="mt-1 font-sans text-sm font-semibold text-[#1a3300]">
                   {created.member1}
                 </p>
                 {(created.member1Sem || created.member1Class) && (
-                  <p className="mt-0.5 font-mono text-xs text-leaf">
+                  <p className="mt-0.5 font-mono text-xs text-[#1a3300]/80">
                     {[created.member1Sem, created.member1Class]
                       .filter(Boolean)
                       .join(" · ")}
@@ -301,15 +294,15 @@ function JoinScreen({
                 )}
               </div>
 
-              <div className="rounded-xl border border-line-2/60 bg-ink-3 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-moss">
+              <div className="rounded-[8px] border border-[rgba(26,51,0,0.12)] bg-white/70 p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#1a3300]/70">
                   Member 2
                 </p>
-                <p className="mt-0.5 text-sm font-semibold text-mist">
+                <p className="mt-1 font-sans text-sm font-semibold text-[#1a3300]">
                   {created.member2}
                 </p>
                 {(created.member2Sem || created.member2Class) && (
-                  <p className="mt-0.5 font-mono text-xs text-leaf">
+                  <p className="mt-0.5 font-mono text-xs text-[#1a3300]/80">
                     {[created.member2Sem, created.member2Class]
                       .filter(Boolean)
                       .join(" · ")}
@@ -321,23 +314,22 @@ function JoinScreen({
 
           {/* Action Buttons */}
           <div className="mt-6 space-y-3">
-            {/* Timeline Button */}
             <Btn
-              variant="ghost"
+              variant="outline"
               onClick={() => setShowTimeline((prev) => !prev)}
-              className="w-full justify-center border-leaf/40 bg-ink-2 text-mist hover:border-leaf hover:bg-surface-2"
+              className="w-full justify-center"
             >
-              <TreeStructure size={18} className="text-leaf" weight="bold" />
+              <TreeStructure size={16} weight="bold" />
               {showTimeline ? "Hide Investigation Timeline" : "View Investigation Timeline"}
             </Btn>
 
-            {/* Continue to Tracker */}
-            <Btn onClick={onDone} className="w-full justify-center">
-              Continue to Hunt Tracker <ArrowRight size={18} />
+            <Btn onClick={onDone} className="w-full justify-center text-base py-3.5">
+              <span>Continue to Hunt Tracker</span>
+              <ArrowRight size={18} />
             </Btn>
           </div>
 
-          {/* 7-Node Node-Tree Timeline Section (Revealed via Timeline Button) */}
+          {/* 7-Node Node-Tree Timeline Section */}
           {showTimeline && (
             <div className="mt-6 anim-rise">
               <NodeTreeTimeline
@@ -353,26 +345,24 @@ function JoinScreen({
 
   /* ---------- Registration / Sign-In Form View ---------- */
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center px-4 py-8 sm:px-6 sm:py-12">
+    <main className="flex min-h-[100dvh] flex-col justify-center bg-[#fcfaf5] px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/maveli-logo.png"
-            alt="The Maveli Files"
-            className="mx-auto h-16 w-16 rounded-full border border-line-2 object-cover shadow-lg shadow-leaf/20"
-          />
-          <h1 className="mt-3 text-2xl font-bold tracking-tight text-mist sm:text-3xl">
-            The Maveli Files
+          <TaglineBadge className="mx-auto mb-4">
+            <Sparkle weight="fill" size={13} /> CAMPUS INVESTIGATION
+          </TaglineBadge>
+
+          <h1 className="font-display text-4xl sm:text-5xl text-[#1a3300] leading-[1.08] tracking-[0.04em]">
+            Search for Maveli <HighlightWord>in the wild.</HighlightWord>
           </h1>
-          <p className="mt-1 text-sm text-fog">
-            Register your 2-member squad to receive your hunt access code.
+          <p className="mt-3 font-sans text-base text-[#1a3300]/85 max-w-[500px] mx-auto leading-relaxed">
+            Register your 2-member squad to unlock access credentials and track the clues left across campus.
           </p>
         </div>
 
         {/* Mode Switcher Tabs */}
-        <div className="mt-6 grid grid-cols-2 gap-1 rounded-xl border border-line bg-ink-2 p-1">
+        <div className="mt-6 flex items-center justify-center gap-1 rounded-[8px] border border-[#b6b6b6] bg-white p-1">
           <button
             type="button"
             onClick={() => {
@@ -382,12 +372,12 @@ function JoinScreen({
             }}
             className={
               mode === "create"
-                ? "flex items-center justify-center gap-1.5 rounded-lg bg-leaf px-3 py-2 text-sm font-semibold text-[#03150a] shadow-sm transition-all"
-                : "flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-fog hover:text-mist transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#1a3300] py-2 font-sans text-xs font-semibold text-[#fcfaf5] transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#1a3300]/70 hover:text-[#1a3300] transition-colors"
             }
           >
-            <UserPlus size={16} weight="bold" />
-            Register Team
+            <UserPlus size={15} weight="bold" />
+            Register Squad
           </button>
           <button
             type="button"
@@ -398,35 +388,39 @@ function JoinScreen({
             }}
             className={
               mode === "code"
-                ? "flex items-center justify-center gap-1.5 rounded-lg bg-leaf px-3 py-2 text-sm font-semibold text-[#03150a] shadow-sm transition-all"
-                : "flex items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-fog hover:text-mist transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#1a3300] py-2 font-sans text-xs font-semibold text-[#fcfaf5] transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#1a3300]/70 hover:text-[#1a3300] transition-colors"
             }
           >
-            <Key size={16} weight="bold" />
+            <Key size={15} weight="bold" />
             Access Code
           </button>
         </div>
 
         {/* Tab 1: Register Team */}
         {mode === "create" ? (
-          <div className="mt-6 space-y-5">
-            {/* Team Name */}
-            <Field
-              label="Team Name"
-              placeholder="e.g. Cipher Syndicate"
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              autoComplete="off"
-              hint="Pick a creative squad name for the leaderboard."
-            />
+          <div className="mt-6 space-y-4">
+            {/* Squad Name Field */}
+            <Panel className="p-4">
+              <Field
+                label="Squad Name"
+                placeholder="e.g. Cipher Syndicate"
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
+                autoComplete="off"
+                hint="Pick a creative squad name for the live leaderboard."
+              />
+            </Panel>
 
-            {/* Member 1 Card */}
-            <div className="rounded-xl border border-line bg-surface/70 p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-line pb-2">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-leaf">
+            {/* Member 1 Card (Sticky Note Mint) */}
+            <Panel tone="mint" className="p-4">
+              <div className="mb-3 flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-2">
+                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#1a3300]">
                   Member 1 (Squad Lead)
                 </span>
-                <span className="font-mono text-[10px] text-fog">Required</span>
+                <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#fcfaf5]">
+                  REQUIRED
+                </span>
               </div>
               <div className="space-y-3">
                 <Field
@@ -443,7 +437,7 @@ function JoinScreen({
                     onChange={(e) => setM1Sem(e.target.value)}
                   >
                     {SEMESTERS.map((s) => (
-                      <option key={s} value={s} className="bg-ink-3 text-mist">
+                      <option key={s} value={s}>
                         {s}
                       </option>
                     ))}
@@ -457,15 +451,17 @@ function JoinScreen({
                   />
                 </div>
               </div>
-            </div>
+            </Panel>
 
-            {/* Member 2 Card */}
-            <div className="rounded-xl border border-line bg-surface/70 p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-line pb-2">
-                <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-leaf">
+            {/* Member 2 Card (Sticky Note Teal or Paper) */}
+            <Panel tone="teal" className="p-4">
+              <div className="mb-3 flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-2">
+                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#1a3300]">
                   Member 2 (Teammate)
                 </span>
-                <span className="font-mono text-[10px] text-fog">Required</span>
+                <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#fcfaf5]">
+                  REQUIRED
+                </span>
               </div>
               <div className="space-y-3">
                 <Field
@@ -482,7 +478,7 @@ function JoinScreen({
                     onChange={(e) => setM2Sem(e.target.value)}
                   >
                     {SEMESTERS.map((s) => (
-                      <option key={s} value={s} className="bg-ink-3 text-mist">
+                      <option key={s} value={s}>
                         {s}
                       </option>
                     ))}
@@ -496,56 +492,68 @@ function JoinScreen({
                   />
                 </div>
               </div>
-            </div>
+            </Panel>
 
             {formError && (
-              <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
+              <div className="rounded-[8px] border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-900">
                 <div className="flex items-start gap-2">
-                  <WarningCircle size={18} className="mt-0.5 shrink-0 text-red-400" />
+                  <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
                   <span>{formError}</span>
                 </div>
               </div>
             )}
 
-            <Btn onClick={create} disabled={busy} className="w-full justify-center">
+            <Btn onClick={create} disabled={busy} className="w-full justify-center text-base py-3.5">
               <Users size={18} />
-              {busy ? "Registering Squad..." : "Register Team & Get Code"}
+              <span>{busy ? "Registering Squad..." : "Enroll Squad & Get Code"}</span>
+              <ArrowRight size={18} />
             </Btn>
 
-            <p className="text-center font-mono text-[11px] text-moss">
-              Both team members must be present on campus during the hunt.
+            <p className="text-center font-sans text-xs text-[#888888]">
+              no registration fee · both teammates must be present on campus
             </p>
           </div>
         ) : (
           /* Tab 2: Sign in with Access Code */
           <div className="mt-6 space-y-4">
-            <Field
-              label="Team Access Code"
-              placeholder="XXXXXX"
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
-              autoCapitalize="characters"
-              autoComplete="off"
-              spellCheck={false}
-              hint="Enter the 6-character code given after registration."
-            />
-
-            {codeError && (
-              <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
-                <div className="flex items-start gap-2">
-                  <WarningCircle size={18} className="mt-0.5 shrink-0 text-red-400" />
-                  <span>{codeError}</span>
-                </div>
+            <Panel className="p-5 space-y-4">
+              <div>
+                <h2 className="font-sans text-sm font-bold text-[#1a3300]">
+                  Authenticate Existing Squad
+                </h2>
+                <p className="mt-0.5 text-xs text-[#666666]">
+                  Enter the 6-character code given after registration.
+                </p>
               </div>
-            )}
 
-            <Btn onClick={join} disabled={busy} className="w-full justify-center">
-              {busy ? "Authenticating..." : "Sign In to Team"} <ArrowRight size={18} />
-            </Btn>
+              <Field
+                label="Squad Access Code"
+                placeholder="XXXXXX"
+                value={code}
+                onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
+                autoCapitalize="characters"
+                autoComplete="off"
+                spellCheck={false}
+              />
 
-            <div className="rounded-xl border border-line bg-ink-3 p-3.5 text-xs text-fog">
+              {codeError && (
+                <div className="rounded-[8px] border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-900">
+                  <div className="flex items-start gap-2">
+                    <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+                    <span>{codeError}</span>
+                  </div>
+                </div>
+              )}
+
+              <Btn onClick={join} disabled={busy} className="w-full justify-center text-base py-3">
+                <span>{busy ? "Authenticating..." : "Sign In to Squad"}</span>
+                <ArrowRight size={18} />
+              </Btn>
+            </Panel>
+
+            <div className="rounded-[10px] border border-[#b6b6b6] bg-white p-3.5 text-xs text-[#555555]">
               <div className="flex items-start gap-2">
-                <Info size={16} className="mt-0.5 shrink-0 text-leaf" />
+                <Info size={16} className="mt-0.5 shrink-0 text-[#1a3300]" />
                 <span>
                   Teammate already registered? Ask them for the 6-character access code to join the live session.
                 </span>

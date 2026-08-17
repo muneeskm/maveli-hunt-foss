@@ -75,36 +75,41 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-ink px-6 text-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/maveli-logo.png"
-        alt="The Maveli Files"
-        className="h-16 w-16 rounded-full border border-line-2 object-cover shadow-lg shadow-leaf/20"
-      />
-      <h1 className="mt-3 text-xl font-black uppercase tracking-tight text-mist">
-        The Maveli Files
-      </h1>
-      <p className="mt-1 text-sm text-fog">
-        Admin Control Dashboard
-      </p>
-      <div className="mt-6 w-full max-w-xs space-y-3">
-        <Field
-          label="Control code"
-          placeholder="••••••"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          autoComplete="off"
-        />
-        {error && (
-          <p className="flex items-start gap-2 text-sm text-red-300">
-            <WarningCircle size={18} className="mt-0.5 shrink-0" />
-            {error}
-          </p>
-        )}
-        <Btn onClick={submit} disabled={busy} className="w-full">
-          {busy ? "Checking..." : "Unlock control"}
-        </Btn>
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#fcfaf5] px-6 text-center">
+      <div className="w-full max-w-sm rounded-[16px] border border-[#b6b6b6] bg-white p-8 shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/maveli-logo.png"
+            alt="The Maveli Files"
+            className="h-11 w-11 object-cover"
+          />
+        </div>
+        <h1 className="font-display mt-4 text-2xl text-[#1a3300]">
+          The Maveli Files
+        </h1>
+        <p className="mt-1 font-mono text-xs uppercase tracking-wider text-[#666666]">
+          Admin Control Center
+        </p>
+
+        <div className="mt-6 space-y-4 text-left">
+          <Field
+            label="Control Code"
+            placeholder="••••••"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            autoComplete="off"
+          />
+          {error && (
+            <p className="flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
+              <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+              {error}
+            </p>
+          )}
+          <Btn onClick={submit} disabled={busy} className="w-full justify-center text-sm py-2.5">
+            {busy ? "Checking..." : "Unlock Control"}
+          </Btn>
+        </div>
       </div>
     </div>
   );
@@ -124,17 +129,19 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("overview");
 
   return (
-    <div className="min-h-[100dvh] bg-ink">
-      <header className="sticky top-0 z-40 border-b border-line bg-ink/90 backdrop-blur">
+    <div className="min-h-[100dvh] bg-[#fcfaf5]">
+      <header className="sticky top-0 z-40 border-b border-[#b6b6b6] bg-[#fcfaf5]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/maveli-logo.png"
-              alt="The Maveli Files"
-              className="h-9 w-9 rounded-full border border-line-2 object-cover"
-            />
-            <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-mist sm:block">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/maveli-logo.png"
+                alt="The Maveli Files"
+                className="h-6 w-6 object-cover"
+              />
+            </div>
+            <span className="hidden font-sans text-sm font-bold tracking-tight text-[#1a3300] sm:block">
               The Maveli Files · Admin
             </span>
             <PhasePill phase={db.game.phase} />
@@ -142,22 +149,22 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <button
             type="button"
             onClick={onLogout}
-            className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-fog hover:text-mist"
+            className="flex items-center gap-1.5 rounded-[6px] border border-[#b6b6b6] bg-white px-3 py-1.5 font-sans text-xs font-medium text-[#1a3300] hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-colors"
           >
-            <SignOut size={18} /> <span className="hidden sm:inline">Logout</span>
+            <SignOut size={15} /> <span>Logout</span>
           </button>
         </div>
-        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-2">
+        <nav className="mx-auto flex max-w-6xl gap-1.5 overflow-x-auto px-4 pb-2.5">
           {TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTab(t.id)}
               className={cn(
-                "shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium",
+                "shrink-0 rounded-[6px] px-3.5 py-1.5 font-sans text-xs font-medium transition-all",
                 tab === t.id
-                  ? "bg-leaf text-[#03150a]"
-                  : "text-fog hover:text-mist",
+                  ? "bg-[#1a3300] text-[#fcfaf5]"
+                  : "bg-white border border-[#b6b6b6] text-[#1a3300] hover:bg-[#f1f1f1]",
               )}
             >
               {t.label}

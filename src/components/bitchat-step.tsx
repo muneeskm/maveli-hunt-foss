@@ -42,13 +42,13 @@ export function BitchatStep() {
 
   if (solved) {
     return (
-      <Panel className="p-5">
+      <Panel tone="mint" className="p-5">
         <div className="flex items-center gap-2">
-          <CheckCircle size={20} weight="fill" className="shrink-0 text-leaf" />
-          <p className="font-semibold text-mist">Transmission verified.</p>
+          <CheckCircle size={20} weight="fill" className="shrink-0 text-[#1a3300]" />
+          <p className="font-sans font-bold text-sm text-[#1a3300]">Transmission verified.</p>
         </div>
-        <p className="mt-1 text-sm leading-relaxed text-fog">
-          The SOS revealed where Mavelli is hiding. Follow the final clue.
+        <p className="mt-1 font-sans text-xs leading-relaxed text-[#1a3300]/80">
+          The SOS revealed where Maveli is sheltered. Follow the final clue.
         </p>
       </Panel>
     );
@@ -56,17 +56,17 @@ export function BitchatStep() {
 
   return (
     <div>
-      <SectionLabel>BitChat transmission</SectionLabel>
+      <SectionLabel>BitChat Transmission</SectionLabel>
       <Panel className="p-5">
-        <p className="text-sm leading-relaxed text-fog">{settings.bitchatGuide}</p>
+        <p className="font-sans text-xs leading-relaxed text-[#555555]">{settings.bitchatGuide}</p>
         <label className="mt-4 block">
-          <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+          <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-[#1a3300]">
             Code from the message
           </span>
           <input
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 24))}
-            className="field text-center font-mono text-lg font-bold uppercase tracking-[0.3em]"
+            className="field text-center font-mono text-lg font-bold uppercase tracking-widest"
             placeholder="......."
             autoCapitalize="characters"
             autoComplete="off"
@@ -76,13 +76,13 @@ export function BitchatStep() {
           />
         </label>
         {error && (
-          <p className="mt-3 flex items-start gap-2 text-sm text-red-300">
-            <WarningCircle size={18} className="mt-0.5 shrink-0" />
+          <p className="mt-3 flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
+            <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
             {error}
           </p>
         )}
-        <Btn onClick={submit} className="mt-4 w-full">
-          Verify code
+        <Btn onClick={submit} className="mt-4 w-full justify-center text-sm py-2.5">
+          Verify Code
         </Btn>
       </Panel>
     </div>

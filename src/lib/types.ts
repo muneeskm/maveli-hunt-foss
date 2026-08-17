@@ -125,4 +125,10 @@ export type ScanResult =
       targetOrder: number;
       targetLocationName: string;
     }
-  | { ok: true; location: GameLocation; word?: string; wordClue?: string };
+  | {
+      ok: true;
+      location: GameLocation;
+      word?: string;
+      wordClue?: string;
+      duplicate?: boolean;
+    };

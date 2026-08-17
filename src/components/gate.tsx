@@ -98,13 +98,13 @@ export function ReconstructionGate() {
 
   if (solved) {
     return (
-      <Panel className="p-6 text-center">
-        <CheckCircle size={44} weight="fill" className="mx-auto text-leaf" />
-        <h2 className="mt-3 text-2xl font-black uppercase tracking-tight text-mist">
-          Mavelli is safe
+      <Panel tone="mint" className="p-6 text-center">
+        <CheckCircle size={40} weight="fill" className="mx-auto text-[#1a3300]" />
+        <h2 className="font-display mt-3 text-2xl text-[#1a3300]">
+          Maveli is Safe!
         </h2>
-        <p className="mt-1 text-sm leading-relaxed text-fog">
-          The instruction matched. You proved your team was there.
+        <p className="mt-1 font-sans text-xs leading-relaxed text-[#1a3300]/80">
+          The instruction matched. Your squad proved the discovery.
         </p>
       </Panel>
     );
@@ -112,23 +112,23 @@ export function ReconstructionGate() {
 
   return (
     <div>
-      <SectionLabel>Final gate</SectionLabel>
+      <SectionLabel>Final Reconstruction Gate</SectionLabel>
       <Panel className="p-5">
-        <p className="text-sm leading-relaxed text-fog">
+        <p className="font-sans text-xs leading-relaxed text-[#555555]">
           The five words on your evidence board are fragments of one hidden
-          instruction. Reconstruct it and enter the words in the exact order
+          instruction. Reconstruct it and enter the words in the exact sequence
           the instruction reads.
         </p>
         <div className="mt-4 space-y-3">
           {game.gateSlots.map((slot, i) => (
             <label key={slot + i} className="block">
-              <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-moss">
+              <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-[#1a3300]">
                 {slot}
               </span>
               <input
                 value={words[i]}
                 onChange={(e) => setWord(i, e.target.value)}
-                className="field text-center font-mono text-lg font-bold uppercase tracking-[0.3em]"
+                className="field text-center font-mono text-lg font-bold uppercase tracking-widest"
                 placeholder="?????"
                 autoCapitalize="characters"
                 autoComplete="off"
@@ -140,13 +140,13 @@ export function ReconstructionGate() {
           ))}
         </div>
         {error && (
-          <p className="mt-3 flex items-start gap-2 text-sm text-red-300">
-            <WarningCircle size={18} className="mt-0.5 shrink-0" />
+          <p className="mt-3 flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
+            <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
             {error}
           </p>
         )}
-        <Btn onClick={submit} disabled={locked || busy} className="mt-4 w-full">
-          {locked ? `Locked for ${countdown}s` : busy ? "Checking..." : "Confirm the instruction"}
+        <Btn onClick={submit} disabled={locked || busy} className="mt-4 w-full justify-center text-sm py-3">
+          <span>{locked ? `Locked for ${countdown}s` : busy ? "Checking..." : "Confirm Final Instruction"}</span>
         </Btn>
       </Panel>
     </div>
