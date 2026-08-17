@@ -163,12 +163,27 @@ export function SelectField({
           {label}
         </span>
       )}
-      <select
-        className="field appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%231a3300%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:14px] bg-[right_14px_center] bg-no-repeat pr-9"
-        {...props}
-      >
-        {children}
-      </select>
+      <div className="relative">
+        <select
+          className="field cursor-pointer appearance-none bg-white pr-10 font-sans text-sm font-semibold text-[#1a3300] hover:border-[#1a3300] transition-colors"
+          {...props}
+        >
+          {children}
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+          <span className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-[#f1f1f1] text-[#1a3300]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              fill="currentColor"
+              viewBox="0 0 256 256"
+            >
+              <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
+            </svg>
+          </span>
+        </div>
+      </div>
       {hint && <span className="mt-1.5 block font-sans text-xs text-[#666666]">{hint}</span>}
     </label>
   );

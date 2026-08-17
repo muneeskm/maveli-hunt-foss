@@ -119,12 +119,12 @@ function JoinScreen({
 
   // Member 1 fields
   const [m1Name, setM1Name] = useState("");
-  const [m1Sem, setM1Sem] = useState("S5");
+  const [m1Sem, setM1Sem] = useState("S1");
   const [m1Class, setM1Class] = useState("");
 
   // Member 2 fields
   const [m2Name, setM2Name] = useState("");
-  const [m2Sem, setM2Sem] = useState("S5");
+  const [m2Sem, setM2Sem] = useState("S1");
   const [m2Class, setM2Class] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);

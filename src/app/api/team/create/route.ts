@@ -92,6 +92,9 @@ export async function POST(req: Request) {
   } catch (e: any) {
     console.error("team/create error:", e);
     const msg = e?.message ?? "";
+    if (msg.includes("already exists")) {
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
     if (msg.includes("permission denied") || e?.code === "42501") {
       return NextResponse.json(
         {

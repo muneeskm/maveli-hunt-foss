@@ -146,6 +146,28 @@ export async function getTeamById(id: string): Promise<Team | null> {
   return data ? teamFromRow(data as TeamRow) : null;
 }
 
+export async function getTeamByName(name: string): Promise<Team | null> {
+  const clean = name.trim();
+  try {
+    const { data, error } = await db()
+      .from("teams")
+      .select("*")
+      .ilike("name", clean)
+      .limit(1);
+    if (!error && data && data.length > 0) {
+      return teamFromRow(data[0] as TeamRow);
+    }
+  } catch (e) {
+    console.error("getTeamByName query failed, falling back to getAllTeams:", e);
+  }
+  try {
+    const all = await getAllTeams();
+    return all.find((t) => t.name.toLowerCase() === clean.toLowerCase()) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getAllTeams(): Promise<Team[]> {
   const { data, error } = await db().from("teams").select("*").order("created_at");
   if (error) throw error;
@@ -352,6 +374,13 @@ export async function createTeam(
     member2Sem: member2Sem.trim(),
     member2Class: member2Class.trim(),
   };
+
+  // Enforce unique squad name (case-insensitive)
+  const existingSquad = await getTeamByName(clean.name);
+  if (existingSquad) {
+    throw new Error(`A squad named "${clean.name}" already exists. Please choose a unique squad name.`);
+  }
+
   const id = randomUUID();
   let code = makeCode();
   // codes are unique; retry on collision

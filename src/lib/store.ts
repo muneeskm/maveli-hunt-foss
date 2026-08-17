@@ -131,11 +131,17 @@ export const demoStore = {
     member2Class = "",
   ): Promise<Team> {
     const db = readDB();
+    const cleanName = name.trim();
+    if (db.teams.some((t) => t.name.toLowerCase() === cleanName.toLowerCase())) {
+      return Promise.reject(
+        new Error(`A squad named "${cleanName}" already exists. Please choose a unique squad name.`),
+      );
+    }
     let code = accessCode();
     while (db.teams.some((t) => t.code === code)) code = accessCode();
     const team: Team = {
       id: uid("team"),
-      name: name.trim(),
+      name: cleanName,
       code,
       member1: member1.trim(),
       member1Sem: member1Sem.trim() || undefined,

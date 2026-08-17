@@ -100,6 +100,8 @@ async function api<T>(path: string, init?: RequestInit): Promise<T> {
   return data;
 }
 
+let initialTeamPollDone = false;
+
 async function refreshTeamState(code: string) {
   try {
     const { state } = await api<{
@@ -118,6 +120,13 @@ async function refreshTeamState(code: string) {
         gateLockSeconds: number;
       };
     }>(`/api/team/state?code=${encodeURIComponent(code)}`);
+    initialTeamPollDone = true;
+    if (!state.team) {
+      if (typeof window !== "undefined") window.localStorage.removeItem(SESSION_KEY);
+      teamCache = emptyTeamCache();
+      notify();
+      return;
+    }
     if (state.rev === teamCache.rev && state.team?.id === teamCache.team?.id) return;
     teamCache = {
       team: state.team,
@@ -142,6 +151,8 @@ async function refreshTeamState(code: string) {
     notify();
   } catch (e) {
     console.error("team state poll", e);
+    initialTeamPollDone = true;
+    notify();
   }
 }
 
@@ -288,7 +299,7 @@ export const httpStore = {
   /** true while a session code exists but the first state poll has not landed */
   sessionPending(): boolean {
     if (typeof window === "undefined") return false;
-    return Boolean(window.localStorage.getItem(SESSION_KEY)) && !teamCache.team;
+    return Boolean(window.localStorage.getItem(SESSION_KEY)) && !teamCache.team && !initialTeamPollDone;
   },
 
   /* ---------- scans ---------- */
