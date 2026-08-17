@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   Broadcast,
   Phone,
-  SignOut,
-  Trophy,
   WhatsappLogo,
   X,
 } from "@phosphor-icons/react";
@@ -52,33 +50,23 @@ export function AppShell({
       {/* Floating Pill Top Nav */}
       <header className="sticky top-3 z-40 mx-auto max-w-xl px-4">
         <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#b6b6b6] bg-[#fcfaf5]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
             {/* 36x36 Highlighter Yellow logo square */}
-            <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+            <div className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/maveli-logo.png"
                 alt="Maveli"
-                className="h-7 w-7 object-cover"
+                className="h-6 w-6 sm:h-7 sm:w-7 object-cover"
               />
             </div>
-            <div className="hidden sm:block">
-              <span className="font-sans text-sm font-bold tracking-tight text-[#1a3300]">
-                The Maveli Files
-              </span>
-            </div>
+            <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-[#1a3300]">
+              The Maveli Files
+            </span>
           </Link>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <PhasePill phase={phase} />
-
-            <Link
-              href="/leaderboard"
-              className="flex h-8 w-8 items-center justify-center rounded-[6px] border border-[#b6b6b6] bg-white text-[#1a3300] hover:bg-[#f1f1f1] transition-colors"
-              aria-label="Leaderboard"
-            >
-              <Trophy size={16} weight="bold" />
-            </Link>
 
             {teamId && (
               <button
@@ -89,11 +77,9 @@ export function AppShell({
                     router.replace("/");
                   }
                 }}
-                className="flex h-8 items-center gap-1 rounded-[6px] border border-[#b6b6b6] bg-white px-2.5 font-sans text-xs font-medium text-[#1a3300] hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-colors"
-                aria-label="Leave team"
+                className="flex h-[24px] shrink-0 items-center rounded-[6px] border border-[#b6b6b6] bg-white px-2.5 font-sans text-xs font-medium text-[#1a3300] hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-colors"
               >
-                <SignOut size={14} />
-                <span className="hidden sm:inline">Leave</span>
+                Exit
               </button>
             )}
           </div>

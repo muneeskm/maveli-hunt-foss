@@ -70,9 +70,9 @@ export function TeamBadge() {
             type="button"
             onClick={copy}
             aria-label="Copy access code"
-            className="flex h-8 w-8 items-center justify-center rounded-[6px] border border-[rgba(26,51,0,0.2)] bg-white text-[#1a3300] hover:bg-[#fcfaf5]"
+            className="flex h-[32px] w-[40px] items-center justify-center rounded-[8px] border border-[rgba(26,51,0,0.2)] bg-white text-[#1a3300] hover:bg-[#fcfaf5]"
           >
-            {copied ? <Check size={16} className="text-[#1a3300]" weight="bold" /> : <Copy size={16} />}
+            {copied ? <Check size={20} className="text-[#1a3300]" weight="bold" /> : <Copy size={20} />}
           </button>
         </div>
       </div>

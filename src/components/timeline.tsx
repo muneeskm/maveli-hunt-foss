@@ -174,9 +174,9 @@ export function Timeline() {
               <span
                 className={cn(
                   "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  e.status === "done" && "border-[#1a3300] bg-[#1a3300] text-[#fcfaf5]",
+                  e.status === "done" && "border-black bg-black text-white shadow-sm",
                   e.status === "current" &&
-                    "anim-blink border-[#1a3300] bg-[#ffe95c] text-[#1a3300]",
+                    "anim-blink border-black bg-black text-white shadow-md",
                   e.status === "upcoming" && "border-[#b6b6b6] bg-white text-[#888888]",
                 )}
               >
