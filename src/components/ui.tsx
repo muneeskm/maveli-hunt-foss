@@ -80,7 +80,7 @@ export function HighlightWord({
   className?: string;
 }) {
   return (
-    <span className={cn("highlight-wash", className)}>
+    <span className={cn("highlight-wash oleo-script-bold", className)}>
       {children}
     </span>
   );

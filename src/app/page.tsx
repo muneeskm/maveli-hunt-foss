@@ -350,7 +350,7 @@ function JoinScreen({
         {/* Brand Header */}
         <div className="text-center">
           <TaglineBadge className="mx-auto mb-4">
-            <Sparkle weight="fill" size={13} /> CAMPUS INVESTIGATION
+            <Sparkle weight="fill" size={13} /> THE MAVELI FILES
           </TaglineBadge>
 
           <h1 className="font-display text-4xl sm:text-5xl text-[#1a3300] leading-[1.08] tracking-[0.04em]">

@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Inter, Roboto_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Inter, Oleo_Script, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-bricolage-grotesque",
   weight: ["800"],
+  display: "swap",
+});
+
+const oleoScript = Oleo_Script({
+  subsets: ["latin"],
+  variable: "--font-oleo-script",
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -49,7 +56,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bricolageGrotesque.variable} ${inter.variable} ${robotoMono.variable}`}
+      className={`${bricolageGrotesque.variable} ${oleoScript.variable} ${inter.variable} ${robotoMono.variable}`}
     >
       <body className="bg-[#fcfaf5] text-[#1a3300] font-sans antialiased selection:bg-[#ffe95c] selection:text-[#1a3300]">
         {children}
