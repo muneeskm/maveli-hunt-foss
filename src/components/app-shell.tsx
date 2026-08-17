@@ -99,7 +99,7 @@ export function AppShell({
 
       {/* Floating Volunteer Call Button */}
       {teamId && (
-        <div className="pointer-events-none fixed inset-0 z-50">
+        <div className="hidden pointer-events-none fixed inset-0 z-50">
           <button
             type="button"
             onClick={() => setContactOpen(true)}

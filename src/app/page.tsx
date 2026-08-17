@@ -349,6 +349,17 @@ function JoinScreen({
       <div className="mx-auto w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center">
+          <div className="mb-4 flex items-center justify-center gap-2.5">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/foss-logo.png"
+              alt="FOSS CCE"
+              className="h-10 w-10 rounded-full border border-[#b6b6b6] object-cover shadow-sm"
+            />
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#666666]">
+              FOSS CCE Presents
+            </span>
+          </div>
           <TaglineBadge className="mx-auto mb-4">
             <Sparkle weight="fill" size={13} /> THE MAVELI FILES
           </TaglineBadge>

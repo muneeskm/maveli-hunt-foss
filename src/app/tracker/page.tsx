@@ -88,6 +88,17 @@ export default function TrackerPage() {
         <p className="font-mono text-[10px] uppercase tracking-widest text-[#666666]">
           The Maveli Files
         </p>
+        <div className="mt-3 flex items-center gap-2 border-t border-[#b6b6b6]/60 pt-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/foss-logo.png"
+            alt="FOSS CCE"
+            className="h-7 w-7 rounded-full border border-[#b6b6b6] object-cover"
+          />
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#666666]">
+            Conducted by FOSS CCE
+          </span>
+        </div>
       </div>
     </AppShell>
   );
