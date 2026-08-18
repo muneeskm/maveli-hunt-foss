@@ -218,11 +218,14 @@ function JoinScreen({
   /* ---------- Post-Registration Success View ---------- */
   if (created) {
     return (
-      <main className="relative min-h-[100dvh] bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
-        {/* Pixel Art Mobile Background Layer */}
-        <div
-          className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
-          style={{ backgroundImage: "url('/mobile-bg.png')" }}
+      <main className="relative min-h-screen bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
+        {/* Pixel Art Mobile Background Layer (Hardware Composited) */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mobile-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="bg-mobile-layer"
         />
 
         <div className="relative z-10 mx-auto max-w-lg">
@@ -370,11 +373,14 @@ function JoinScreen({
 
   /* ---------- Registration / Sign-In Form View ---------- */
   return (
-    <main className="relative min-h-[100dvh] flex flex-col justify-center bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
-      {/* Pixel Art Mobile Background Layer */}
-      <div
-        className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
-        style={{ backgroundImage: "url('/mobile-bg.png')" }}
+    <main className="relative min-h-screen flex flex-col justify-center bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
+      {/* Pixel Art Mobile Background Layer (Hardware Composited) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/mobile-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="bg-mobile-layer"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-md">

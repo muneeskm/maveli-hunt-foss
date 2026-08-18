@@ -40,11 +40,14 @@ export function AppShell({
   const tel = settings.volunteerPhone.replace(/[^+\d]/g, "");
 
   return (
-    <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
-      {/* Pixel Art Mobile Background Layer */}
-      <div
-        className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
-        style={{ backgroundImage: "url('/mobile-bg.png')" }}
+    <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
+      {/* Pixel Art Mobile Background Layer (Hardware Composited) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/mobile-bg.png"
+        alt=""
+        aria-hidden="true"
+        className="bg-mobile-layer"
       />
 
       <div className="relative z-10">

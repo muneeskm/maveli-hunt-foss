@@ -161,15 +161,18 @@ export default function ScanTokenPage() {
   );
 
   const bgLayer = (
-    <div
-      className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
-      style={{ backgroundImage: "url('/mobile-bg.png')" }}
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/mobile-bg.png"
+      alt=""
+      aria-hidden="true"
+      className="bg-mobile-layer"
     />
   );
 
   if (view.kind === "checking") {
     return (
-      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           {bar}
@@ -188,11 +191,11 @@ export default function ScanTokenPage() {
 
   if (view.kind === "out_of_order") {
     return (
-      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           {bar}
-          <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
+          <main className="mx-auto flex min-h-[calc(100vh-70px)] max-w-md flex-col justify-center px-5 py-8">
             <div className="text-center">
               <TaglineBadge className="mx-auto mb-3">
                 <WarningCircle size={14} weight="bold" /> OUT OF SEQUENCE
@@ -232,11 +235,11 @@ export default function ScanTokenPage() {
 
   if (view.kind === "unknown") {
     return (
-      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           {bar}
-          <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
+          <div className="flex min-h-[80vh] flex-col items-center justify-center px-6 text-center">
             <div className="liquid-glass-subtle flex h-16 w-16 items-center justify-center rounded-full border-red-500/30">
               <XCircle size={32} className="text-red-400" />
             </div>
@@ -258,11 +261,11 @@ export default function ScanTokenPage() {
   if (view.kind === "sighting") {
     const isFirst = !view.duplicate;
     return (
-      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           {bar}
-          <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
+          <main className="mx-auto flex min-h-[calc(100vh-70px)] max-w-md flex-col justify-center px-5 py-8">
             <div className="text-center">
               <TaglineBadge className="mx-auto mb-3">
                 <Sparkle weight="fill" size={13} />
@@ -399,7 +402,7 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-locking") {
     return (
-      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
+      <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           <div className="liquid-glass-subtle mx-auto flex h-20 w-20 items-center justify-center rounded-full">
@@ -418,7 +421,7 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-alarm") {
     return (
-      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 py-10 text-center text-white overflow-x-hidden">
+      <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#020712] px-6 py-10 text-center text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10 w-full max-w-sm">
           <TaglineBadge className="mx-auto mb-3">
@@ -447,7 +450,7 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-dup") {
     return (
-      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
+      <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
         {bgLayer}
         <div className="relative z-10">
           <div className="liquid-glass-subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full">
@@ -473,7 +476,7 @@ export default function ScanTokenPage() {
     game.winnerTeamId === team.id;
 
   return (
-    <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#020712] text-white overflow-x-hidden">
       {bgLayer}
       <div className="relative z-10">
         {bar}
