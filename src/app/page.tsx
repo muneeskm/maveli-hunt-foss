@@ -87,10 +87,10 @@ export default function HomePage() {
   if (team && !created) return null;
   if (!team && sessionPending) {
     return (
-      <div className="flex min-h-[100dvh] items-center justify-center bg-[#fcfaf5]">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-[#090d0b]">
         <div className="text-center">
-          <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#1a3300]" />
-          <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+          <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+          <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
             Syncing squad...
           </p>
         </div>
@@ -218,7 +218,7 @@ function JoinScreen({
   /* ---------- Post-Registration Success View ---------- */
   if (created) {
     return (
-      <main className="min-h-[100dvh] bg-[#fcfaf5] px-4 py-8 sm:px-6 sm:py-12">
+      <main className="min-h-[100dvh] bg-[#090d0b] px-4 py-8 sm:px-6 sm:py-12">
         <div className="mx-auto max-w-lg">
           {/* Header */}
           <div className="text-center">
@@ -226,31 +226,31 @@ function JoinScreen({
               <Sparkle weight="fill" size={13} /> SQUAD ENROLLED
             </TaglineBadge>
 
-            <h1 className="font-display mt-4 text-3xl font-extrabold text-[#1a3300] sm:text-4xl leading-tight">
+            <h1 className="font-display mt-4 text-3xl font-extrabold text-white sm:text-4xl leading-tight">
               Save your squad <HighlightWord>credentials.</HighlightWord>
             </h1>
-            <p className="mt-2 font-sans text-base text-[#1a3300]/80">
+            <p className="mt-2 font-sans text-base text-[#9ca3af]">
               Your squad is officially locked in for The Maveli Files.
             </p>
           </div>
 
-          {/* Access Code Box (Highlighter Yellow Sticky Note) */}
-          <div className="mt-6 rounded-[14px] border border-[rgba(26,51,0,0.2)] bg-[#ffe95c] p-6 text-center shadow-sm">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+          {/* Access Code Box (FOSS Green Tinted Card) */}
+          <div className="mt-6 rounded-[14px] border-2 border-[#22c55e] bg-[#102317] p-6 text-center shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
               Squad Access Code
             </p>
             <div className="mt-3 flex items-center justify-center gap-3">
-              <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#1a3300] sm:text-5xl">
+              <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#22c55e] sm:text-5xl">
                 {created.code}
               </span>
               <button
                 type="button"
                 onClick={copy}
                 aria-label="Copy access code"
-                className="flex h-11 w-11 items-center justify-center rounded-[6px] border border-[#1a3300] bg-white text-[#1a3300] hover:bg-[#fcfaf5] active:translate-y-[1px] transition-all"
+                className="flex h-11 w-11 items-center justify-center rounded-[6px] border border-[#22c55e] bg-[#162d1f] text-[#22c55e] hover:bg-[#22c55e] hover:text-[#090d0b] active:translate-y-[1px] transition-all"
               >
                 {copied ? (
-                  <Check size={20} className="text-[#1a3300]" weight="bold" />
+                  <Check size={20} className="text-[#22c55e]" weight="bold" />
                 ) : (
                   <Copy size={20} />
                 )}
@@ -258,15 +258,15 @@ function JoinScreen({
             </div>
 
             {copied && (
-              <p className="mt-2 font-mono text-xs font-semibold text-[#1a3300]">
+              <p className="mt-2 font-mono text-xs font-semibold text-[#86efac]">
                 ✓ Access code copied to clipboard!
               </p>
             )}
 
             {/* Critical Save Notice */}
-            <div className="mt-5 rounded-[8px] border border-[rgba(26,51,0,0.15)] bg-white/80 p-3.5 text-left text-xs leading-relaxed text-[#1a3300]">
+            <div className="mt-5 rounded-[8px] border border-[#202d24] bg-[#16201a] p-3.5 text-left text-xs leading-relaxed text-white">
               <div className="flex items-start gap-2.5">
-                <Warning size={18} className="mt-0.5 shrink-0 text-[#1a3300]" weight="fill" />
+                <Warning size={18} className="mt-0.5 shrink-0 text-[#22c55e]" weight="fill" />
                 <p>
                   <strong>Important: Screenshot and take note of this code now.</strong>{" "}
                   Both members will use this code to log into the hunt tracker across their phones.
@@ -276,21 +276,21 @@ function JoinScreen({
           </div>
 
           {/* Mandatory WhatsApp Group Callout */}
-          <div className="mt-5 rounded-[14px] border-2 border-[#1a3300] bg-[#d5f5c2] p-5 shadow-sm">
+          <div className="mt-5 rounded-[14px] border-2 border-[#22c55e] bg-[#112419] p-5 shadow-sm">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a3300] text-[#fcfaf5]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
                 <WhatsappLogo size={24} weight="fill" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-sans text-base font-bold text-[#1a3300]">
+                  <h3 className="font-sans text-base font-bold text-white">
                     Join Official WhatsApp Group
                   </h3>
-                  <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-bold text-[#fcfaf5]">
+                  <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
                     REQUIRED
                   </span>
                 </div>
-                <p className="mt-1 text-xs leading-relaxed text-[#1a3300]/85">
+                <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
                   <strong>Every squad member must join.</strong> Real-time broadcasts, game alerts, and starting instructions will be posted here.
                 </p>
                 <a
@@ -308,23 +308,23 @@ function JoinScreen({
 
           {/* Team Summary Card (Mint Pastel Surface) */}
           <Panel tone="mint" className="mt-5">
-            <div className="flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-3">
-              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]/80">
+            <div className="flex items-center justify-between border-b border-[#202d24] pb-3">
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#9ca3af]">
                 Registered Squad
               </span>
-              <span className="font-sans text-sm font-bold text-[#1a3300]">{created.name}</span>
+              <span className="font-sans text-sm font-bold text-white">{created.name}</span>
             </div>
 
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-[8px] border border-[rgba(26,51,0,0.12)] bg-white/70 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-[#1a3300]/70">
+              <div className="rounded-[8px] border border-[#202d24] bg-[#16201a] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
                   Member 1 (Lead)
                 </p>
-                <p className="mt-1 font-sans text-sm font-semibold text-[#1a3300]">
+                <p className="mt-1 font-sans text-sm font-semibold text-white">
                   {created.member1}
                 </p>
                 {(created.member1Sem || created.member1Class) && (
-                  <p className="mt-0.5 font-mono text-xs text-[#1a3300]/80">
+                  <p className="mt-0.5 font-mono text-xs text-[#86efac]">
                     {[created.member1Sem, created.member1Class]
                       .filter(Boolean)
                       .join(" · ")}
@@ -332,15 +332,15 @@ function JoinScreen({
                 )}
               </div>
 
-              <div className="rounded-[8px] border border-[rgba(26,51,0,0.12)] bg-white/70 p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-[#1a3300]/70">
+              <div className="rounded-[8px] border border-[#202d24] bg-[#16201a] p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
                   Member 2
                 </p>
-                <p className="mt-1 font-sans text-sm font-semibold text-[#1a3300]">
+                <p className="mt-1 font-sans text-sm font-semibold text-white">
                   {created.member2}
                 </p>
                 {(created.member2Sem || created.member2Class) && (
-                  <p className="mt-0.5 font-mono text-xs text-[#1a3300]/80">
+                  <p className="mt-0.5 font-mono text-xs text-[#86efac]">
                     {[created.member2Sem, created.member2Class]
                       .filter(Boolean)
                       .join(" · ")}
@@ -364,7 +364,7 @@ function JoinScreen({
 
   /* ---------- Registration / Sign-In Form View ---------- */
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center bg-[#fcfaf5] px-4 py-8 sm:px-6 sm:py-12">
+    <main className="flex min-h-[100dvh] flex-col justify-center bg-[#090d0b] px-4 py-8 sm:px-6 sm:py-12">
       <div className="mx-auto w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center">
@@ -373,9 +373,9 @@ function JoinScreen({
             <img
               src="/foss-logo.png"
               alt="FOSS CCE"
-              className="h-10 w-10 rounded-full border border-[#b6b6b6] object-cover shadow-sm"
+              className="h-10 w-10 rounded-full border border-[#202d24] object-cover shadow-sm"
             />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#666666]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#9ca3af]">
               FOSS CCE Presents
             </span>
           </div>
@@ -383,10 +383,10 @@ function JoinScreen({
             <Sparkle weight="fill" size={13} /> THE MAVELI FILES
           </TaglineBadge>
 
-          <h1 className="font-display text-4xl sm:text-5xl text-[#1a3300] leading-[1.08] tracking-[0.04em]">
+          <h1 className="font-display text-4xl sm:text-5xl text-white leading-[1.08] tracking-[0.04em]">
             Search for Maveli <HighlightWord>in the wild.</HighlightWord>
           </h1>
-          <p className="mt-3 font-sans text-base text-[#1a3300]/85 max-w-[500px] mx-auto leading-relaxed">
+          <p className="mt-3 font-sans text-base text-[#9ca3af] max-w-[500px] mx-auto leading-relaxed">
             Register your 2-member squad to unlock access credentials and track the clues left across campus.
           </p>
         </div>
@@ -395,7 +395,7 @@ function JoinScreen({
         <CountdownTimer className="mt-6" />
 
         {/* Mode Switcher Tabs */}
-        <div className="mt-6 flex items-center justify-center gap-1 rounded-[8px] border border-[#b6b6b6] bg-white p-1">
+        <div className="mt-6 flex items-center justify-center gap-1 rounded-[8px] border border-[#202d24] bg-[#111813] p-1">
           <button
             type="button"
             onClick={() => {
@@ -405,8 +405,8 @@ function JoinScreen({
             }}
             className={
               mode === "create"
-                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#1a3300] py-2 font-sans text-xs font-semibold text-[#fcfaf5] transition-all"
-                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#1a3300]/70 hover:text-[#1a3300] transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#9ca3af] hover:text-white transition-colors"
             }
           >
             <UserPlus size={15} weight="bold" />
@@ -421,8 +421,8 @@ function JoinScreen({
             }}
             className={
               mode === "code"
-                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#1a3300] py-2 font-sans text-xs font-semibold text-[#fcfaf5] transition-all"
-                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#1a3300]/70 hover:text-[#1a3300] transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#9ca3af] hover:text-white transition-colors"
             }
           >
             <Key size={15} weight="bold" />
@@ -445,14 +445,11 @@ function JoinScreen({
               />
             </Panel>
 
-            {/* Member 1 Card (Sticky Note Mint) */}
+            {/* Member 1 Card */}
             <Panel tone="mint" className="p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-2">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#1a3300]">
+              <div className="mb-3 flex items-center justify-between border-b border-[#202d24] pb-2">
+                <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
                   Member 1 (Squad Lead)
-                </span>
-                <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#fcfaf5]">
-                  REQUIRED
                 </span>
               </div>
               <div className="space-y-3">
@@ -486,14 +483,11 @@ function JoinScreen({
               </div>
             </Panel>
 
-            {/* Member 2 Card (Sticky Note Teal or Paper) */}
+            {/* Member 2 Card */}
             <Panel tone="teal" className="p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-[rgba(26,51,0,0.12)] pb-2">
-                <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#1a3300]">
+              <div className="mb-3 flex items-center justify-between border-b border-[#202d24] pb-2">
+                <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
                   Member 2 (Teammate)
-                </span>
-                <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-semibold text-[#fcfaf5]">
-                  REQUIRED
                 </span>
               </div>
               <div className="space-y-3">
@@ -528,9 +522,9 @@ function JoinScreen({
             </Panel>
 
             {formError && (
-              <div className="rounded-[8px] border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-900">
+              <div className="rounded-[8px] border border-red-800 bg-[#2d1414] p-3 text-xs font-semibold text-red-200">
                 <div className="flex items-start gap-2">
-                  <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+                  <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
                   <span>{formError}</span>
                 </div>
               </div>
@@ -542,7 +536,7 @@ function JoinScreen({
               <ArrowRight size={18} />
             </Btn>
 
-            <p className="text-center font-sans text-xs text-[#888888]">
+            <p className="text-center font-sans text-xs text-[#6b7280]">
               no registration fee · both teammates must be present on campus
             </p>
           </div>
@@ -551,10 +545,10 @@ function JoinScreen({
           <div className="mt-6 space-y-4">
             <Panel className="p-5 space-y-4">
               <div>
-                <h2 className="font-sans text-sm font-bold text-[#1a3300]">
+                <h2 className="font-sans text-sm font-bold text-white">
                   Authenticate Existing Squad
                 </h2>
-                <p className="mt-0.5 text-xs text-[#666666]">
+                <p className="mt-0.5 text-xs text-[#9ca3af]">
                   Enter the 6-character code given after registration.
                 </p>
               </div>
@@ -570,9 +564,9 @@ function JoinScreen({
               />
 
               {codeError && (
-                <div className="rounded-[8px] border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-900">
+                <div className="rounded-[8px] border border-red-800 bg-[#2d1414] p-3 text-xs font-semibold text-red-200">
                   <div className="flex items-start gap-2">
-                    <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+                    <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
                     <span>{codeError}</span>
                   </div>
                 </div>
@@ -584,9 +578,9 @@ function JoinScreen({
               </Btn>
             </Panel>
 
-            <div className="rounded-[10px] border border-[#b6b6b6] bg-white p-3.5 text-xs text-[#555555]">
+            <div className="rounded-[10px] border border-[#202d24] bg-[#111813] p-3.5 text-xs text-[#9ca3af]">
               <div className="flex items-start gap-2">
-                <Info size={16} className="mt-0.5 shrink-0 text-[#1a3300]" />
+                <Info size={16} className="mt-0.5 shrink-0 text-[#22c55e]" />
                 <span>
                   Teammate already registered? Ask them for the 6-character access code to join the live session.
                 </span>

@@ -76,9 +76,9 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#fcfaf5] px-6 text-center">
-      <div className="w-full max-w-sm rounded-[16px] border border-[#b6b6b6] bg-white p-8 shadow-sm">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center">
+      <div className="w-full max-w-sm rounded-[16px] border border-[#202d24] bg-[#111813] p-8 shadow-sm">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/maveli-logo.png"
@@ -86,10 +86,10 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
             className="h-11 w-11 object-cover"
           />
         </div>
-        <h1 className="font-display mt-4 text-2xl text-[#1a3300]">
+        <h1 className="font-display mt-4 text-2xl text-white">
           The Maveli Files
         </h1>
-        <p className="mt-1 font-mono text-xs uppercase tracking-wider text-[#666666]">
+        <p className="mt-1 font-mono text-xs uppercase tracking-wider text-[#9ca3af]">
           Admin Control Center
         </p>
 
@@ -109,8 +109,8 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
             }}
           />
           {error && (
-            <p className="flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
-              <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+            <p className="flex items-start gap-2 rounded-[6px] border border-red-800 bg-[#2d1414] p-2.5 font-sans text-xs font-semibold text-red-200">
+              <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
               {error}
             </p>
           )}
@@ -137,11 +137,11 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("overview");
 
   return (
-    <div className="min-h-[100dvh] bg-[#fcfaf5]">
-      <header className="sticky top-0 z-40 border-b border-[#b6b6b6] bg-[#fcfaf5]/95 backdrop-blur-md">
+    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
+      <header className="sticky top-0 z-40 border-b border-[#202d24] bg-[#111813]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+            <div className="flex h-8 w-8 items-center justify-center rounded-[6px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/maveli-logo.png"
@@ -149,7 +149,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                 className="h-6 w-6 object-cover"
               />
             </div>
-            <span className="hidden font-sans text-sm font-bold tracking-tight text-[#1a3300] sm:block">
+            <span className="hidden font-sans text-sm font-bold tracking-tight text-white sm:block">
               The Maveli Files · Admin
             </span>
             <PhasePill phase={db.game.phase} />
@@ -157,7 +157,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <button
             type="button"
             onClick={onLogout}
-            className="flex items-center gap-1.5 rounded-[6px] border border-[#b6b6b6] bg-white px-3 py-1.5 font-sans text-xs font-medium text-[#1a3300] hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-colors"
+            className="flex items-center gap-1.5 rounded-[6px] border border-[#202d24] bg-[#16221a] px-3 py-1.5 font-sans text-xs font-medium text-white hover:bg-red-950/50 hover:text-red-400 hover:border-red-800 transition-colors"
           >
             <SignOut size={15} /> <span>Logout</span>
           </button>
@@ -171,8 +171,8 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               className={cn(
                 "shrink-0 rounded-[6px] px-3.5 py-1.5 font-sans text-xs font-medium transition-all",
                 tab === t.id
-                  ? "bg-[#1a3300] text-[#fcfaf5]"
-                  : "bg-white border border-[#b6b6b6] text-[#1a3300] hover:bg-[#f1f1f1]",
+                  ? "bg-[#22c55e] text-[#090d0b] font-bold"
+                  : "bg-[#16221a] border border-[#202d24] text-[#9ca3af] hover:text-white hover:bg-[#1a2c20]",
               )}
             >
               {t.label}
@@ -224,7 +224,7 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
         <Stat label="Rescued" value={String(finished)} icon={<Trophy size={16} />} />
       </div>
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
         <SectionHeader>Phase control</SectionHeader>
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
           {PHASES.map((p) => (
@@ -238,35 +238,35 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
             </Btn>
           ))}
         </div>
-        <p className="mt-3 text-xs leading-relaxed text-[#666666]">
+        <p className="mt-3 text-xs leading-relaxed text-[#9ca3af]">
           Content unlocks per phase. End event locks the leaderboard and
           records the winner. Teams keep playing until then.
         </p>
       </Panel>
 
       {winner && (
-        <Panel className="border-[rgba(26,51,0,0.2)] bg-[#ffe95c]/20 p-4">
+        <Panel className="border border-[#22c55e]/40 bg-[#102317] p-4 text-white">
           <SectionHeader>Winner</SectionHeader>
-          <p className="mt-2 text-lg font-bold text-[#1a3300]">{winner.name}</p>
-          <p className="text-sm text-[#666666]">
+          <p className="mt-2 text-lg font-bold text-[#22c55e]">{winner.name}</p>
+          <p className="text-sm text-[#9ca3af]">
             {winner.member1} / {winner.member2}
           </p>
         </Panel>
       )}
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
         <SectionHeader>Recent broadcasts</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-[#666666]">No broadcasts yet.</p>
+          <p className="mt-2 text-sm text-[#9ca3af]">No broadcasts yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-[#b6b6b6]/40">
+          <ul className="mt-2 divide-y divide-[#202d24]">
             {[...db.broadcasts].reverse().slice(0, 8).map((b) => (
               <li key={b.id} className="py-2">
                 <div className="flex items-start gap-2">
-                  <BroadcastIcon size={14} className="mt-0.5 shrink-0 text-[#1a3300]" />
+                  <BroadcastIcon size={14} className="mt-0.5 shrink-0 text-[#22c55e]" />
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-[#1a3300]">{b.message}</p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#666666]">
+                    <p className="text-sm font-medium text-white">{b.message}</p>
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
                       {b.audience}
                       {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
                     </p>
@@ -283,19 +283,19 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: ReactNode }) {
   return (
-    <Panel className="p-3">
-      <div className="flex items-center gap-1.5 text-[#1a3300]/80">
+    <Panel className="p-3 bg-[#111813] border border-[#202d24]">
+      <div className="flex items-center gap-1.5 text-[#22c55e]">
         {icon}
-        <span className="font-mono text-[10px] uppercase tracking-widest">{label}</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">{label}</span>
       </div>
-      <p className="mt-1 font-mono text-2xl font-bold text-[#1a3300]">{value}</p>
+      <p className="mt-1 font-mono text-2xl font-bold text-white">{value}</p>
     </Panel>
   );
 }
 
 function SectionHeader({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#666666]">
+    <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#9ca3af]">
       {children}
     </h2>
   );
@@ -333,7 +333,7 @@ function TeamsTab({ db, locations }: { db: DB; locations: ReturnType<typeof stor
       </div>
 
       {teams.length === 0 ? (
-        <Panel className="p-6 text-center text-sm text-[#666666]">
+        <Panel className="p-6 text-center text-sm text-[#9ca3af] bg-[#111813] border border-[#202d24]">
           No teams yet. They register on the site.
         </Panel>
       ) : (
@@ -376,7 +376,7 @@ function TeamCard({
   const tel = db.settings.volunteerPhone.replace(/[^+\d]/g, "");
 
   return (
-    <Panel className="p-4">
+    <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -384,15 +384,15 @@ function TeamCard({
       >
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="truncate font-semibold text-[#1a3300]">{team.name}</span>
+            <span className="truncate font-semibold text-white">{team.name}</span>
             <Chip className="shrink-0">{team.code}</Chip>
           </div>
-          <p className="mt-0.5 text-xs text-[#666666]">
+          <p className="mt-0.5 text-xs text-[#9ca3af]">
             {team.member1} / {team.member2} · joined {formatTime(team.createdAt)}
           </p>
           <div className="mt-2 flex items-center gap-2">
             <ProgressDots n={progress} total={5} />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#1a3300]/80">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[#22c55e]">
               {stage.label}
             </span>
           </div>
@@ -400,7 +400,7 @@ function TeamCard({
         <CaretDown
           size={16}
           className={cn(
-            "shrink-0 text-[#666666] transition-transform",
+            "shrink-0 text-[#9ca3af] transition-transform",
             open && "rotate-180",
           )}
         />
@@ -415,9 +415,9 @@ function TeamCard({
       </div>
 
       {open && (
-        <div className="mt-4 space-y-3 border-t border-[#b6b6b6]/60 pt-4">
+        <div className="mt-4 space-y-3 border-t border-[#202d24] pt-4">
           <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#666666]">
+            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#9ca3af]">
               Level 1 - push hint
             </p>
             <div className="flex gap-2">
@@ -447,7 +447,7 @@ function TeamCard({
           </div>
 
           <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#666666]">
+            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#9ca3af]">
               Level 3 - admin advance
             </p>
             <div className="flex gap-2">
@@ -509,7 +509,7 @@ function ProgressDots({ n, total }: { n: number; total: number }) {
           key={i}
           className={cn(
             "h-1.5 w-1.5 rounded-full",
-            i < n ? "bg-[#1a3300]" : "bg-[#b6b6b6]/40",
+            i < n ? "bg-[#22c55e] shadow-[0_0_4px_#22c55e]" : "bg-[#202d24]",
           )}
         />
       ))}
@@ -525,11 +525,11 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <SectionHeader>Investigation QR codes</SectionHeader>
-            <p className="mt-1 text-sm text-[#666666]">
+            <p className="mt-1 text-sm text-[#9ca3af]">
               QR codes for all 7 checkpoints (Sightings 1–5, SOS Transmission, and Final Sanctuary).
               Print on A4 or test scan URLs directly below.
             </p>
@@ -547,26 +547,26 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
           return (
             <Panel
               key={l.id}
-              className="flex flex-col items-center justify-between p-5 text-center transition-all hover:border-[#1a3300]"
+              className="flex flex-col items-center justify-between p-5 text-center transition-all bg-[#111813] border border-[#202d24] text-white hover:border-[#22c55e]"
             >
               <div className="w-full">
-                <div className="flex items-center justify-between border-b border-[#b6b6b6]/60 pb-2 text-left">
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1a3300]">
+                <div className="flex items-center justify-between border-b border-[#202d24] pb-2 text-left">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#22c55e]">
                     Node 0{l.order}
                   </span>
-                  <span className="font-mono text-[10px] uppercase text-[#666666]">
+                  <span className="font-mono text-[10px] uppercase text-[#9ca3af]">
                     {l.type}
                   </span>
                 </div>
 
-                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-[#1a3300]">
+                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-white">
                   {l.name}
                 </p>
-                <p className="font-mono text-[10px] text-[#666666]">{l.token}</p>
+                <p className="font-mono text-[10px] text-[#9ca3af]">{l.token}</p>
               </div>
 
               {/* QR Code Container */}
-              <div className="my-4 rounded-xl border border-[#b6b6b6] bg-white p-3 shadow-inner">
+              <div className="my-4 rounded-xl border border-[#202d24] bg-white p-3 shadow-inner">
                 <QRCode
                   value={scanUrl}
                   size={140}
@@ -577,7 +577,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
               </div>
 
               <div className="w-full space-y-2">
-                <div className="rounded bg-[#f1f1f1] px-2 py-1 font-mono text-[10px] text-[#1a3300]/80 truncate">
+                <div className="rounded bg-[#16221a] px-2 py-1 font-mono text-[10px] text-[#86efac] truncate border border-[#202d24]">
                   {scanUrl}
                 </div>
                 <div className="flex items-center justify-center gap-2">
@@ -585,7 +585,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
                     href={scanUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#1a3300] hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#22c55e] hover:underline"
                   >
                     Open test link ↗
                   </a>
@@ -623,7 +623,7 @@ function BroadcastTab({ db }: { db: DB }) {
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>Send a broadcast</SectionHeader>
         <div className="mt-3 space-y-3">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -635,8 +635,8 @@ function BroadcastTab({ db }: { db: DB }) {
                 className={cn(
                   "rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
                   audience === a
-                    ? "border-[#1a3300] bg-[#1a3300] text-[#fcfaf5]"
-                    : "border-[#b6b6b6] bg-white text-[#666666] hover:bg-[#f1f1f1]",
+                    ? "border-[#22c55e] bg-[#22c55e] text-[#090d0b] font-bold"
+                    : "border-[#202d24] bg-[#16221a] text-[#9ca3af] hover:text-white",
                 )}
               >
                 {a === "all" ? "Everyone" : a === "day1" ? "Day 1" : a === "day2" ? "Day 2" : "One team"}
@@ -659,7 +659,7 @@ function BroadcastTab({ db }: { db: DB }) {
                 ))}
               </select>
               {!teamId && (
-                <p className="font-sans text-xs text-amber-700">
+                <p className="font-sans text-xs text-amber-400">
                   Please choose a target squad to send a private broadcast.
                 </p>
               )}
@@ -679,16 +679,16 @@ function BroadcastTab({ db }: { db: DB }) {
         </div>
       </Panel>
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>History</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-[#666666]">No broadcasts yet.</p>
+          <p className="mt-2 text-sm text-[#9ca3af]">No broadcasts yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-[#b6b6b6]/40">
+          <ul className="mt-2 divide-y divide-[#202d24]">
             {[...db.broadcasts].reverse().map((b) => (
               <li key={b.id} className="py-2">
-                <p className="text-sm font-medium text-[#1a3300]">{b.message}</p>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#666666]">
+                <p className="text-sm font-medium text-white">{b.message}</p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
                   {b.audience}
                   {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
                 </p>
@@ -726,7 +726,7 @@ function SettingsTab({ db }: { db: DB }) {
   };
 
   return (
-    <Panel className="p-4">
+    <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
       <SectionHeader>Event settings</SectionHeader>
       <div className="mt-3 grid gap-4 sm:grid-cols-2">
         <Field
@@ -764,7 +764,7 @@ function SettingsTab({ db }: { db: DB }) {
           inputMode="numeric"
         />
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
+          <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
             BitChat guide (shown to teams)
           </span>
           <textarea
@@ -774,7 +774,7 @@ function SettingsTab({ db }: { db: DB }) {
           />
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
+          <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
             Mapillary note (sighting 1)
           </span>
           <textarea
@@ -808,9 +808,9 @@ function DangerTab({ db }: { db: DB }) {
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>End event</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
+        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
           Locks the leaderboard and records the winner from the archive. Teams
           see the "event over" screen.
         </p>
@@ -827,9 +827,9 @@ function DangerTab({ db }: { db: DB }) {
         </Btn>
       </Panel>
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>Restart game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
+        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
           Keeps teams registered, wipes all scans, answers, and hints. Game
           returns to standby.
         </p>
@@ -846,9 +846,9 @@ function DangerTab({ db }: { db: DB }) {
         </Btn>
       </Panel>
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>New game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
+        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
           Wipes everything including registered teams. Use only for a brand new
           event.
         </p>
@@ -869,9 +869,9 @@ function DangerTab({ db }: { db: DB }) {
         </Btn>
       </Panel>
 
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>Export data</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
+        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
           Downloads the full game record (teams, scans, answers, hints,
           broadcasts, settings) as JSON.
         </p>
@@ -901,11 +901,11 @@ function AuditTab({ db }: { db: DB }) {
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4">
+      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <SectionHeader>System audit trail ({logs.length})</SectionHeader>
-            <p className="mt-1 text-sm text-[#666666]">
+            <p className="mt-1 text-sm text-[#9ca3af]">
               Every administrative action, phase change, hint push, broadcast, settings update, and login attempt is logged.
             </p>
           </div>
@@ -920,14 +920,14 @@ function AuditTab({ db }: { db: DB }) {
       </Panel>
 
       {filtered.length === 0 ? (
-        <Panel className="p-6 text-center text-sm text-[#666666]">
+        <Panel className="p-6 text-center text-sm text-[#9ca3af] bg-[#111813] border border-[#202d24]">
           {logs.length === 0 ? "No audit events recorded yet." : "No audit events match your filter."}
         </Panel>
       ) : (
-        <Panel className="p-0 overflow-hidden">
+        <Panel className="p-0 overflow-hidden bg-[#111813] border border-[#202d24]">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-[#b6b6b6]/60 bg-[#fcfaf5] font-mono text-[10px] uppercase tracking-wider text-[#666666]">
+              <thead className="border-b border-[#202d24] bg-[#16221a] font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
                 <tr>
                   <th className="px-4 py-3">Timestamp</th>
                   <th className="px-4 py-3">Actor</th>
@@ -935,13 +935,13 @@ function AuditTab({ db }: { db: DB }) {
                   <th className="px-4 py-3">Target</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#b6b6b6]/40 font-sans">
+              <tbody className="divide-y divide-[#202d24] font-sans">
                 {filtered.map((entry, i) => {
                   const isFail = entry.action.includes("fail");
                   const isSuccess = entry.action.includes("success") || entry.action.startsWith("set-");
                   return (
-                    <tr key={`${entry.at}-${entry.action}-${i}`} className="hover:bg-[#fcfaf5]/60 transition-colors">
-                      <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[11px] text-[#666666]">
+                    <tr key={`${entry.at}-${entry.action}-${i}`} className="hover:bg-[#16221a]/50 transition-colors">
+                      <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[11px] text-[#9ca3af]">
                         {formatTime(entry.at)}
                       </td>
                       <td className="whitespace-nowrap px-4 py-2.5">
@@ -949,8 +949,8 @@ function AuditTab({ db }: { db: DB }) {
                           className={cn(
                             "inline-block rounded px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider",
                             entry.actor === "admin"
-                              ? "bg-[#ffe95c] text-[#1a3300] border border-[rgba(26,51,0,0.15)]"
-                              : "bg-[#f1f1f1] text-[#666666] border border-[#b6b6b6]",
+                              ? "bg-[#14281b] text-[#22c55e] border border-[#22c55e]/40"
+                              : "bg-[#16221a] text-[#9ca3af] border border-[#202d24]",
                           )}
                         >
                           {entry.actor}
@@ -960,15 +960,15 @@ function AuditTab({ db }: { db: DB }) {
                         <span
                           className={cn(
                             "font-mono font-semibold",
-                            isFail && "text-red-700",
-                            isSuccess && "text-[#1a3300]",
-                            !isFail && !isSuccess && "text-[#1a3300]",
+                            isFail && "text-red-400",
+                            isSuccess && "text-[#22c55e]",
+                            !isFail && !isSuccess && "text-white",
                           )}
                         >
                           {entry.action}
                         </span>
                       </td>
-                      <td className="px-4 py-2.5 font-mono text-[11px] text-[#1a3300]/80 truncate max-w-xs">
+                      <td className="px-4 py-2.5 font-mono text-[11px] text-[#9ca3af] truncate max-w-xs">
                         {entry.target || "—"}
                       </td>
                     </tr>

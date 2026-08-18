@@ -52,28 +52,28 @@ export function TeamBadge() {
   };
 
   return (
-    <Panel tone="mint" className="mb-5 p-4">
+    <Panel tone="mint" className="mb-5 p-4 bg-[#102117] border border-[#22c55e]/30 text-white">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <Users size={16} className="shrink-0 text-[#1a3300]" />
-            <span className="truncate font-sans font-bold text-[#1a3300]">{team.name}</span>
+            <Users size={16} className="shrink-0 text-[#22c55e]" />
+            <span className="truncate font-sans font-bold text-white">{team.name}</span>
           </div>
-          <p className="mt-0.5 font-sans text-xs text-[#1a3300]/80">
+          <p className="mt-0.5 font-sans text-xs text-[#9ca3af]">
             {team.member1} / {team.member2}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <span className="rounded-[6px] bg-[#ffe95c] px-2.5 py-1 font-mono text-sm font-bold tracking-widest text-[#1a3300]">
+          <span className="rounded-[6px] bg-[#14261a] border border-[#22c55e]/40 px-2.5 py-1 font-mono text-sm font-bold tracking-widest text-[#22c55e]">
             {team.code}
           </span>
           <button
             type="button"
             onClick={copy}
             aria-label="Copy access code"
-            className="flex h-[32px] w-[40px] items-center justify-center rounded-[8px] border border-[rgba(26,51,0,0.2)] bg-white text-[#1a3300] hover:bg-[#fcfaf5]"
+            className="flex h-[32px] w-[40px] items-center justify-center rounded-[8px] border border-[#22c55e]/30 bg-[#16221a] text-[#22c55e] hover:bg-[#22c55e] hover:text-[#090d0b] transition-colors"
           >
-            {copied ? <Check size={20} className="text-[#1a3300]" weight="bold" /> : <Copy size={20} />}
+            {copied ? <Check size={20} className="text-[#22c55e]" weight="bold" /> : <Copy size={20} />}
           </button>
         </div>
       </div>
@@ -86,34 +86,34 @@ export function TeamBadge() {
 export function StandbyStage() {
   return (
     <div className="space-y-5">
-      <Panel className="p-6 text-center">
+      <Panel className="p-6 text-center bg-[#111813] border border-[#202d24]">
         <TaglineBadge className="mx-auto">
           <Sparkle weight="fill" size={13} /> STANDBY MODE
         </TaglineBadge>
-        <h1 className="font-display mt-4 text-2xl sm:text-3xl text-[#1a3300]">
+        <h1 className="font-display mt-4 text-2xl sm:text-3xl text-white">
           Squad Registered & <HighlightWord>Locked In</HighlightWord>
         </h1>
-        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#555555]">
+        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
           The campus investigation grid is currently locked. Checkpoints and clue signals will activate once the hunt officially commences. Keep your squad access code ready.
         </p>
       </Panel>
 
       {/* Mandatory WhatsApp Group Callout */}
-      <div className="rounded-[14px] border-2 border-[#1a3300] bg-[#d5f5c2] p-5 shadow-sm">
+      <div className="rounded-[14px] border-2 border-[#22c55e] bg-[#112419] p-5 shadow-sm text-white">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a3300] text-[#fcfaf5]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
             <WhatsappLogo size={24} weight="fill" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-sans text-base font-bold text-[#1a3300]">
+              <h3 className="font-sans text-base font-bold text-white">
                 Official Hunt WhatsApp Group
               </h3>
-              <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-bold text-[#fcfaf5]">
+              <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
                 REQUIRED
               </span>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-[#1a3300]/85">
+            <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
               <strong>Every member must join.</strong> Kickoff announcements, live broadcasts, and game hints will be posted in this group.
             </p>
             <a
@@ -129,11 +129,11 @@ export function StandbyStage() {
         </div>
       </div>
 
-      <Panel tone="paper" className="p-4">
+      <Panel tone="paper" className="p-4 bg-[#111813] border border-[#202d24]">
         <div className="flex items-start gap-2.5">
-          <Warning size={18} className="mt-0.5 shrink-0 text-[#1a3300]" weight="fill" />
-          <div className="text-xs leading-relaxed text-[#1a3300]/80">
-            <p className="font-semibold text-[#1a3300]">Hunt Readiness Checklist:</p>
+          <Warning size={18} className="mt-0.5 shrink-0 text-[#22c55e]" weight="fill" />
+          <div className="text-xs leading-relaxed text-[#9ca3af]">
+            <p className="font-semibold text-white">Hunt Readiness Checklist:</p>
             <ul className="mt-1 list-disc pl-4 space-y-0.5">
               <li>Both squad members must note down the squad access code from the badge above.</li>
               <li>Make sure both members have joined the WhatsApp group.</li>
@@ -187,18 +187,18 @@ export function SightingStage({ location }: { location: GameLocation }) {
     <div className="space-y-5">
       <SectionLabel>{location.name}</SectionLabel>
 
-      <Panel className="p-4">
-        <p className="text-[15px] leading-relaxed text-[#1a3300]">{location.clueText}</p>
+      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+        <p className="text-[15px] leading-relaxed text-white">{location.clueText}</p>
       </Panel>
 
-      <Panel tone="mint" className="p-4">
+      <Panel tone="mint" className="p-4 bg-[#102117] border border-[#22c55e]/30">
         <div className="flex items-center gap-2">
-          <MapPin size={16} weight="fill" className="shrink-0 text-[#1a3300]" />
-          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]">
+          <MapPin size={16} weight="fill" className="shrink-0 text-[#22c55e]" />
+          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
             Mapillary View
           </span>
         </div>
-        <p className="mt-2 text-xs leading-relaxed text-[#1a3300]/80">
+        <p className="mt-2 text-xs leading-relaxed text-[#9ca3af]">
           {location.mapillaryNote ??
             "Open the Mapillary capture of this landmark. Compare it with the site photo to spot the difference."}
         </p>
@@ -215,7 +215,7 @@ export function SightingStage({ location }: { location: GameLocation }) {
       </Panel>
 
       {location.photoUrl && (
-        <div className="overflow-hidden rounded-[14px] border border-[#b6b6b6] bg-white">
+        <div className="overflow-hidden rounded-[14px] border border-[#202d24] bg-[#111813]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={location.photoUrl}
@@ -226,23 +226,23 @@ export function SightingStage({ location }: { location: GameLocation }) {
       )}
 
       {solved ? (
-        <Panel tone="yellow" className="p-5 text-center">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+        <Panel tone="yellow" className="p-5 text-center bg-[#14261a] border border-[#22c55e]">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
             Evidence Recovered
           </p>
-          <p className="mt-2 font-mono text-3xl font-extrabold tracking-widest text-[#1a3300]">
+          <p className="mt-2 font-mono text-3xl font-extrabold tracking-widest text-[#22c55e]">
             {word?.word ?? "?????"}
           </p>
           {word?.wordClue && (
-            <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#1a3300]/80">
+            <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
               {word.wordClue}
             </p>
           )}
         </Panel>
       ) : (
-        <Panel className="p-5">
-          <p className="font-sans font-bold text-sm text-[#1a3300]">Type the word that differs</p>
-          <p className="mt-1 font-sans text-xs leading-relaxed text-[#666666]">
+        <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+          <p className="font-sans font-bold text-sm text-white">Type the word that differs</p>
+          <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
             Enter the exact changed word found in this sighting.
           </p>
           <div className="mt-3 space-y-3">
@@ -263,7 +263,7 @@ export function SightingStage({ location }: { location: GameLocation }) {
               aria-label="The word that differs"
             />
             {error && (
-              <p className="flex items-start gap-2 text-xs font-medium text-red-700">
+              <p className="flex items-start gap-2 text-xs font-medium text-red-400">
                 <WarningCircle size={16} className="mt-0.5 shrink-0" />
                 {error}
               </p>
@@ -277,11 +277,11 @@ export function SightingStage({ location }: { location: GameLocation }) {
       )}
 
       {hasHint && (
-        <Panel tone="teal" className="p-4">
-          <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]">
+        <Panel tone="teal" className="p-4 bg-[#0e201e] border border-[#10b981]/30">
+          <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#6ee7b7]">
             <ShieldWarning size={15} /> Level 1 Hint
           </div>
-          <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#1a3300]/85">{location.hintText}</p>
+          <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#9ca3af]">{location.hintText}</p>
         </Panel>
       )}
 
@@ -303,19 +303,19 @@ export function DeadEndStage() {
         <TaglineBadge className="mx-auto mb-2">
           DAY 1 · END OF TRAIL
         </TaglineBadge>
-        <h1 className="font-display mt-2 text-3xl font-extrabold text-[#1a3300]">
+        <h1 className="font-display mt-2 text-3xl font-extrabold text-white">
           Maveli Has Disappeared
         </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#555555]">
+        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
           The trail stops here. The last clue did not lead to Maveli. Something is amiss.
         </p>
       </div>
 
-      <Panel tone="mint" className="p-5">
-        <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#1a3300]">
+      <Panel tone="mint" className="p-5 bg-[#102117] border border-[#22c55e]/30">
+        <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#22c55e]">
           <Radio size={15} className="anim-blink" /> Signal Lost
         </div>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#1a3300]">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
           {isNight
             ? "Maveli broke radio silence. He is trapped somewhere on campus and has found a way to communicate without the internet. He needs your squad tomorrow."
             : "The trail was deliberate. Maveli was leading us somewhere on purpose. Stay ready."}
@@ -323,12 +323,12 @@ export function DeadEndStage() {
       </Panel>
 
       {isNight ? (
-        <Panel className="p-5">
+        <Panel className="p-5 bg-[#111813] border border-[#202d24]">
           <div className="flex items-center gap-2">
-            <InstagramLogo size={18} className="shrink-0 text-[#1a3300]" />
-            <p className="font-sans font-bold text-sm text-[#1a3300]">Emergency Instagram Broadcast</p>
+            <InstagramLogo size={18} className="shrink-0 text-[#22c55e]" />
+            <p className="font-sans font-bold text-sm text-white">Emergency Instagram Broadcast</p>
           </div>
-          <p className="mt-1 font-sans text-xs leading-relaxed text-[#666666]">
+          <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
             Maveli went live and transmitted an SOS. Watch the broadcast so your squad is prepared for Day 2.
           </p>
           <a
@@ -341,23 +341,23 @@ export function DeadEndStage() {
           </a>
         </Panel>
       ) : (
-        <Panel className="p-5">
+        <Panel className="p-5 bg-[#111813] border border-[#202d24]">
           <div className="flex items-center gap-2">
-            <Radio size={18} className="shrink-0 text-[#1a3300]" />
-            <p className="font-sans font-bold text-sm text-[#1a3300]">Offline Broadcast Channel</p>
+            <Radio size={18} className="shrink-0 text-[#22c55e]" />
+            <p className="font-sans font-bold text-sm text-white">Offline Broadcast Channel</p>
           </div>
-          <p className="mt-1 font-sans text-xs leading-relaxed text-[#666666]">
+          <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
             Maveli has found a way to communicate without cellular internet.
           </p>
           <button
             type="button"
             onClick={() => setBitchatOpen((v) => !v)}
-            className="mt-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300] underline"
+            className="mt-3 font-mono text-xs font-semibold uppercase tracking-wider text-[#22c55e] underline"
           >
             BITCHAT PROTOCOL — HOW IT WORKS
           </button>
           {bitchatOpen && (
-            <p className="mt-2 border-t border-[#b6b6b6]/40 pt-3 font-sans text-xs leading-relaxed text-[#555555]">
+            <p className="mt-2 border-t border-[#202d24] pt-3 font-sans text-xs leading-relaxed text-[#9ca3af]">
               {settings.bitchatGuide}
             </p>
           )}
@@ -378,23 +378,23 @@ export function SosStage() {
   return (
     <div className="space-y-5">
       <SectionLabel>Day 2 — Rescue</SectionLabel>
-      <Panel tone="yellow" className="p-5">
+      <Panel tone="yellow" className="p-5 bg-[#14261a] border border-[#22c55e]/40">
         <div className="flex items-center gap-2">
-          <Radio size={16} className="anim-blink text-[#1a3300]" />
-          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]">
+          <Radio size={16} className="anim-blink text-[#22c55e]" />
+          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
             Emergency Transmission
           </span>
         </div>
-        <h2 className="font-display mt-2 text-2xl text-[#1a3300]">
+        <h2 className="font-display mt-2 text-2xl text-white">
           Find the Signal
         </h2>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#1a3300]/80">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
           Maveli&apos;s SOS is broadcasting on campus. Reach the area and locate the Emergency Transmission marker.
         </p>
       </Panel>
       {sos && (
-        <Panel className="p-4">
-          <p className="font-sans text-sm leading-relaxed text-[#1a3300]">{sos.clueText}</p>
+        <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+          <p className="font-sans text-sm leading-relaxed text-white">{sos.clueText}</p>
           <div className="mt-4">
             <QRScannerButton label="Scan the transmission QR" />
           </div>
@@ -424,23 +424,23 @@ export function FinalStage() {
   return (
     <div className="space-y-5">
       <SectionLabel>Final Hunt</SectionLabel>
-      <Panel tone="mint" className="p-5">
+      <Panel tone="mint" className="p-5 bg-[#102117] border border-[#22c55e]/30">
         <div className="flex items-center gap-2">
-          <Leaf size={18} className="anim-blink text-[#1a3300]" />
-          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#1a3300]">
+          <Leaf size={18} className="anim-blink text-[#22c55e]" />
+          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
             He is Close
           </span>
         </div>
-        <h2 className="font-display mt-2 text-2xl text-[#1a3300]">
+        <h2 className="font-display mt-2 text-2xl text-white">
           Find the Sanctuary
         </h2>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#1a3300]/80">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
           The transmission indicated where Maveli is sheltered. Reach the location and scan the final marker.
         </p>
       </Panel>
       {fin && (
-        <Panel className="p-4">
-          <p className="font-sans text-sm leading-relaxed text-[#1a3300]">{fin.clueText}</p>
+        <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+          <p className="font-sans text-sm leading-relaxed text-white">{fin.clueText}</p>
           <div className="mt-4">
             <QRScannerButton label="Scan the final QR" />
           </div>
@@ -455,8 +455,8 @@ export function FinalStage() {
 export function GateStage() {
   return (
     <div className="space-y-5">
-      <Panel className="p-5">
-        <p className="font-sans text-sm leading-relaxed text-[#1a3300]">
+      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <p className="font-sans text-sm leading-relaxed text-white">
           You are standing where Maveli is sheltered. The final marker demands proof: the five words, reconstructed in the exact order he left.
         </p>
       </Panel>
@@ -478,11 +478,11 @@ export function RescuedStage() {
         <TaglineBadge className="mx-auto mb-3">
           MISSION ACCOMPLISHED
         </TaglineBadge>
-        <Leaf size={44} weight="fill" className="mx-auto text-[#1a3300]" />
-        <h1 className="font-display mt-3 text-3xl font-extrabold text-[#1a3300]">
+        <Leaf size={44} weight="fill" className="mx-auto text-[#22c55e]" />
+        <h1 className="font-display mt-3 text-3xl font-extrabold text-white">
           Maveli is Safe!
         </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#555555]">
+        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
           {myWin
             ? "Your squad found him first! Maveli is safe thanks to your deduction."
             : "Your squad solved the trail. The hunt is complete."}
@@ -495,7 +495,7 @@ export function RescuedStage() {
         </Link>
         <Link
           href="/tracker"
-          className="mx-auto mt-3 flex max-w-xs items-center justify-center gap-1 text-xs font-medium text-[#666666] hover:text-[#1a3300]"
+          className="mx-auto mt-3 flex max-w-xs items-center justify-center gap-1 text-xs font-medium text-[#9ca3af] hover:text-[#22c55e]"
         >
           Back to Tracker <ArrowRight size={14} />
         </Link>
@@ -515,17 +515,17 @@ export function EndedStage() {
 
   return (
     <div className="space-y-5 pt-4 text-center">
-      <h1 className="font-display text-3xl font-extrabold text-[#1a3300]">
+      <h1 className="font-display text-3xl font-extrabold text-white">
         The Hunt is Over
       </h1>
       {winner ? (
-        <Panel tone="mint" className="p-6">
-          <Trophy size={32} weight="fill" className="mx-auto text-[#1a3300]" />
-          <p className="mt-2 font-sans text-lg font-bold text-[#1a3300]">{winner.name}</p>
-          <p className="font-sans text-xs text-[#1a3300]/80">found Maveli first.</p>
+        <Panel tone="mint" className="p-6 bg-[#102117] border border-[#22c55e]/30">
+          <Trophy size={32} weight="fill" className="mx-auto text-[#22c55e]" />
+          <p className="mt-2 font-sans text-lg font-bold text-white">{winner.name}</p>
+          <p className="font-sans text-xs text-[#9ca3af]">found Maveli first.</p>
         </Panel>
       ) : (
-        <p className="mx-auto max-w-[34ch] font-sans text-sm leading-relaxed text-[#555555]">
+        <p className="mx-auto max-w-[34ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
           Results will be announced shortly. Thank you for the search.
         </p>
       )}

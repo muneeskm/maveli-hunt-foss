@@ -33,10 +33,10 @@ export default function TrackerPage() {
   if (!team) {
     if (sessionPending) {
       return (
-        <div className="flex min-h-[100dvh] items-center justify-center bg-[#fcfaf5]">
+        <div className="flex min-h-[100dvh] items-center justify-center bg-[#090d0b]">
           <div className="text-center">
-            <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#1a3300]" />
-            <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+            <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
+            <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
               Syncing squad...
             </p>
           </div>
@@ -83,19 +83,19 @@ export default function TrackerPage() {
         <img
           src="/maveli-logo.png"
           alt="The Maveli Files"
-          className="h-10 w-10 rounded-full border border-[#b6b6b6] object-cover shadow-sm"
+          className="h-10 w-10 rounded-full border border-[#202d24] object-cover shadow-sm"
         />
-        <p className="font-mono text-[10px] uppercase tracking-widest text-[#666666]">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
           The Maveli Files
         </p>
-        <div className="mt-3 flex items-center gap-2 border-t border-[#b6b6b6]/60 pt-3">
+        <div className="mt-3 flex items-center gap-2 border-t border-[#202d24] pt-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/foss-logo.png"
             alt="FOSS CCE"
-            className="h-7 w-7 rounded-full border border-[#b6b6b6] object-cover"
+            className="h-7 w-7 rounded-full border border-[#202d24] object-cover"
           />
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#666666]">
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#9ca3af]">
             Conducted by FOSS CCE
           </span>
         </div>

@@ -123,8 +123,8 @@ export function QRScannerButton({ label = "Scan the QR with camera" }: { label?:
               </>
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
-                <Camera size={40} className="text-[#ffe95c]" />
-                <p className="text-sm leading-relaxed text-[#b6b6b6]">
+                <Camera size={40} className="text-[#22c55e]" />
+                <p className="text-sm leading-relaxed text-[#9ca3af]">
                   Your browser cannot scan QR codes directly. Open your camera
                   app and point it at the QR on the evidence marker.
                 </p>

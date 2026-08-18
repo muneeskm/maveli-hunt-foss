@@ -98,12 +98,12 @@ export function ReconstructionGate() {
 
   if (solved) {
     return (
-      <Panel tone="mint" className="p-6 text-center">
-        <CheckCircle size={40} weight="fill" className="mx-auto text-[#1a3300]" />
-        <h2 className="font-display mt-3 text-2xl text-[#1a3300]">
+      <Panel tone="mint" className="p-6 text-center bg-[#102117] border border-[#22c55e]/40 text-white">
+        <CheckCircle size={40} weight="fill" className="mx-auto text-[#22c55e]" />
+        <h2 className="font-display mt-3 text-2xl text-white">
           Maveli is Safe!
         </h2>
-        <p className="mt-1 font-sans text-xs leading-relaxed text-[#1a3300]/80">
+        <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
           The instruction matched. Your squad proved the discovery.
         </p>
       </Panel>
@@ -113,8 +113,8 @@ export function ReconstructionGate() {
   return (
     <div>
       <SectionLabel>Final Reconstruction Gate</SectionLabel>
-      <Panel className="p-5">
-        <p className="font-sans text-xs leading-relaxed text-[#555555]">
+      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <p className="font-sans text-xs leading-relaxed text-[#9ca3af]">
           The five words on your evidence board are fragments of one hidden
           instruction. Reconstruct it and enter the words in the exact sequence
           the instruction reads.
@@ -122,7 +122,7 @@ export function ReconstructionGate() {
         <div className="mt-4 space-y-3">
           {game.gateSlots.map((slot, i) => (
             <label key={slot + i} className="block">
-              <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-[#1a3300]">
+              <span className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-white font-bold">
                 {slot}
               </span>
               <input
@@ -140,8 +140,8 @@ export function ReconstructionGate() {
           ))}
         </div>
         {error && (
-          <p className="mt-3 flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
-            <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-700" />
+          <p className="mt-3 flex items-start gap-2 rounded-[6px] border border-red-800 bg-[#2d1414] p-2.5 font-sans text-xs font-semibold text-red-200">
+            <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
             {error}
           </p>
         )}

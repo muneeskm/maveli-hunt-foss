@@ -150,7 +150,7 @@ export function Timeline() {
       <ol className="relative mt-2">
         {/* the rail */}
         <span
-          className="absolute bottom-5 left-4 top-5 w-px bg-[#b6b6b6]"
+          className="absolute bottom-5 left-4 top-5 w-px bg-[#202d24]"
           aria-hidden="true"
         />
 
@@ -158,7 +158,7 @@ export function Timeline() {
           <li key={e.key} className="relative">
             {e.section && (
               <div className="flex items-center pb-2 pt-1">
-                <span className="relative z-10 ml-[7px] bg-[#fcfaf5] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#1a3300]">
+                <span className="relative z-10 ml-[7px] bg-[#090d0b] border border-[#202d24] rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#22c55e]">
                   {e.section}
                 </span>
               </div>
@@ -174,10 +174,10 @@ export function Timeline() {
               <span
                 className={cn(
                   "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  e.status === "done" && "border-black bg-black text-white shadow-sm",
+                  e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.2)]",
                   e.status === "current" &&
-                    "anim-blink border-black bg-black text-white shadow-md",
-                  e.status === "upcoming" && "border-[#b6b6b6] bg-white text-[#888888]",
+                    "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b] shadow-[0_0_12px_rgba(34,197,94,0.4)]",
+                  e.status === "upcoming" && "border-[#202d24] bg-[#111813] text-[#6b7280]",
                 )}
               >
                 {e.icon}
@@ -186,19 +186,19 @@ export function Timeline() {
               <div className="min-w-0 flex-1 pt-0.5">
                 <p
                   className={cn(
-                    "text-[15px] font-semibold leading-snug text-[#1a3300]",
-                    e.status === "upcoming" && "text-[#777777]",
+                    "text-[15px] font-semibold leading-snug text-white",
+                    e.status === "upcoming" && "text-[#6b7280]",
                   )}
                 >
                   {e.title}
                 </p>
                 {e.detail && (
-                  <p className="mt-0.5 text-[13px] leading-relaxed text-[#555555]">
+                  <p className="mt-0.5 text-[13px] leading-relaxed text-[#9ca3af]">
                     {e.detail}
                   </p>
                 )}
                 {e.meta && (
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#888888]">
+                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7280]">
                     {e.meta}
                   </p>
                 )}
@@ -207,9 +207,9 @@ export function Timeline() {
               <span
                 className={cn(
                   "mt-1 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-wider",
-                  e.status === "done" && "text-[#1a3300]",
-                  e.status === "current" && "text-[#1a3300] bg-[#ffe95c] px-1.5 py-0.5 rounded-[4px]",
-                  e.status === "upcoming" && "text-[#888888]",
+                  e.status === "done" && "text-[#22c55e]",
+                  e.status === "current" && "text-[#090d0b] bg-[#22c55e] px-1.5 py-0.5 rounded-[4px] font-bold",
+                  e.status === "upcoming" && "text-[#6b7280]",
                 )}
               >
                 {e.status === "done"

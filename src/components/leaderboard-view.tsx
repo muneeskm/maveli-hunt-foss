@@ -26,9 +26,9 @@ export function LeaderboardView({
         <Chip tone="yellow">{rows.length} Squads</Chip>
       </div>
 
-      <Panel className="divide-y divide-[#b6b6b6]/40 p-0 overflow-hidden shadow-sm">
+      <Panel className="divide-y divide-[#202d24] p-0 overflow-hidden shadow-sm bg-[#111813] border border-[#202d24]">
         {visible.length === 0 && (
-          <p className="px-4 py-8 text-center font-sans text-sm text-[#888888]">
+          <p className="px-4 py-8 text-center font-sans text-sm text-[#9ca3af]">
             No squads registered yet.
           </p>
         )}
@@ -42,28 +42,28 @@ export function LeaderboardView({
               key={row.team.id}
               className={cn(
                 "flex items-center gap-3 p-4 transition-colors",
-                highlight && "bg-[#d5f5c2]/30",
-                isWinner && "bg-[#ffe95c]/30",
+                highlight && "bg-[#14281b] border-l-4 border-l-[#22c55e]",
+                isWinner && "bg-[#162f1e]",
               )}
             >
               <span
                 className={cn(
                   "flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] font-mono text-xs font-bold",
                   isFirst
-                    ? "bg-[#ffe95c] text-[#1a3300]"
-                    : "bg-[#f1f1f1] text-[#666666]",
+                    ? "bg-[#22c55e] text-[#090d0b]"
+                    : "bg-[#16221a] text-[#9ca3af]",
                 )}
               >
                 {row.rank}
               </span>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5 truncate font-sans text-sm font-bold text-[#1a3300]">
+                <div className="flex items-center gap-1.5 truncate font-sans text-sm font-bold text-white">
                   {isWinner && (
-                    <Trophy size={16} weight="fill" className="shrink-0 text-[#1a3300]" />
+                    <Trophy size={16} weight="fill" className="shrink-0 text-[#22c55e]" />
                   )}
                   <span className="truncate">{row.team.name}</span>
                 </div>
-                <div className="mt-0.5 font-mono text-[10px] text-[#666666]">
+                <div className="mt-0.5 font-mono text-[10px] text-[#9ca3af]">
                   {row.correctReconstructionAt
                     ? `RESCUED AT ${formatTime(row.correctReconstructionAt)}`
                     : row.scans.length > 0

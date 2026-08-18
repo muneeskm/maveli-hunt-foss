@@ -40,13 +40,13 @@ export function AppShell({
   const tel = settings.volunteerPhone.replace(/[^+\d]/g, "");
 
   return (
-    <div className="min-h-[100dvh] bg-[#fcfaf5]">
+    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
       {/* Floating Pill Top Nav */}
       <header className="sticky top-3 z-40 mx-auto max-w-xl px-4">
-        <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#b6b6b6] bg-[#fcfaf5]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
+        <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            {/* 36x36 Highlighter Yellow logo square */}
-            <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+            {/* Logo square */}
+            <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/maveli-logo.png"
@@ -54,7 +54,7 @@ export function AppShell({
                 className="h-[28px] w-[28px] object-cover"
               />
             </div>
-            <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-[#1a3300]">
+            <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-white">
               The Maveli Files
             </span>
           </Link>
@@ -71,7 +71,7 @@ export function AppShell({
                     router.replace("/");
                   }
                 }}
-                className="flex h-[24px] shrink-0 items-center rounded-[6px] border border-[#b6b6b6] bg-white px-2.5 font-sans text-xs font-medium text-[#1a3300] hover:bg-red-50 hover:text-red-700 hover:border-red-300 transition-colors"
+                className="flex h-[24px] shrink-0 items-center rounded-[6px] border border-[#202d24] bg-[#16221a] px-2.5 font-sans text-xs font-medium text-white hover:bg-red-950/50 hover:text-red-400 hover:border-red-800 transition-colors"
               >
                 Exit
               </button>
@@ -82,8 +82,8 @@ export function AppShell({
 
       {visible.length > 0 && (
         <div className="mx-auto mt-4 max-w-xl px-4">
-          <div className="flex items-center gap-2.5 rounded-[10px] border border-[#a8e5e5] bg-[#a8e5e5]/30 px-4 py-2.5 text-xs text-[#1a3300]">
-            <Broadcast size={16} weight="bold" className="shrink-0 text-[#1a3300]" />
+          <div className="flex items-center gap-2.5 rounded-[10px] border border-[#22c55e]/40 bg-[#102317] px-4 py-2.5 text-xs text-white">
+            <Broadcast size={16} weight="bold" className="shrink-0 text-[#22c55e]" />
             <p className="truncate font-sans font-medium">{visible[0].message}</p>
           </div>
         </div>
@@ -98,7 +98,7 @@ export function AppShell({
             type="button"
             onClick={() => setContactOpen(true)}
             aria-label="Contact volunteers"
-            className="pointer-events-auto absolute bottom-5 right-4 flex h-13 w-13 items-center justify-center rounded-full bg-[#1a3300] text-[#fcfaf5] shadow-lg hover:opacity-90 active:scale-95 transition-all"
+            className="pointer-events-auto absolute bottom-5 right-4 flex h-13 w-13 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b] shadow-lg hover:opacity-90 active:scale-95 transition-all"
             style={{ marginBottom: "env(safe-area-inset-bottom)" }}
           >
             <Phone size={22} weight="fill" />
@@ -109,28 +109,28 @@ export function AppShell({
       {/* Contact Modal */}
       {contactOpen && (
         <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm"
           onClick={() => setContactOpen(false)}
         >
           <Panel
             tone="paper"
-            className="w-full max-w-md rounded-[16px] p-6 shadow-xl anim-rise"
+            className="w-full max-w-md rounded-[16px] p-6 shadow-xl anim-rise bg-[#111813] border border-[#202d24]"
             onClick={(e: MouseEvent) => e.stopPropagation()}
           >
-            <div className="mb-2 flex items-center justify-between border-b border-[#b6b6b6] pb-3">
-              <h2 className="font-sans text-base font-bold text-[#1a3300]">
+            <div className="mb-2 flex items-center justify-between border-b border-[#202d24] pb-3">
+              <h2 className="font-sans text-base font-bold text-white">
                 Need guidance? Contact a volunteer
               </h2>
               <button
                 type="button"
                 onClick={() => setContactOpen(false)}
-                className="flex h-7 w-7 items-center justify-center rounded-full text-[#666666] hover:bg-black/5"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[#9ca3af] hover:bg-white/10"
                 aria-label="Close"
               >
                 <X size={16} />
               </button>
             </div>
-            <p className="mb-5 font-sans text-sm text-[#555555]">
+            <p className="mb-5 font-sans text-sm text-[#9ca3af]">
               A student volunteer will assist your squad without giving the secret away.
             </p>
             <div className="grid grid-cols-2 gap-3">

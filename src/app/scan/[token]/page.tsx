@@ -134,12 +134,12 @@ export default function ScanTokenPage() {
 
   const bar = (
     <header className="sticky top-3 z-40 mx-auto max-w-md px-4">
-      <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#b6b6b6] bg-[#fcfaf5]/95 px-3.5 py-2.5 backdrop-blur-md shadow-sm">
+      <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-sm">
         <Link
           href="/tracker"
-          className="flex items-center gap-2 font-sans text-xs font-bold text-[#1a3300]"
+          className="flex items-center gap-2 font-sans text-xs font-bold text-white"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-[#ffe95c] border border-[rgba(26,51,0,0.15)] overflow-hidden">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/maveli-logo.png"
@@ -151,7 +151,7 @@ export default function ScanTokenPage() {
         </Link>
         <Link
           href="/leaderboard"
-          className="rounded-[6px] border border-[#b6b6b6] bg-white px-2.5 py-1 font-sans text-xs font-medium text-[#1a3300] hover:bg-[#f1f1f1]"
+          className="rounded-[6px] border border-[#202d24] bg-[#16221a] px-2.5 py-1 font-sans text-xs font-medium text-white hover:bg-[#1a2c20] transition-colors"
         >
           Leaderboard
         </Link>
@@ -161,13 +161,13 @@ export default function ScanTokenPage() {
 
   if (view.kind === "checking") {
     return (
-      <div className="min-h-[100dvh] bg-[#fcfaf5]">
+      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
         {bar}
         <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ffe95c]">
-            <Radio size={28} className="anim-blink text-[#1a3300]" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
+            <Radio size={28} className="anim-blink text-[#22c55e]" />
           </div>
-          <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#1a3300]">
+          <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
             Decoding campus evidence...
           </p>
         </div>
@@ -177,29 +177,29 @@ export default function ScanTokenPage() {
 
   if (view.kind === "out_of_order") {
     return (
-      <div className="min-h-[100dvh] bg-[#fcfaf5]">
+      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
         {bar}
         <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
           <div className="text-center">
             <TaglineBadge className="mx-auto mb-3">
               <WarningCircle size={14} weight="bold" /> OUT OF SEQUENCE
             </TaglineBadge>
-            <h1 className="font-display text-3xl sm:text-4xl text-[#1a3300]">
+            <h1 className="font-display text-3xl sm:text-4xl text-white">
               Whoa there, <HighlightWord>Time Traveler!</HighlightWord> ⏳
             </h1>
           </div>
 
-          <Panel tone="yellow" className="mt-6 p-6 text-center">
-            <p className="font-mono text-xs uppercase tracking-wider text-[#1a3300]/80">
+          <Panel tone="yellow" className="mt-6 p-6 text-center bg-[#14261a] border border-[#22c55e]/40">
+            <p className="font-mono text-xs uppercase tracking-wider text-[#86efac]">
               Sequence Check
             </p>
-            <p className="mt-3 font-sans text-sm leading-relaxed text-[#1a3300]">
+            <p className="mt-3 font-sans text-sm leading-relaxed text-white">
               You just scanned <strong>{view.targetLocationName}</strong> (Node 0{view.targetOrder}),
               but your squad hasn&apos;t uncovered{" "}
               <strong>Sighting 0{view.expectedOrder}</strong> ({view.expectedLocationName}) yet!
             </p>
 
-            <div className="mt-4 rounded-[8px] border border-[rgba(26,51,0,0.15)] bg-white/80 p-3 text-xs italic text-[#1a3300]">
+            <div className="mt-4 rounded-[8px] border border-[#202d24] bg-[#16201a] p-3 text-xs italic text-[#86efac]">
               💡 Maveli says: &quot;Hold your horses! My footprints move forward in time,
               not quantum entanglement. Follow the trail in sequence!&quot;
             </div>
@@ -218,16 +218,16 @@ export default function ScanTokenPage() {
 
   if (view.kind === "unknown") {
     return (
-      <div className="min-h-[100dvh] bg-[#fcfaf5]">
+      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
         {bar}
         <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
-            <XCircle size={32} className="text-red-700" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3f1515] border border-red-800">
+            <XCircle size={32} className="text-red-400" />
           </div>
-          <h1 className="font-display mt-4 text-2xl text-[#1a3300]">
+          <h1 className="font-display mt-4 text-2xl text-white">
             Not a Hunt Marker
           </h1>
-          <p className="mx-auto mt-2 max-w-[32ch] font-sans text-xs text-[#666666]">
+          <p className="mx-auto mt-2 max-w-[32ch] font-sans text-xs text-[#9ca3af]">
             This code does not belong to The Maveli Files. Check the physical landmark marker and try again.
           </p>
           <Btn onClick={continueTracker} className="mt-6">
@@ -241,7 +241,7 @@ export default function ScanTokenPage() {
   if (view.kind === "sighting") {
     const isFirst = !view.duplicate;
     return (
-      <div className="min-h-[100dvh] bg-[#fcfaf5]">
+      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
         {bar}
         <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
           <div className="text-center">
@@ -249,13 +249,13 @@ export default function ScanTokenPage() {
               <Sparkle weight="fill" size={13} />
               {isFirst ? "EVIDENCE RECOVERED" : "ALREADY RECOVERED"}
             </TaglineBadge>
-            <h1 className="font-display text-3xl sm:text-4xl text-[#1a3300]">
+            <h1 className="font-display text-3xl sm:text-4xl text-white">
               {view.name}
             </h1>
           </div>
 
           {view.photoUrl && (
-            <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-[14px] border border-[#b6b6b6] shadow-sm">
+            <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-[14px] border border-[#202d24] shadow-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={view.photoUrl}
@@ -265,30 +265,30 @@ export default function ScanTokenPage() {
             </div>
           )}
 
-          <Panel tone="yellow" className="mt-5 p-6 text-center">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#1a3300]/80">
+          <Panel tone="yellow" className="mt-5 p-6 text-center bg-[#14261a] border border-[#22c55e]/40">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
               Decrypted Word 0{view.order}
             </p>
             {revealed ? (
               <div className="anim-mask mt-3">
-                <p className="font-mono text-4xl font-extrabold tracking-widest text-[#1a3300]">
+                <p className="font-mono text-4xl font-extrabold tracking-widest text-[#22c55e]">
                   {view.word || "RECORDED"}
                 </p>
                 {view.wordClue && (
-                  <p className="mx-auto mt-3 max-w-[36ch] font-sans text-xs leading-relaxed text-[#1a3300]/80">
+                  <p className="mx-auto mt-3 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
                     {view.wordClue}
                   </p>
                 )}
               </div>
             ) : (
               <>
-                <p className="mt-3 select-none font-mono text-4xl font-bold tracking-widest text-[#1a3300]/70">
+                <p className="mt-3 select-none font-mono text-4xl font-bold tracking-widest text-[#86efac]">
                   •••••
                 </p>
                 <Btn
                   variant="outline"
                   onClick={() => setRevealed(true)}
-                  className="mt-4 bg-white"
+                  className="mt-4 bg-[#16221a] border border-[#22c55e]/40 text-[#22c55e]"
                 >
                   <Eye size={16} /> Reveal Word
                 </Btn>
@@ -296,7 +296,7 @@ export default function ScanTokenPage() {
             )}
           </Panel>
 
-          <p className="mt-4 text-center font-sans text-xs text-[#666666]">
+          <p className="mt-4 text-center font-sans text-xs text-[#9ca3af]">
             {isFirst
               ? "✓ Word automatically logged to your squad's Evidence Board!"
               : "Your squad already recorded this sighting. Continue to the next node."}
@@ -313,14 +313,14 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-locking") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#fcfaf5] px-6 text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#ffe95c]">
-          <Radio size={36} className="anim-blink text-[#1a3300]" />
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center text-white">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
+          <Radio size={36} className="anim-blink text-[#22c55e]" />
         </div>
-        <h1 className="font-display mt-6 text-3xl text-[#1a3300]">
+        <h1 className="font-display mt-6 text-3xl text-white">
           Signal Locking...
         </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#666666]">
+        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
           Stay in the vicinity. The transmission packet is resolving...
         </p>
       </div>
@@ -329,19 +329,19 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-alarm") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#fcfaf5] px-6 py-10 text-center">
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 py-10 text-center text-white">
         <TaglineBadge className="mx-auto mb-3">
           EMERGENCY ALERT
         </TaglineBadge>
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl text-[#1a3300]">
+        <h1 className="font-display mt-2 text-3xl sm:text-4xl text-white">
           Maveli SOS Detected!
         </h1>
-        <Panel tone="mint" className="mt-6 w-full max-w-sm p-5 text-left">
-          <div className="flex items-center gap-2 border-b border-[rgba(26,51,0,0.15)] pb-2">
-            <CheckCircle size={18} weight="fill" className="shrink-0 text-[#1a3300]" />
-            <p className="font-sans text-xs font-bold text-[#1a3300]">Transmission Received</p>
+        <Panel tone="mint" className="mt-6 w-full max-w-sm p-5 text-left bg-[#102117] border border-[#22c55e]/40">
+          <div className="flex items-center gap-2 border-b border-[#202d24] pb-2">
+            <CheckCircle size={18} weight="fill" className="shrink-0 text-[#22c55e]" />
+            <p className="font-sans text-xs font-bold text-white">Transmission Received</p>
           </div>
-          <p className="mt-3 font-sans text-xs leading-relaxed text-[#1a3300]/85">
+          <p className="mt-3 font-sans text-xs leading-relaxed text-[#9ca3af]">
             Maveli is alive, but trapped. He has been broadcasting on an offline channel. The next clue tells you where he is sheltered.
           </p>
         </Panel>
@@ -355,14 +355,14 @@ export default function ScanTokenPage() {
 
   if (view.kind === "sos-dup") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#fcfaf5] px-6 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#d5f5c2]">
-          <CheckCircle size={32} className="text-[#1a3300]" />
+      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center text-white">
+        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
+          <CheckCircle size={32} className="text-[#22c55e]" />
         </div>
-        <h1 className="font-display mt-4 text-2xl text-[#1a3300]">
+        <h1 className="font-display mt-4 text-2xl text-white">
           SOS Already Received
         </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#666666]">
+        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
           Your squad already recovered this transmission. The next clue is ready in the tracker.
         </p>
         <Btn onClick={continueTracker} className="mt-6">
@@ -378,18 +378,18 @@ export default function ScanTokenPage() {
     game.winnerTeamId === team.id;
 
   return (
-    <div className="min-h-[100dvh] bg-[#fcfaf5]">
+    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
       {bar}
       <main className="mx-auto max-w-md px-5 py-8">
         {solved ? (
           <div className="py-10 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#d5f5c2]">
-              <Leaf size={36} weight="fill" className="text-[#1a3300]" />
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
+              <Leaf size={36} weight="fill" className="text-[#22c55e]" />
             </div>
-            <h1 className="font-display mt-4 text-3xl text-[#1a3300]">
+            <h1 className="font-display mt-4 text-3xl text-white">
               Maveli is Safe!
             </h1>
-            <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#666666]">
+            <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
               Your squad proved the final instruction. The hunt is complete.
             </p>
             <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5">
@@ -399,17 +399,17 @@ export default function ScanTokenPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            <Panel tone="mint" className="p-6 text-center">
-              <Detective size={32} weight="bold" className="mx-auto text-[#1a3300]" />
-              <h1 className="font-display mt-2 text-2xl text-[#1a3300]">
+            <Panel tone="mint" className="p-6 text-center bg-[#102117] border border-[#22c55e]/40">
+              <Detective size={32} weight="bold" className="mx-auto text-[#22c55e]" />
+              <h1 className="font-display mt-2 text-2xl text-white">
                 You Found the Sanctuary
               </h1>
-              <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#1a3300]/80">
+              <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
                 Maveli is here. The final marker demands proof. Reconstruct the instruction from your five words in exact order.
               </p>
               {view.duplicate && (
-                <p className="mt-3 flex items-start justify-center gap-2 rounded-[6px] border border-[#b6b6b6] bg-white p-2 text-xs text-[#666666]">
-                  <WarningCircle size={16} className="mt-0.5 shrink-0" />
+                <p className="mt-3 flex items-start justify-center gap-2 rounded-[6px] border border-[#202d24] bg-[#16201a] p-2 text-xs text-[#9ca3af]">
+                  <WarningCircle size={16} className="mt-0.5 shrink-0 text-amber-400" />
                   This marker was already scanned by your squad.
                 </p>
               )}

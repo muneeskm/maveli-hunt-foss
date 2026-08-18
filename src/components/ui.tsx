@@ -23,7 +23,7 @@ export function Panel({
         tone === "teal" && "panel-teal",
         tone === "blush" && "panel-blush",
         tone === "yellow" && "panel-yellow",
-        tone === "paper" && "bg-[#fcfaf5] border border-[#b6b6b6]",
+        tone === "paper" && "bg-[#111813] border border-[#202d24]",
         className,
       )}
       onClick={onClick}
@@ -49,7 +49,7 @@ export function Chip({
         (tone === "leaf" || tone === "yellow") && "chip-yellow",
         tone === "mint" && "chip-mint",
         tone === "teal" && "chip-teal",
-        tone === "alarm" && "bg-red-50 border-red-200 text-red-800",
+        tone === "alarm" && "bg-[#3f1515] border border-red-800 text-red-300",
         className,
       )}
     >
@@ -137,12 +137,12 @@ export function Field({
   return (
     <label className="block">
       {label && (
-        <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
+        <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
           {label}
         </span>
       )}
       <input className="field" {...props} />
-      {hint && <span className="mt-1.5 block font-sans text-xs text-[#666666]">{hint}</span>}
+      {hint && <span className="mt-1.5 block font-sans text-xs text-[#9ca3af]">{hint}</span>}
     </label>
   );
 }
@@ -159,19 +159,19 @@ export function SelectField({
   return (
     <label className="block">
       {label && (
-        <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
+        <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
           {label}
         </span>
       )}
       <div className="relative">
         <select
-          className="field cursor-pointer appearance-none bg-white pr-10 font-sans text-sm font-semibold text-[#1a3300] hover:border-[#1a3300] transition-colors"
+          className="field cursor-pointer appearance-none bg-[#111813] pr-10 font-sans text-sm font-semibold text-white hover:border-[#22c55e] transition-colors"
           {...props}
         >
           {children}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-          <span className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-[#f1f1f1] text-[#1a3300]">
+          <span className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-[#16221a] text-[#22c55e]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="12"
@@ -184,7 +184,7 @@ export function SelectField({
           </span>
         </div>
       </div>
-      {hint && <span className="mt-1.5 block font-sans text-xs text-[#666666]">{hint}</span>}
+      {hint && <span className="mt-1.5 block font-sans text-xs text-[#9ca3af]">{hint}</span>}
     </label>
   );
 }
@@ -201,14 +201,14 @@ const PHASE_LABEL: Record<Phase, string> = {
 export function PhasePill({ phase }: { phase: Phase }) {
   const isAlarm = phase === "day2" || phase === "rescued";
   return (
-    <div className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#b6b6b6] bg-white px-3 py-1 text-xs">
+    <div className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#202d24] bg-[#111813] px-3 py-1 text-xs">
       <span
         className={cn(
           "h-2 w-2 shrink-0 rounded-full",
-          isAlarm ? "bg-red-500 anim-blink" : "bg-[#1a3300]",
+          isAlarm ? "bg-red-500 anim-blink" : "bg-[#22c55e] shadow-[0_0_6px_#22c55e]",
         )}
       />
-      <span className="font-mono text-[10px] font-bold tracking-wider text-[#1a3300]">
+      <span className="font-mono text-[10px] font-bold tracking-wider text-white">
         {PHASE_LABEL[phase]}
       </span>
     </div>
@@ -218,8 +218,8 @@ export function PhasePill({ phase }: { phase: Phase }) {
 export function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div className="mb-3 flex items-center gap-2">
-      <span className="h-1.5 w-1.5 rounded-full bg-[#1a3300]" />
-      <span className="font-sans text-xs font-bold uppercase tracking-wider text-[#1a3300]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
+      <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
         {children}
       </span>
     </div>
@@ -236,7 +236,7 @@ export function WordBlock({
   return (
     <span
       className={cn(
-        "font-mono text-lg font-bold tracking-widest text-[#1a3300] bg-[#ffe95c] rounded-[4px] px-2.5 py-0.5",
+        "font-mono text-lg font-bold tracking-widest text-[#4ade80] bg-[#14261a] border border-[#22c55e]/40 rounded-[4px] px-2.5 py-0.5",
         blurred && "select-none",
       )}
       style={blurred ? { filter: "blur(8px)" } : undefined}

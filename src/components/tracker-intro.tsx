@@ -383,7 +383,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-50 flex min-h-[100dvh] w-full flex-col justify-between overflow-y-auto bg-[#fcfaf5] px-4 py-5 text-[#1a3300] select-none transition-opacity duration-300",
+        "fixed inset-0 z-50 flex min-h-[100dvh] w-full flex-col justify-between overflow-y-auto bg-[#090d0b] px-4 py-5 text-white select-none transition-opacity duration-300",
         state === "complete" ? "opacity-0 pointer-events-none" : "opacity-100",
       )}
       style={{ touchAction: "none" }}
@@ -392,7 +392,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-25">
         {/* Top-left sketchbook doodle annotations */}
         <svg
-          className="absolute left-4 top-14 h-28 w-28 text-[#1a3300]"
+          className="absolute left-4 top-14 h-28 w-28 text-[#22c55e]"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -406,7 +406,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
 
         {/* Bottom-right coordinates & star doodle */}
         <svg
-          className="absolute right-4 bottom-16 h-24 w-24 text-[#1a3300]"
+          className="absolute right-4 bottom-16 h-24 w-24 text-[#22c55e]"
           viewBox="0 0 100 100"
           fill="none"
           stroke="currentColor"
@@ -419,25 +419,25 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
 
         {/* Faint paper graph grid */}
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className="absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage:
-              "linear-gradient(to right, #1a3300 1px, transparent 1px), linear-gradient(to bottom, #1a3300 1px, transparent 1px)",
+              "linear-gradient(to right, #22c55e 1px, transparent 1px), linear-gradient(to bottom, #22c55e 1px, transparent 1px)",
             backgroundSize: "32px 32px",
           }}
         />
       </div>
 
       {/* ----------------- 2. TOP HEADER ----------------- */}
-      <header className="relative z-10 mx-auto flex w-full max-w-lg items-center justify-between border-b border-[#b6b6b6]/40 pb-2.5">
+      <header className="relative z-10 mx-auto flex w-full max-w-lg items-center justify-between border-b border-[#202d24] pb-2.5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#1a3300] anim-blink" />
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#1a3300]/80">
+            <span className="h-2 w-2 rounded-full bg-[#22c55e] anim-blink shadow-[0_0_8px_#22c55e]" />
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#86efac]">
               {introMessages.headerLabel}
             </p>
           </div>
-          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl text-[#1a3300] leading-none tracking-[0.04em]">
+          <h1 className="font-display mt-0.5 text-2xl sm:text-3xl text-white leading-none tracking-[0.04em]">
             MAVELI <span className="highlight-wash">SIGNAL</span>
           </h1>
         </div>
@@ -446,11 +446,11 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
         <button
           type="button"
           onClick={completeIntro}
-          className="flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#1a3300]/60 hover:text-[#1a3300] transition-colors p-1"
+          className="flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#9ca3af] hover:text-[#22c55e] transition-colors p-1"
           aria-label="Skip introduction"
         >
           <span>{introMessages.skip}</span>
-          <span className="hidden sm:inline text-[9px] text-[#888888]">(ESC)</span>
+          <span className="hidden sm:inline text-[9px] text-[#6b7280]">(ESC)</span>
         </button>
       </header>
 
@@ -499,9 +499,9 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
           aria-valuemax={100}
           tabIndex={0}
         >
-          {/* Subtle highlighter yellow glow wash behind Maveli when 100% locked */}
+          {/* Subtle neon green glow wash behind Maveli when 100% locked */}
           {signal >= 100 && (
-            <div className="absolute inset-4 rounded-full bg-[#ffe95c]/30 blur-xl anim-rise pointer-events-none" />
+            <div className="absolute inset-4 rounded-full bg-[#22c55e]/20 blur-xl anim-rise pointer-events-none" />
           )}
 
           {/* Hand-Drawn SVG Signal Rings BEHIND and AROUND Maveli */}
@@ -509,16 +509,16 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
             className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none"
             viewBox={`0 0 ${ringSize} ${ringSize}`}
           >
-            {/* Outer Sketch Track (Pencil dashed) */}
+            {/* Outer Sketch Track */}
             <circle
               cx={ringSize / 2}
               cy={ringSize / 2}
               r={normalizedRadius}
               fill="none"
-              stroke="#b6b6b6"
+              stroke="#202d24"
               strokeWidth="2"
               strokeDasharray="5 4"
-              opacity="0.65"
+              opacity="0.8"
             />
 
             {/* Inner faint concentric orbit */}
@@ -527,10 +527,10 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
               cy={ringSize / 2}
               r="105"
               fill="none"
-              stroke="#1a3300"
+              stroke="#22c55e"
               strokeWidth="1"
               strokeDasharray="3 5"
-              opacity="0.18"
+              opacity="0.25"
             />
 
             {/* Subtle Crosshair Marks */}
@@ -539,27 +539,27 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
               y1="20"
               x2={ringSize / 2}
               y2={ringSize - 20}
-              stroke="#1a3300"
+              stroke="#22c55e"
               strokeWidth="1"
-              opacity="0.12"
+              opacity="0.2"
             />
             <line
               x1="20"
               y1={ringSize / 2}
               x2={ringSize - 20}
               y2={ringSize / 2}
-              stroke="#1a3300"
+              stroke="#22c55e"
               strokeWidth="1"
-              opacity="0.12"
+              opacity="0.2"
             />
 
-            {/* Active Tuned Arc in Forest Ink */}
+            {/* Active Tuned Arc in FOSS Neon Green */}
             <circle
               cx={ringSize / 2}
               cy={ringSize / 2}
               r={normalizedRadius}
               fill="none"
-              stroke="#1a3300"
+              stroke="#22c55e"
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
@@ -573,8 +573,8 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
                 cx={knobX}
                 cy={knobY}
                 r="8"
-                fill="#ffe95c"
-                stroke="#1a3300"
+                fill="#22c55e"
+                stroke="#090d0b"
                 strokeWidth="2.5"
                 className="drop-shadow-sm"
               />
@@ -586,8 +586,8 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
             {/* Low signal radar wave placeholder */}
             {signal < 25 && (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                <Radio size={40} className="anim-blink text-[#1a3300]/50" weight="duotone" />
-                <span className="mt-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#1a3300]/50">
+                <Radio size={40} className="anim-blink text-[#22c55e]/60" weight="duotone" />
+                <span className="mt-2 font-mono text-[10px] font-bold uppercase tracking-widest text-[#22c55e]/60">
                   RECEIVING SIGNAL...
                 </span>
               </div>
@@ -631,7 +631,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
           {!hasInteracted && interactiveReady && signal < 25 && (
             <div
               className={cn(
-                "pointer-events-none absolute -bottom-2 z-30 flex items-center gap-1.5 rounded-full border border-[rgba(26,51,0,0.2)] bg-[#ffe95c] px-3.5 py-1 font-sans text-xs font-bold text-[#1a3300] shadow-sm",
+                "pointer-events-none absolute -bottom-2 z-30 flex items-center gap-1.5 rounded-full border border-[#22c55e]/40 bg-[#14261a] px-3.5 py-1 font-sans text-xs font-bold text-[#22c55e] shadow-sm",
                 showIdleHint ? "anim-dial-pulse" : "anim-rise",
               )}
             >
@@ -643,7 +643,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
 
         {/* ----------------- CLEAN TELEMETRY: SIGNAL % ----------------- */}
         <div className="mt-1 flex items-center justify-center">
-          <span className="font-mono text-xl sm:text-2xl font-extrabold tracking-wider text-[#1a3300]">
+          <span className="font-mono text-xl sm:text-2xl font-extrabold tracking-wider text-[#22c55e]">
             SIGNAL: {Math.round(signal)}%
           </span>
         </div>
@@ -655,50 +655,34 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
         <div className="relative">
           {/* Subtle pointer tip pointing UP toward Maveli */}
           <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
-            <div
-              className={cn(
-                "h-3 w-3 rotate-45 border-l border-t transition-all duration-200",
-                currentNote.tone === "yellow"
-                  ? "border-[#1a3300] bg-[#ffe95c]"
-                  : currentNote.tone === "mint"
-                    ? "border-[#1a3300] bg-[#d5f5c2]"
-                    : "border-[#1a3300] bg-white",
-              )}
-            />
+            <div className="h-3 w-3 rotate-45 border-l border-t border-[#202d24] bg-[#111813]" />
           </div>
 
           {/* Dialogue Note Body */}
           <div
             key={currentNote.key}
-            className={cn(
-              "panel rounded-[12px] border p-4 sm:p-5 text-center transition-all duration-200 shadow-sm anim-note-pop",
-              currentNote.tone === "yellow"
-                ? "border-[#1a3300] bg-[#ffe95c]/25"
-                : currentNote.tone === "mint"
-                  ? "border-[#1a3300] bg-[#d5f5c2]/40"
-                  : "border-[#1a3300] bg-white",
-            )}
+            className="panel rounded-[12px] border border-[#202d24] bg-[#111813] p-4 sm:p-5 text-center transition-all duration-200 shadow-[0_0_20px_rgba(0,0,0,0.5)] anim-note-pop text-white"
             aria-live="polite"
           >
-            <p className="font-sans text-base sm:text-lg font-semibold leading-snug text-[#1a3300]">
+            <p className="font-sans text-base sm:text-lg font-semibold leading-snug text-white">
               {currentNote.content}
             </p>
           </div>
         </div>
 
-        {/* Primary CTA Button (Follows DESIGN.md: Forest Ink fill, Cream text, 6px radius, arrow glyph) */}
+        {/* Primary CTA Button */}
         {state === "ready" ? (
           <button
             type="button"
             onClick={completeIntro}
-            className="btn btn-primary w-full justify-center text-base py-3.5 shadow-sm anim-rise"
+            className="btn btn-primary w-full justify-center text-base py-3.5 shadow-[0_0_20px_rgba(34,197,94,0.3)] anim-rise"
           >
-            <Sparkle size={18} weight="fill" className="text-[#ffe95c]" />
+            <Sparkle size={18} weight="fill" />
             <span>→ {introMessages.cta}</span>
           </button>
         ) : (
           <div className="flex items-center justify-center py-1">
-            <p className="font-mono text-[11px] uppercase tracking-wider text-[#888888]">
+            <p className="font-mono text-[11px] uppercase tracking-wider text-[#9ca3af]">
               {signal >= 100 ? "Ready to track" : "Swipe around Maveli to tune"}
             </p>
           </div>
