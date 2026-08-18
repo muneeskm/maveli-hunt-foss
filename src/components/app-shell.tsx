@@ -10,6 +10,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { PhasePill, Panel, Btn } from "@/components/ui";
+import { filterBroadcastsForTeam } from "@/lib/game";
 import { store } from "@/lib/store";
 import type { Broadcast as BroadcastType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -33,14 +34,7 @@ export function AppShell({
   const [contactOpen, setContactOpen] = useState(false);
 
   const visible = useMemo(() => {
-    return broadcasts
-      .filter((b) => {
-        if (b.audience === "team") return !!teamId && b.teamId === teamId;
-        if (b.audience === "day1") return phase === "day1" || phase === "night";
-        if (b.audience === "day2") return phase === "day2" || phase === "rescued";
-        return true;
-      })
-      .slice(-1);
+    return filterBroadcastsForTeam(broadcasts, phase, teamId).slice(-1);
   }, [broadcasts, phase, teamId]);
 
   const tel = settings.volunteerPhone.replace(/[^+\d]/g, "");

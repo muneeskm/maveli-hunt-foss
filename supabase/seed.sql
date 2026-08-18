@@ -62,7 +62,7 @@ values (1,
   'https://instagram.com',
   'Mavelli has been broadcasting on BitChat. Open the BitChat app, find the account named in the SOS, and read the latest message. It contains a code. Enter that code here.',
   'MERIDIAN',
-  'mavelli-admin',
+  'FOSSCCE@MaveliFiles',
   4,
   'Open Mapillary (app or mapillary.com) and find the view for this spot. Compare it with the photo on this site and type the one word that differs.')
 on conflict (id) do update

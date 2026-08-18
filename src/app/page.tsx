@@ -25,6 +25,7 @@ import {
   SelectField,
   TaglineBadge,
 } from "@/components/ui";
+import { CountdownTimer } from "@/components/countdown-timer";
 import { TrackerIntro } from "@/components/tracker-intro";
 import { useGame, useMounted } from "@/hooks/use-game";
 import { store } from "@/lib/store";
@@ -389,6 +390,9 @@ function JoinScreen({
             Register your 2-member squad to unlock access credentials and track the clues left across campus.
           </p>
         </div>
+
+        {/* Event Countdown Timer */}
+        <CountdownTimer className="mt-6" />
 
         {/* Mode Switcher Tabs */}
         <div className="mt-6 flex items-center justify-center gap-1 rounded-[8px] border border-[#b6b6b6] bg-white p-1">

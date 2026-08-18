@@ -24,7 +24,7 @@ import { store } from "@/lib/store";
 import type { DB, Phase } from "@/lib/types";
 import { cn, formatTime } from "@/lib/utils";
 
-type Tab = "overview" | "teams" | "qr" | "broadcast" | "settings" | "danger";
+type Tab = "overview" | "teams" | "qr" | "broadcast" | "settings" | "audit" | "danger";
 
 const TABS: { id: Tab; label: string }[] = [
   { id: "overview", label: "Overview" },
@@ -32,6 +32,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "qr", label: "QR sheet" },
   { id: "broadcast", label: "Broadcast" },
   { id: "settings", label: "Settings" },
+  { id: "audit", label: "Audit log" },
   { id: "danger", label: "Danger" },
 ];
 
@@ -63,9 +64,9 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
     }
     setBusy(true);
     try {
-      const ok = await store.adminLogin(code);
-      if (!ok) {
-        setError("Wrong code. This login is logged.");
+      const res = await store.adminLogin(code);
+      if (!res.ok) {
+        setError(res.message || "Wrong code. This login is logged.");
         return;
       }
       onAuthed();
@@ -94,11 +95,18 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
 
         <div className="mt-6 space-y-4 text-left">
           <Field
-            label="Control Code"
-            placeholder="••••••"
+            label="Admin Password"
+            type="password"
+            placeholder="Enter admin password"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            autoComplete="off"
+            autoComplete="current-password"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submit();
+              }
+            }}
           />
           {error && (
             <p className="flex items-start gap-2 rounded-[6px] border border-red-200 bg-red-50 p-2.5 font-sans text-xs font-semibold text-red-800">
@@ -107,7 +115,7 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
             </p>
           )}
           <Btn onClick={submit} disabled={busy} className="w-full justify-center text-sm py-2.5">
-            {busy ? "Checking..." : "Unlock Control"}
+            {busy ? "Checking..." : "Log In to Control Center"}
           </Btn>
         </div>
       </div>
@@ -179,6 +187,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
         {tab === "qr" && <QRTab locations={locations} />}
         {tab === "broadcast" && <BroadcastTab db={db} />}
         {tab === "settings" && <SettingsTab db={db} />}
+        {tab === "audit" && <AuditTab db={db} />}
         {tab === "danger" && <DangerTab db={db} />}
       </main>
     </div>
@@ -598,12 +607,14 @@ function BroadcastTab({ db }: { db: DB }) {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
 
+  const canSend = Boolean(message.trim()) && (audience !== "team" || Boolean(teamId));
+
   const send = () => {
-    if (!message.trim()) return;
+    if (!canSend) return;
     store.addBroadcast(
       message.trim(),
       audience,
-      audience === "team" ? teamId || undefined : undefined,
+      audience === "team" ? teamId : undefined,
     );
     setMessage("");
     setSent(true);
@@ -633,19 +644,26 @@ function BroadcastTab({ db }: { db: DB }) {
             ))}
           </div>
           {audience === "team" && (
-            <select
-              value={teamId}
-              onChange={(e) => setTeamId(e.target.value)}
-              className="field text-sm"
-              aria-label="Team"
-            >
-              <option value="">Select team...</option>
-              {db.teams.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name} ({t.code})
-                </option>
-              ))}
-            </select>
+            <div className="space-y-1.5">
+              <select
+                value={teamId}
+                onChange={(e) => setTeamId(e.target.value)}
+                className="field text-sm"
+                aria-label="Team"
+              >
+                <option value="">Select squad...</option>
+                {db.teams.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name} ({t.code})
+                  </option>
+                ))}
+              </select>
+              {!teamId && (
+                <p className="font-sans text-xs text-amber-700">
+                  Please choose a target squad to send a private broadcast.
+                </p>
+              )}
+            </div>
           )}
           <textarea
             value={message}
@@ -654,7 +672,7 @@ function BroadcastTab({ db }: { db: DB }) {
             className="field min-h-24 resize-y"
             aria-label="Broadcast message"
           />
-          <Btn onClick={send} className="w-full sm:w-auto">
+          <Btn onClick={send} disabled={!canSend} className="w-full sm:w-auto">
             {sent ? <Check size={18} /> : <BroadcastIcon size={18} />}
             {sent ? "Sent" : "Send broadcast"}
           </Btn>
@@ -864,3 +882,104 @@ function DangerTab({ db }: { db: DB }) {
     </div>
   );
 }
+
+/* ---------- audit log ---------- */
+
+function AuditTab({ db }: { db: DB }) {
+  const [query, setQuery] = useState("");
+  const logs = db.auditLog ?? [];
+
+  const q = query.trim().toLowerCase();
+  const filtered = logs.filter((entry) => {
+    if (!q) return true;
+    return (
+      entry.actor.toLowerCase().includes(q) ||
+      entry.action.toLowerCase().includes(q) ||
+      entry.target.toLowerCase().includes(q)
+    );
+  });
+
+  return (
+    <div className="space-y-4">
+      <Panel className="p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <SectionHeader>System audit trail ({logs.length})</SectionHeader>
+            <p className="mt-1 text-sm text-[#666666]">
+              Every administrative action, phase change, hint push, broadcast, settings update, and login attempt is logged.
+            </p>
+          </div>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filter actor / action / target..."
+            className="field field-sm w-full sm:w-64"
+            aria-label="Filter audit log"
+          />
+        </div>
+      </Panel>
+
+      {filtered.length === 0 ? (
+        <Panel className="p-6 text-center text-sm text-[#666666]">
+          {logs.length === 0 ? "No audit events recorded yet." : "No audit events match your filter."}
+        </Panel>
+      ) : (
+        <Panel className="p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="border-b border-[#b6b6b6]/60 bg-[#fcfaf5] font-mono text-[10px] uppercase tracking-wider text-[#666666]">
+                <tr>
+                  <th className="px-4 py-3">Timestamp</th>
+                  <th className="px-4 py-3">Actor</th>
+                  <th className="px-4 py-3">Action</th>
+                  <th className="px-4 py-3">Target</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#b6b6b6]/40 font-sans">
+                {filtered.map((entry, i) => {
+                  const isFail = entry.action.includes("fail");
+                  const isSuccess = entry.action.includes("success") || entry.action.startsWith("set-");
+                  return (
+                    <tr key={`${entry.at}-${entry.action}-${i}`} className="hover:bg-[#fcfaf5]/60 transition-colors">
+                      <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[11px] text-[#666666]">
+                        {formatTime(entry.at)}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-2.5">
+                        <span
+                          className={cn(
+                            "inline-block rounded px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider",
+                            entry.actor === "admin"
+                              ? "bg-[#ffe95c] text-[#1a3300] border border-[rgba(26,51,0,0.15)]"
+                              : "bg-[#f1f1f1] text-[#666666] border border-[#b6b6b6]",
+                          )}
+                        >
+                          {entry.actor}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <span
+                          className={cn(
+                            "font-mono font-semibold",
+                            isFail && "text-red-700",
+                            isSuccess && "text-[#1a3300]",
+                            !isFail && !isSuccess && "text-[#1a3300]",
+                          )}
+                        >
+                          {entry.action}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2.5 font-mono text-[11px] text-[#1a3300]/80 truncate max-w-xs">
+                        {entry.target || "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Panel>
+      )}
+    </div>
+  );
+}
+

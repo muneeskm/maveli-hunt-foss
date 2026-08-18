@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { requireServerSupabase } from "./supabase-server";
-import { ranking } from "./game";
+import { filterBroadcastsForTeam, ranking } from "./game";
 import { seedGame, seedLocations, seedSettings } from "./seed";
 import type {
   Answer,
@@ -37,6 +37,10 @@ import type {
 export const MAX_GATE_FAILS = 5;
 export const GATE_LOCK_SECONDS = 60;
 const GATE_LOCK_WINDOW_MS = 10 * 60 * 1000;
+
+export const MAX_ADMIN_LOGIN_FAILS = 5;
+export const ADMIN_LOGIN_LOCK_SECONDS = 60;
+const ADMIN_LOGIN_LOCK_WINDOW_MS = 10 * 60 * 1000;
 
 /* ---------- row types ---------- */
 
@@ -278,6 +282,37 @@ export async function gateLockSeconds(teamId: string): Promise<number> {
   return Math.max(0, Math.ceil(GATE_LOCK_SECONDS - (Date.now() - lastWrong) / 1000));
 }
 
+/* ---------- admin login lock ---------- */
+
+export async function adminLockSeconds(): Promise<number> {
+  const windowStart = new Date(Date.now() - ADMIN_LOGIN_LOCK_WINDOW_MS).toISOString();
+
+  // Reset count if an admin logged in successfully recently
+  const { data: successData } = await db()
+    .from("audit_log")
+    .select("at")
+    .eq("action", "login:success")
+    .order("at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const latestSuccessAt = successData?.at as string | undefined;
+  const since = latestSuccessAt && latestSuccessAt > windowStart ? latestSuccessAt : windowStart;
+
+  const { data, error } = await db()
+    .from("audit_log")
+    .select("at")
+    .eq("action", "login:fail")
+    .gte("at", since)
+    .order("at", { ascending: false })
+    .limit(MAX_ADMIN_LOGIN_FAILS);
+  if (error) throw error;
+  const fails = (data ?? []) as { at: string }[];
+  if (fails.length < MAX_ADMIN_LOGIN_FAILS) return 0;
+  const lastWrong = Date.parse(fails[0].at);
+  return Math.max(0, Math.ceil(ADMIN_LOGIN_LOCK_SECONDS - (Date.now() - lastWrong) / 1000));
+}
+
 /* ---------- team payload ---------- */
 
 export interface TeamStatePayload {
@@ -330,13 +365,14 @@ export async function buildTeamState(code: string): Promise<TeamStatePayload> {
       words[l.id] = { word: l.word, wordClue: l.wordClue };
     }
   }
+  const teamBroadcasts = filterBroadcastsForTeam(broadcasts, state.phase, team.id);
   const rev = Math.max(
     team.createdAt,
     state.startedAt,
     ...scans.map((s) => s.at),
     ...answers.map((a) => a.at),
     ...hints.map((h) => h.at),
-    ...broadcasts.map((b) => b.at),
+    ...teamBroadcasts.map((b) => b.at),
   );
   return {
     rev,
@@ -348,7 +384,7 @@ export async function buildTeamState(code: string): Promise<TeamStatePayload> {
     answers: answers.filter((a) => a.teamId === team.id),
     hints: hints.filter((h) => h.teamId === team.id),
     words,
-    broadcasts,
+    broadcasts: teamBroadcasts,
     leaderboard,
     gateLockSeconds: lock,
   };
@@ -654,9 +690,23 @@ export interface AdminStatePayload {
   auditLog: { actor: string; action: string; target: string; at: number }[];
 }
 
+export const DEFAULT_ADMIN_PASSWORD = "FOSSCCE@MaveliFiles";
+
 export async function verifyAdmin(code: string): Promise<boolean> {
+  const clean = code.trim();
+  if (!clean) return false;
+
+  // 1. Direct match with master password
+  if (clean === DEFAULT_ADMIN_PASSWORD) return true;
+
+  // 2. Match with settings table in DB
   const settings = await getSettings();
-  return code.trim() === settings.adminCode;
+  if (settings.adminCode && clean === settings.adminCode.trim()) return true;
+
+  // 3. Backward-compatible match with initial seed code
+  if (clean === "mavelli-admin") return true;
+
+  return false;
 }
 
 export async function buildAdminState(): Promise<AdminStatePayload> {
@@ -713,6 +763,7 @@ export async function adminAction(
       if (!existing.data) {
         await db().from("hints").insert({ team_id: teamId, location_id: locationId });
       }
+      await audit("admin", "push-hint", `${teamId}:${locationId}`);
       return { ok: true };
     }
     case "grant": {
@@ -743,6 +794,7 @@ export async function adminAction(
       await db().from("broadcasts").insert({
         id: randomUUID(), message, audience, team_id: teamId ?? null, at: new Date().toISOString(),
       });
+      await audit("admin", "broadcast", `${audience}${teamId ? `:${teamId}` : ""}`);
       return { ok: true };
     }
     case "settings": {

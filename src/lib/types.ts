@@ -92,6 +92,13 @@ export interface StageInfo {
   location?: GameLocation; // current sighting to solve
 }
 
+export interface AuditEntry {
+  actor: string;
+  action: string;
+  target: string;
+  at: number;
+}
+
 export interface DB {
   game: GameState;
   teams: Team[];
@@ -100,6 +107,7 @@ export interface DB {
   hints: Hint[];
   broadcasts: Broadcast[];
   settings: Settings;
+  auditLog?: AuditEntry[];
 }
 
 export interface LeaderboardRow {

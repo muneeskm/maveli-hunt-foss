@@ -1,5 +1,6 @@
 import type {
   Answer,
+  Broadcast,
   GameLocation,
   GameState,
   LeaderboardRow,
@@ -147,3 +148,29 @@ export function gateStatus(game: GameState) {
     slots: game.gateSlots,
   };
 }
+
+export function isBroadcastVisible(
+  broadcast: Broadcast,
+  phase: Phase,
+  teamId?: string | null,
+): boolean {
+  if (broadcast.audience === "team") {
+    return Boolean(teamId && broadcast.teamId === teamId);
+  }
+  if (broadcast.audience === "day1") {
+    return phase === "day1" || phase === "night";
+  }
+  if (broadcast.audience === "day2") {
+    return phase === "day2" || phase === "rescued";
+  }
+  return true; // "all" audience is always visible
+}
+
+export function filterBroadcastsForTeam(
+  broadcasts: Broadcast[],
+  phase: Phase,
+  teamId?: string | null,
+): Broadcast[] {
+  return broadcasts.filter((b) => isBroadcastVisible(b, phase, teamId));
+}
+

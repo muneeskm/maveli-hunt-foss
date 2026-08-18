@@ -395,19 +395,19 @@ export const httpStore = {
     if (stored) adminCode = stored;
     return Boolean(stored);
   },
-  async adminLogin(code: string): Promise<boolean> {
+  async adminLogin(code: string): Promise<{ ok: true } | { ok: false; message: string }> {
     try {
-      const res = await api<{ ok: boolean }>("/api/admin/login", {
+      const res = await api<{ ok: boolean; message?: string }>("/api/admin/login", {
         method: "POST",
         body: JSON.stringify({ code }),
       });
-      if (!res.ok) return false;
+      if (!res.ok) return { ok: false, message: res.message ?? "Wrong code. This login is logged." };
       adminCode = code.trim();
       if (typeof window !== "undefined") window.localStorage.setItem(ADMIN_SESSION_KEY, adminCode);
       void refreshAdminState();
-      return true;
-    } catch {
-      return false;
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, message: (e as Error).message || "Wrong code. This login is logged." };
     }
   },
   adminLogout() {
@@ -425,6 +425,7 @@ export const httpStore = {
       hints: [],
       broadcasts: [],
       settings: seedSettings(),
+      auditLog: [],
     };
   },
   allScans(): Scan[] {
@@ -483,6 +484,7 @@ export const httpStore = {
         hints: db.hints,
         broadcasts: db.broadcasts,
         settings: db.settings,
+        auditLog: db.auditLog ?? [],
       },
       null,
       2,

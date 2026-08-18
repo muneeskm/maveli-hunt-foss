@@ -298,6 +298,15 @@ alter default privileges in schema public grant all on routines to service_role;
 
 
 -- ============================================================================
--- END OF MIGRATIONS - append new blocks below as M007, M008, ...
+-- M007 - AUDIT LOG PERFORMANCE INDEX
+--   Index (action, at desc) optimizes admin login brute-force lockout checks
+--   and recent audit trail queries.
 -- ============================================================================
+
+create index if not exists idx_audit_log_action_at on public.audit_log (action, at desc);
+
+-- ============================================================================
+-- END OF MIGRATIONS - append new blocks below as M008, M009, ...
+-- ============================================================================
+
 

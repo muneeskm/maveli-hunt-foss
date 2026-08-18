@@ -19,7 +19,7 @@ export const DEMO_WORDS = ["TEMPLE", "NORTH", "THREE", "BANYAN", "CLOCK"] as con
 export const DEMO_GATE_ANSWER = ["NORTH", "TEMPLE", "CLOCK", "BANYAN", "THREE"];
 
 export const DEMO_BITCHAT_CODE = "MERIDIAN";
-export const DEMO_ADMIN_CODE = "mavelli-admin";
+export const DEMO_ADMIN_CODE = "FOSSCCE@MaveliFiles";
 
 const DEMO_WORD_CLUES: Record<string, string> = {
   TEMPLE: "A place of worship. He is not inside it, but near it.",
