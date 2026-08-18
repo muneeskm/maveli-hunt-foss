@@ -229,17 +229,17 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
             </Btn>
           ))}
         </div>
-        <p className="mt-3 text-xs leading-relaxed text-fog">
+        <p className="mt-3 text-xs leading-relaxed text-[#666666]">
           Content unlocks per phase. End event locks the leaderboard and
           records the winner. Teams keep playing until then.
         </p>
       </Panel>
 
       {winner && (
-        <Panel className="border-leaf/40 p-4">
+        <Panel className="border-[rgba(26,51,0,0.2)] bg-[#ffe95c]/20 p-4">
           <SectionHeader>Winner</SectionHeader>
-          <p className="mt-2 text-lg font-bold text-mist">{winner.name}</p>
-          <p className="text-sm text-fog">
+          <p className="mt-2 text-lg font-bold text-[#1a3300]">{winner.name}</p>
+          <p className="text-sm text-[#666666]">
             {winner.member1} / {winner.member2}
           </p>
         </Panel>
@@ -248,16 +248,16 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
       <Panel className="p-4">
         <SectionHeader>Recent broadcasts</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-fog">No broadcasts yet.</p>
+          <p className="mt-2 text-sm text-[#666666]">No broadcasts yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-line">
+          <ul className="mt-2 divide-y divide-[#b6b6b6]/40">
             {[...db.broadcasts].reverse().slice(0, 8).map((b) => (
               <li key={b.id} className="py-2">
                 <div className="flex items-start gap-2">
-                  <BroadcastIcon size={14} className="mt-0.5 shrink-0 text-leaf" />
+                  <BroadcastIcon size={14} className="mt-0.5 shrink-0 text-[#1a3300]" />
                   <div className="min-w-0">
-                    <p className="text-sm text-mist">{b.message}</p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-moss">
+                    <p className="text-sm font-medium text-[#1a3300]">{b.message}</p>
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#666666]">
                       {b.audience}
                       {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
                     </p>
@@ -275,18 +275,18 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
 function Stat({ label, value, icon }: { label: string; value: string; icon: ReactNode }) {
   return (
     <Panel className="p-3">
-      <div className="flex items-center gap-1.5 text-moss">
+      <div className="flex items-center gap-1.5 text-[#1a3300]/80">
         {icon}
         <span className="font-mono text-[10px] uppercase tracking-widest">{label}</span>
       </div>
-      <p className="mt-1 font-mono text-2xl font-bold text-mist">{value}</p>
+      <p className="mt-1 font-mono text-2xl font-bold text-[#1a3300]">{value}</p>
     </Panel>
   );
 }
 
 function SectionHeader({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
+    <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#666666]">
       {children}
     </h2>
   );
@@ -324,7 +324,7 @@ function TeamsTab({ db, locations }: { db: DB; locations: ReturnType<typeof stor
       </div>
 
       {teams.length === 0 ? (
-        <Panel className="p-6 text-center text-sm text-fog">
+        <Panel className="p-6 text-center text-sm text-[#666666]">
           No teams yet. They register on the site.
         </Panel>
       ) : (
@@ -375,15 +375,15 @@ function TeamCard({
       >
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="truncate font-semibold text-mist">{team.name}</span>
+            <span className="truncate font-semibold text-[#1a3300]">{team.name}</span>
             <Chip className="shrink-0">{team.code}</Chip>
           </div>
-          <p className="mt-0.5 text-xs text-fog">
+          <p className="mt-0.5 text-xs text-[#666666]">
             {team.member1} / {team.member2} · joined {formatTime(team.createdAt)}
           </p>
           <div className="mt-2 flex items-center gap-2">
             <ProgressDots n={progress} total={5} />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-moss">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[#1a3300]/80">
               {stage.label}
             </span>
           </div>
@@ -391,7 +391,7 @@ function TeamCard({
         <CaretDown
           size={16}
           className={cn(
-            "shrink-0 text-fog transition-transform",
+            "shrink-0 text-[#666666] transition-transform",
             open && "rotate-180",
           )}
         />
@@ -406,9 +406,9 @@ function TeamCard({
       </div>
 
       {open && (
-        <div className="mt-4 space-y-3 border-t border-line pt-4">
+        <div className="mt-4 space-y-3 border-t border-[#b6b6b6]/60 pt-4">
           <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#666666]">
               Level 1 - push hint
             </p>
             <div className="flex gap-2">
@@ -438,7 +438,7 @@ function TeamCard({
           </div>
 
           <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#666666]">
               Level 3 - admin advance
             </p>
             <div className="flex gap-2">
@@ -500,7 +500,7 @@ function ProgressDots({ n, total }: { n: number; total: number }) {
           key={i}
           className={cn(
             "h-1.5 w-1.5 rounded-full",
-            i < n ? "bg-leaf" : "bg-line-2",
+            i < n ? "bg-[#1a3300]" : "bg-[#b6b6b6]/40",
           )}
         />
       ))}
@@ -520,7 +520,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <SectionHeader>Investigation QR codes</SectionHeader>
-            <p className="mt-1 text-sm text-fog">
+            <p className="mt-1 text-sm text-[#666666]">
               QR codes for all 7 checkpoints (Sightings 1–5, SOS Transmission, and Final Sanctuary).
               Print on A4 or test scan URLs directly below.
             </p>
@@ -538,26 +538,26 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
           return (
             <Panel
               key={l.id}
-              className="flex flex-col items-center justify-between p-5 text-center transition-all hover:border-leaf/50"
+              className="flex flex-col items-center justify-between p-5 text-center transition-all hover:border-[#1a3300]"
             >
               <div className="w-full">
-                <div className="flex items-center justify-between border-b border-line pb-2 text-left">
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-leaf">
+                <div className="flex items-center justify-between border-b border-[#b6b6b6]/60 pb-2 text-left">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#1a3300]">
                     Node 0{l.order}
                   </span>
-                  <span className="font-mono text-[10px] uppercase text-moss">
+                  <span className="font-mono text-[10px] uppercase text-[#666666]">
                     {l.type}
                   </span>
                 </div>
 
-                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-mist">
+                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-[#1a3300]">
                   {l.name}
                 </p>
-                <p className="font-mono text-[10px] text-fog">{l.token}</p>
+                <p className="font-mono text-[10px] text-[#666666]">{l.token}</p>
               </div>
 
               {/* QR Code Container */}
-              <div className="my-4 rounded-xl border border-line bg-white p-3 shadow-inner">
+              <div className="my-4 rounded-xl border border-[#b6b6b6] bg-white p-3 shadow-inner">
                 <QRCode
                   value={scanUrl}
                   size={140}
@@ -568,7 +568,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
               </div>
 
               <div className="w-full space-y-2">
-                <div className="rounded bg-ink-3 px-2 py-1 font-mono text-[10px] text-moss truncate">
+                <div className="rounded bg-[#f1f1f1] px-2 py-1 font-mono text-[10px] text-[#1a3300]/80 truncate">
                   {scanUrl}
                 </div>
                 <div className="flex items-center justify-center gap-2">
@@ -576,7 +576,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
                     href={scanUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-leaf hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#1a3300] hover:underline"
                   >
                     Open test link ↗
                   </a>
@@ -622,10 +622,10 @@ function BroadcastTab({ db }: { db: DB }) {
                 type="button"
                 onClick={() => setAudience(a)}
                 className={cn(
-                  "rounded-lg border px-3 py-2 text-sm font-medium",
+                  "rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
                   audience === a
-                    ? "border-leaf/50 bg-leaf/10 text-leaf"
-                    : "border-line-2 text-fog",
+                    ? "border-[#1a3300] bg-[#1a3300] text-[#fcfaf5]"
+                    : "border-[#b6b6b6] bg-white text-[#666666] hover:bg-[#f1f1f1]",
                 )}
               >
                 {a === "all" ? "Everyone" : a === "day1" ? "Day 1" : a === "day2" ? "Day 2" : "One team"}
@@ -664,13 +664,13 @@ function BroadcastTab({ db }: { db: DB }) {
       <Panel className="p-4">
         <SectionHeader>History</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-fog">No broadcasts yet.</p>
+          <p className="mt-2 text-sm text-[#666666]">No broadcasts yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-line">
+          <ul className="mt-2 divide-y divide-[#b6b6b6]/40">
             {[...db.broadcasts].reverse().map((b) => (
               <li key={b.id} className="py-2">
-                <p className="text-sm text-mist">{b.message}</p>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-moss">
+                <p className="text-sm font-medium text-[#1a3300]">{b.message}</p>
+                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#666666]">
                   {b.audience}
                   {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
                 </p>
@@ -746,7 +746,7 @@ function SettingsTab({ db }: { db: DB }) {
           inputMode="numeric"
         />
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+          <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
             BitChat guide (shown to teams)
           </span>
           <textarea
@@ -756,7 +756,7 @@ function SettingsTab({ db }: { db: DB }) {
           />
         </label>
         <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-mono text-[11px] uppercase tracking-[0.14em] text-fog">
+          <span className="mb-1.5 block font-sans text-xs font-semibold text-[#1a3300]">
             Mapillary note (sighting 1)
           </span>
           <textarea
@@ -792,7 +792,7 @@ function DangerTab({ db }: { db: DB }) {
     <div className="space-y-4">
       <Panel className="p-4">
         <SectionHeader>End event</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-fog">
+        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
           Locks the leaderboard and records the winner from the archive. Teams
           see the "event over" screen.
         </p>
@@ -811,7 +811,7 @@ function DangerTab({ db }: { db: DB }) {
 
       <Panel className="p-4">
         <SectionHeader>Restart game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-fog">
+        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
           Keeps teams registered, wipes all scans, answers, and hints. Game
           returns to standby.
         </p>
@@ -830,7 +830,7 @@ function DangerTab({ db }: { db: DB }) {
 
       <Panel className="p-4">
         <SectionHeader>New game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-fog">
+        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
           Wipes everything including registered teams. Use only for a brand new
           event.
         </p>
@@ -853,7 +853,7 @@ function DangerTab({ db }: { db: DB }) {
 
       <Panel className="p-4">
         <SectionHeader>Export data</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-fog">
+        <p className="mt-2 text-sm leading-relaxed text-[#666666]">
           Downloads the full game record (teams, scans, answers, hints,
           broadcasts, settings) as JSON.
         </p>

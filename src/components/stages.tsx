@@ -14,7 +14,9 @@ import {
   Sparkle,
   Trophy,
   Users,
+  Warning,
   WarningCircle,
+  WhatsappLogo,
 } from "@phosphor-icons/react";
 import {
   Btn,
@@ -25,7 +27,6 @@ import {
   TaglineBadge,
 } from "@/components/ui";
 import { EvidenceBoard } from "@/components/evidence-board";
-import { NodeTreeTimeline } from "@/components/node-tree-timeline";
 import { BitchatStep } from "@/components/bitchat-step";
 import { ReconstructionGate } from "@/components/gate";
 import { QRScannerButton } from "@/components/qr-scanner";
@@ -84,7 +85,7 @@ export function TeamBadge() {
 
 export function StandbyStage() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <Panel className="p-6 text-center">
         <TaglineBadge className="mx-auto">
           <Sparkle weight="fill" size={13} /> STANDBY MODE
@@ -92,14 +93,55 @@ export function StandbyStage() {
         <h1 className="font-display mt-4 text-2xl sm:text-3xl text-[#1a3300]">
           Squad Registered & <HighlightWord>Locked In</HighlightWord>
         </h1>
-        <p className="mx-auto mt-2 max-w-[38ch] font-sans text-sm leading-relaxed text-[#555555]">
-          Maveli was last spotted near Cake Farm. The investigation trail will activate when the event commences. Keep your access code ready.
+        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#555555]">
+          The campus investigation grid is currently locked. Checkpoints and clue signals will activate once the hunt officially commences. Keep your squad access code ready.
         </p>
       </Panel>
-      <NodeTreeTimeline
-        title="Investigation Trail (7 Nodes)"
-        subtitle="First Sighting: Cake Farm"
-      />
+
+      {/* Mandatory WhatsApp Group Callout */}
+      <div className="rounded-[14px] border-2 border-[#1a3300] bg-[#d5f5c2] p-5 shadow-sm">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a3300] text-[#fcfaf5]">
+            <WhatsappLogo size={24} weight="fill" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="font-sans text-base font-bold text-[#1a3300]">
+                Official Hunt WhatsApp Group
+              </h3>
+              <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-bold text-[#fcfaf5]">
+                REQUIRED
+              </span>
+            </div>
+            <p className="mt-1 text-xs leading-relaxed text-[#1a3300]/85">
+              <strong>Every member must join.</strong> Kickoff announcements, live broadcasts, and game hints will be posted in this group.
+            </p>
+            <a
+              href="https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv"
+              target="_blank"
+              rel="noreferrer"
+              className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5"
+            >
+              <WhatsappLogo size={18} weight="fill" />
+              <span>Join WhatsApp Group ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <Panel tone="paper" className="p-4">
+        <div className="flex items-start gap-2.5">
+          <Warning size={18} className="mt-0.5 shrink-0 text-[#1a3300]" weight="fill" />
+          <div className="text-xs leading-relaxed text-[#1a3300]/80">
+            <p className="font-semibold text-[#1a3300]">Hunt Readiness Checklist:</p>
+            <ul className="mt-1 list-disc pl-4 space-y-0.5">
+              <li>Both squad members must note down the squad access code from the badge above.</li>
+              <li>Make sure both members have joined the WhatsApp group.</li>
+              <li>Keep your phone charged for scanning QR codes on campus.</li>
+            </ul>
+          </div>
+        </div>
+      </Panel>
     </div>
   );
 }

@@ -98,19 +98,19 @@ export function QRScannerButton({ label = "Scan the QR with camera" }: { label?:
       {open && (
         <div className="fixed inset-0 z-[70] flex flex-col bg-black">
           <div className="flex items-center justify-between px-4 py-4">
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-fog">
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#b6b6b6]">
               Point at the QR code
             </span>
             <button
               type="button"
               onClick={close}
               aria-label="Close scanner"
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-fog hover:text-mist"
+              className="flex h-10 w-10 items-center justify-center rounded-xl text-[#b6b6b6] hover:text-white transition-colors"
             >
               <X size={22} />
             </button>
           </div>
-          <div className="relative mx-4 flex-1 overflow-hidden rounded-2xl border border-line bg-ink-3">
+          <div className="relative mx-4 flex-1 overflow-hidden rounded-2xl border border-[#333333] bg-[#111111]">
             {supported ? (
               <>
                 <video
@@ -123,8 +123,8 @@ export function QRScannerButton({ label = "Scan the QR with camera" }: { label?:
               </>
             ) : (
               <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
-                <Camera size={40} className="text-moss" />
-                <p className="text-sm leading-relaxed text-fog">
+                <Camera size={40} className="text-[#ffe95c]" />
+                <p className="text-sm leading-relaxed text-[#b6b6b6]">
                   Your browser cannot scan QR codes directly. Open your camera
                   app and point it at the QR on the evidence marker.
                 </p>

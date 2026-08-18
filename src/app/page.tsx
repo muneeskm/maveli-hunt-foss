@@ -10,11 +10,11 @@ import {
   Key,
   ShieldCheck,
   Sparkle,
-  TreeStructure,
   UserPlus,
   Users,
   Warning,
   WarningCircle,
+  WhatsappLogo,
 } from "@phosphor-icons/react";
 import {
   Btn,
@@ -26,11 +26,11 @@ import {
   TaglineBadge,
 } from "@/components/ui";
 import { TrackerIntro } from "@/components/tracker-intro";
-import { NodeTreeTimeline } from "@/components/node-tree-timeline";
 import { useGame, useMounted } from "@/hooks/use-game";
 import { store } from "@/lib/store";
 import type { Team } from "@/lib/types";
 
+const INTRO_COMPLETED_KEY = "maveli-intro-completed";
 const INTRO_SEEN_KEY = "mh:intro-seen";
 const SEMESTERS = ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"];
 
@@ -55,13 +55,17 @@ export default function HomePage() {
   }, [mounted, team, created, router]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) setStep("join");
+    // Intro temporarily disabled while schema changes are being finalized/committed.
+    // TrackerIntro component and assets remain preserved in the codebase.
+    setStep("join");
   }, []);
 
   const skipIntro = useCallback(() => {
     if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+      try {
+        localStorage.setItem(INTRO_COMPLETED_KEY, "true");
+        sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+      } catch {}
     }
     setStep("join");
   }, []);
@@ -70,7 +74,10 @@ export default function HomePage() {
 
   const afterJoin = () => {
     if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+      try {
+        localStorage.setItem(INTRO_COMPLETED_KEY, "true");
+        sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+      } catch {}
     }
     go(returnTo ?? "/tracker");
   };
@@ -132,7 +139,6 @@ function JoinScreen({
   const [codeError, setCodeError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [showTimeline, setShowTimeline] = useState(false);
 
   const create = async () => {
     if (busy) return;
@@ -261,9 +267,40 @@ function JoinScreen({
               <div className="flex items-start gap-2.5">
                 <Warning size={18} className="mt-0.5 shrink-0 text-[#1a3300]" weight="fill" />
                 <p>
-                  <strong>Important: Screenshot or save this code now.</strong>{" "}
+                  <strong>Important: Screenshot and take note of this code now.</strong>{" "}
                   Both members will use this code to log into the hunt tracker across their phones.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Mandatory WhatsApp Group Callout */}
+          <div className="mt-5 rounded-[14px] border-2 border-[#1a3300] bg-[#d5f5c2] p-5 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#1a3300] text-[#fcfaf5]">
+                <WhatsappLogo size={24} weight="fill" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-sans text-base font-bold text-[#1a3300]">
+                    Join Official WhatsApp Group
+                  </h3>
+                  <span className="rounded-[4px] bg-[#1a3300] px-2 py-0.5 font-mono text-[9px] font-bold text-[#fcfaf5]">
+                    REQUIRED
+                  </span>
+                </div>
+                <p className="mt-1 text-xs leading-relaxed text-[#1a3300]/85">
+                  <strong>Every squad member must join.</strong> Real-time broadcasts, game alerts, and starting instructions will be posted here.
+                </p>
+                <a
+                  href="https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5"
+                >
+                  <WhatsappLogo size={18} weight="fill" />
+                  <span>Join WhatsApp Group ↗</span>
+                </a>
               </div>
             </div>
           </div>
@@ -313,31 +350,12 @@ function JoinScreen({
           </Panel>
 
           {/* Action Buttons */}
-          <div className="mt-6 space-y-3">
-            <Btn
-              variant="outline"
-              onClick={() => setShowTimeline((prev) => !prev)}
-              className="w-full justify-center"
-            >
-              <TreeStructure size={16} weight="bold" />
-              {showTimeline ? "Hide Investigation Timeline" : "View Investigation Timeline"}
-            </Btn>
-
+          <div className="mt-6">
             <Btn onClick={onDone} className="w-full justify-center text-base py-3.5">
               <span>Continue to Hunt Tracker</span>
               <ArrowRight size={18} />
             </Btn>
           </div>
-
-          {/* 7-Node Node-Tree Timeline Section */}
-          {showTimeline && (
-            <div className="mt-6 anim-rise">
-              <NodeTreeTimeline
-                title="Investigation Trail (7 Nodes)"
-                subtitle="First Sighting: Cake Farm"
-              />
-            </div>
-          )}
         </div>
       </main>
     );

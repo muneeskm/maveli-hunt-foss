@@ -324,6 +324,7 @@ phone). Placeholder test data:
 | File | Role |
 |---|---|
 | `schema.db` | Canonical, idempotent DB schema - paste into Supabase SQL Editor |
+| `supabase/migrations/001_lock_down_public_tables.sql` | Privacy & access lockdown migration (applies RLS, revokes anon/authenticated privileges) |
 | `supabase/seed.sql` | Placeholder content - paste after schema.db, replace before event |
 | `.env.example` | Documents all env vars (read it) |
 | `next.config.ts` | Security headers (nosniff, X-Frame-Options, permissions) |

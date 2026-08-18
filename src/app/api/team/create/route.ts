@@ -96,16 +96,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: msg }, { status: 400 });
     }
     if (msg.includes("permission denied") || e?.code === "42501") {
+      console.error(
+        "CRITICAL: Supabase permission denied (42501). Ensure SUPABASE_SERVICE_ROLE_KEY (or SUPABASE_SECRET_KEY) is configured on the server.",
+      );
       return NextResponse.json(
         {
           error:
-            "Database permissions error. Please set SUPABASE_SERVICE_ROLE_KEY in .env or run migration M005 in your Supabase SQL Editor.",
+            "Database configuration error. Please contact event coordinators.",
         },
         { status: 500 },
       );
     }
     return NextResponse.json(
-      { error: (e as Error).message || "Could not register the team. Try again." },
+      { error: "Could not register the squad. Please try again." },
       { status: 500 },
     );
   }

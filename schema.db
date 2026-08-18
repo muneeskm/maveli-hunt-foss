@@ -17,11 +17,12 @@
 --   ALTER TABLE ... ADD COLUMN IF NOT EXISTS / DO $$ guards. Never edit an
 --   old block - the file must stay re-runnable from the top.
 --
--- SECURITY NOTE
---   This is an event game, not user data. RLS is left open on purpose
---   (anyone with the anon key can read/write) to match the "no auth,
---   access-code only" design. Tighten policies later if the game ever
---   holds real data.
+-- SECURITY & ACCESS MODEL
+--   Browser -> Next.js API -> Server-Side Privileged Client -> Postgres DB
+--   Anon access is completely revoked from all application tables.
+--   Row Level Security (RLS) is enabled on all tables with zero open policies.
+--   All sensitive data (answers, words, team codes, BitChat codes, admin codes)
+--   is strictly kept private on the server.
 -- ============================================================================
 
 
@@ -216,10 +217,8 @@ end $$;
 
 -- ============================================================================
 -- M005 - TEAM REGISTRATION: SEMESTER & CLASS
---   1. Add member1_sem, member1_class, member2_sem, member2_class columns to
---      public.teams to store full member academic details.
---   2. Grant registration permissions on teams so team creation succeeds
---      smoothly across all server/anon key configurations.
+--   Add member1_sem, member1_class, member2_sem, member2_class columns to
+--   public.teams to store full member academic details.
 -- ============================================================================
 
 alter table public.teams
@@ -228,47 +227,74 @@ alter table public.teams
   add column if not exists member2_sem text not null default '',
   add column if not exists member2_class text not null default '';
 
-grant select, insert on public.teams to anon, authenticated;
-
-do $$
-begin
-  drop policy if exists "teams select" on public.teams;
-  drop policy if exists "teams insert" on public.teams;
-  create policy "teams select" on public.teams for select using (true);
-  create policy "teams insert" on public.teams for insert with check (true);
-end $$;
-
 
 -- ============================================================================
--- M006 - PERMISSIONS & ACCESS FIX (Fixes 42501 permission denied)
---   Restores grants and open policies on all public event tables so that API
---   routes (and anon/service keys) can read game state, locations, answers,
---   scans, hints, and broadcasts without error.
+-- M006 - PRIVACY & ACCESS LOCKDOWN (Canonical security state)
+--   Ensures anon and authenticated roles have zero direct table access.
+--   All client interactions flow through Next.js API routes using the
+--   server-side privileged client (SUPABASE_SERVICE_ROLE_KEY).
+--   Row Level Security is enabled with zero policies = deny all for public roles.
 -- ============================================================================
 
-grant usage on schema public to anon, authenticated, service_role;
-grant all on all tables in schema public to anon, authenticated, service_role;
-grant all on all sequences in schema public to anon, authenticated, service_role;
-
+-- 1. Enable Row Level Security (RLS) on all application tables
 do $$
 declare
-  t text;
+  tbl text;
 begin
-  foreach t in array array['games','teams','locations','scans','answers','hints','broadcasts','settings','audit_log']
+  foreach tbl in array array['games','teams','locations','scans','answers','hints','broadcasts','settings','audit_log']
   loop
-    execute format('alter table public.%I enable row level security', t);
-    execute format('drop policy if exists "open select" on public.%I', t);
-    execute format('drop policy if exists "open insert" on public.%I', t);
-    execute format('drop policy if exists "open update" on public.%I', t);
-    execute format('drop policy if exists "open delete" on public.%I', t);
-    execute format('drop policy if exists "%s select" on public.%I', t, t);
-    execute format('drop policy if exists "%s insert" on public.%I', t, t);
-    execute format('drop policy if exists "%s update" on public.%I', t, t);
-    execute format('create policy "open select" on public.%I for select using (true)', t);
-    execute format('create policy "open insert" on public.%I for insert with check (true)', t);
-    execute format('create policy "open update" on public.%I for update using (true) with check (true)', t);
+    if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = tbl) then
+      execute format('alter table public.%I enable row level security', tbl);
+    end if;
   end loop;
 end $$;
+
+-- 2. Drop any open/public policies on application tables
+do $$
+declare
+  tbl text;
+  pol text;
+begin
+  foreach tbl in array array['games','teams','locations','scans','answers','hints','broadcasts','settings','audit_log']
+  loop
+    if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = tbl) then
+      for pol in (
+        select policyname
+        from pg_policies
+        where schemaname = 'public'
+          and tablename = tbl
+          and (
+            roles::text[] && array['anon', 'authenticated', 'public']::text[]
+            or policyname ilike '%open%'
+            or policyname ilike '%teams%'
+          )
+      )
+      loop
+        execute format('drop policy if exists %I on public.%I', pol, tbl);
+      end loop;
+    end if;
+  end loop;
+end $$;
+
+-- 3. Revoke all privileges on public schema objects from anon & authenticated
+revoke all on all tables in schema public from anon, authenticated;
+revoke all on all sequences in schema public from anon, authenticated;
+revoke all on all routines in schema public from anon, authenticated;
+
+-- 4. Lock down DEFAULT PRIVILEGES for future tables/sequences/routines
+alter default privileges in schema public revoke all on tables from anon, authenticated;
+alter default privileges in schema public revoke all on sequences from anon, authenticated;
+alter default privileges in schema public revoke all on routines from anon, authenticated;
+
+-- 5. Explicitly grant required privileges to server-side service role
+grant usage on schema public to service_role;
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+grant all on all routines in schema public to service_role;
+
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
+alter default privileges in schema public grant all on routines to service_role;
 
 
 -- ============================================================================
