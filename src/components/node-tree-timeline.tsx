@@ -37,7 +37,7 @@ interface NodeTreeTimelineProps {
 export function NodeTreeTimeline({
   className,
   title = "Investigation Trail",
-  subtitle = "7-Node Campus Search Grid",
+  subtitle = "6-Node Campus Search Grid",
   mode = "preview",
 }: NodeTreeTimelineProps) {
   const { team, game, locations, scans, answers, words, sessionPending } =
@@ -45,13 +45,13 @@ export function NodeTreeTimeline({
 
   const nodes = useMemo<InvestigationNode[]>(() => {
     if (mode === "preview" || !team) {
-      // STATIC PREVIEW: Node 01 active waypoint, Nodes 02-07 locked teasers
+      // STATIC PREVIEW: Node 01 active waypoint, Nodes 02-06 locked teasers
       return [
         {
           id: "s1",
           nodeNumber: "01",
           kind: "sighting",
-          name: "Cake Farm Cafe",
+          name: "The Arrival (Main Gate)",
           status: "active",
           detail: "Initial sighting coordinate at Christ College of Engineering.",
         },
@@ -59,40 +59,33 @@ export function NodeTreeTimeline({
           id: "s2",
           nodeNumber: "02",
           kind: "sighting",
-          name: "Classified Waypoint",
+          name: "Cake Farm Cafe",
           status: "locked",
         },
         {
           id: "s3",
           nodeNumber: "03",
           kind: "sighting",
-          name: "Classified Waypoint",
+          name: "Classified Disconnection",
           status: "locked",
         },
         {
           id: "s4",
           nodeNumber: "04",
           kind: "sighting",
-          name: "Classified Waypoint",
-          status: "locked",
-        },
-        {
-          id: "s5",
-          nodeNumber: "05",
-          kind: "sighting",
-          name: "Classified Waypoint",
+          name: "St. Mary's Block Reception",
           status: "locked",
         },
         {
           id: "sos",
-          nodeNumber: "06",
+          nodeNumber: "05",
           kind: "sos",
           name: "Emergency Frequency SOS",
           status: "locked",
         },
         {
           id: "fin",
-          nodeNumber: "07",
+          nodeNumber: "06",
           kind: "final",
           name: "Sanctuary Reconstruction Gate",
           status: "locked",
@@ -117,9 +110,9 @@ export function NodeTreeTimeline({
 
     const result: InvestigationNode[] = [];
 
-    // Sightings 01..05
+    // Sightings 01..04
     let currentFound = false;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < sightings.length; i++) {
       const loc = sightings[i];
       const nodeNumber = `0${i + 1}`;
       const locId = loc?.id ?? `s${i + 1}`;
@@ -155,7 +148,7 @@ export function NodeTreeTimeline({
       });
     }
 
-    // Node 06: SOS Transmission
+    // Node 05: SOS Transmission
     const allSightingsDone = sightings.every((s) => teamScanned.has(s.id));
     let sosStatus: NodeStatus = "locked";
     if (sosScanned) {
@@ -170,7 +163,7 @@ export function NodeTreeTimeline({
 
     result.push({
       id: "sos",
-      nodeNumber: "06",
+      nodeNumber: "05",
       kind: "sos",
       name: sosScanned ? "Emergency SOS Beacon" : "Classified Transmission",
       status: sosStatus,
@@ -181,7 +174,7 @@ export function NodeTreeTimeline({
           : undefined,
     });
 
-    // Node 07: Final Gate Sanctuary
+    // Node 06: Final Gate Sanctuary
     let finStatus: NodeStatus = "locked";
     if (rescued) {
       finStatus = "completed";
@@ -192,7 +185,7 @@ export function NodeTreeTimeline({
 
     result.push({
       id: "fin",
-      nodeNumber: "07",
+      nodeNumber: "06",
       kind: "final",
       name: rescued
         ? "Sanctuary Reconstructed"
@@ -203,7 +196,7 @@ export function NodeTreeTimeline({
       detail: rescued
         ? "Maveli is safe. All words verified in sequence."
         : finStatus === "active"
-          ? "Reconstruct the five words in sequence to open the gate."
+          ? "Reconstruct the four words in sequence to open the gate."
           : undefined,
     });
 
@@ -215,7 +208,7 @@ export function NodeTreeTimeline({
 
   if (mode === "active" && sessionPending) {
     return (
-      <div className={cn("panel rounded-[16px] border border-[#202d24] bg-[#111813] p-6 text-center shadow-sm", className)}>
+      <div className={cn("panel rounded-[16px] p-6 text-center shadow-xl", className)}>
         <span className="anim-blink mx-auto block h-3 w-3 rounded-full bg-[#22c55e]" />
         <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
           Syncing investigation tree...
@@ -227,12 +220,12 @@ export function NodeTreeTimeline({
   return (
     <div
       className={cn(
-        "panel rounded-[16px] border border-[#202d24] bg-[#111813] p-5 sm:p-6 shadow-sm text-white",
+        "panel rounded-[16px] p-5 sm:p-6 shadow-xl text-white",
         className,
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#202d24] pb-4">
+      <div className="flex items-center justify-between border-b border-[#1e293b]/60 pb-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#14261a] text-[#22c55e] border border-[#22c55e]/40">
             <TreeStructure size={22} weight="bold" />
@@ -246,20 +239,20 @@ export function NodeTreeTimeline({
           tone={completedCount > 0 ? "leaf" : "default"}
           className="shrink-0 font-mono text-xs font-bold"
         >
-          {completedCount} / 7 Solved
+          {completedCount} / {nodes.length} Solved
         </Chip>
       </div>
 
       {/* Progress Bar */}
       <div className="mt-4 flex items-center gap-2">
-        <div className="h-1.5 flex-1 rounded-full bg-[#16221a] overflow-hidden border border-[#202d24]">
+        <div className="h-1.5 flex-1 rounded-full bg-white/5 overflow-hidden border border-white/10">
           <div
             className="h-full bg-[#22c55e] transition-all duration-500 ease-out"
-            style={{ width: `${Math.round((completedCount / 7) * 100)}%` }}
+            style={{ width: `${Math.round((completedCount / (nodes.length || 6)) * 100)}%` }}
           />
         </div>
-        <span className="font-mono text-[10px] font-semibold text-[#9ca3af]">
-          {Math.round((completedCount / 7) * 100)}%
+        <span className="font-mono text-[10px] font-semibold text-[#cbd5e1]">
+          {Math.round((completedCount / (nodes.length || 6)) * 100)}%
         </span>
       </div>
 
@@ -267,7 +260,7 @@ export function NodeTreeTimeline({
       <div className="relative mt-6">
         {/* Central Vertical Trunk Line */}
         <div
-          className="absolute bottom-6 left-4 sm:left-5 top-5 w-[2px] bg-[#202d24]"
+          className="absolute bottom-6 left-4 sm:left-5 top-5 w-[2px] bg-white/15"
           aria-hidden="true"
         />
 
@@ -295,22 +288,22 @@ export function NodeTreeTimeline({
                       className={cn(
                         "relative flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full border transition-all shadow-sm",
                         isCompleted &&
-                          "border-[#22c55e] bg-[#14281b] text-[#22c55e]",
+                          "border-[#22c55e] bg-white/10 text-[#22c55e] backdrop-blur-md",
                         isActive &&
-                          "border-[#22c55e] bg-[#22c55e] text-[#090d0b] shadow-sm ring-2 ring-[#22c55e]/40",
+                          "border-[#22c55e] bg-[#22c55e] text-[#020712] shadow-sm ring-2 ring-[#22c55e]/40",
                         isLocked &&
-                          "border-[#202d24] bg-[#111813] text-[#6b7280]",
+                          "border-white/15 bg-white/5 text-[#cbd5e1] backdrop-blur-md",
                       )}
                     >
                       {isCompleted ? (
                         <CheckCircle size={17} weight="bold" />
                       ) : isActive ? (
                         node.kind === "sos" ? (
-                          <Radio size={16} weight="fill" className="text-[#090d0b]" />
+                          <Radio size={16} weight="fill" className="text-[#020712]" />
                         ) : node.kind === "final" ? (
-                          <Leaf size={16} weight="fill" className="text-[#090d0b]" />
+                          <Leaf size={16} weight="fill" className="text-[#020712]" />
                         ) : (
-                          <MapPin size={16} weight="fill" className="text-[#090d0b]" />
+                          <MapPin size={16} weight="fill" className="text-[#020712]" />
                         )
                       ) : (
                         <Lock size={13} weight="bold" />
@@ -322,12 +315,12 @@ export function NodeTreeTimeline({
                 {/* Node Card */}
                 <div
                   className={cn(
-                    "min-w-0 flex-1 rounded-[12px] border p-3 sm:p-3.5 transition-colors",
+                    "min-w-0 flex-1 rounded-[14px] border p-3 sm:p-3.5 transition-colors",
                     isCompleted &&
-                      "border-[#22c55e]/30 bg-[#102117]",
+                      "border-white/15 bg-white/[0.04] backdrop-blur-md",
                     isActive &&
-                      "border-[#22c55e] bg-[#14281b] ring-1 ring-[#22c55e]/30",
-                    isLocked && "border-[#202d24] bg-[#111813]",
+                      "border-[#22c55e]/60 bg-white/[0.06] backdrop-blur-md ring-1 ring-[#22c55e]/40 shadow-lg",
+                    isLocked && "border-white/10 bg-white/[0.02] backdrop-blur-sm",
                   )}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -338,24 +331,24 @@ export function NodeTreeTimeline({
 
                       {/* Status Badges */}
                       {isCompleted && (
-                        <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#14281b] px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-[#22c55e] border border-[#22c55e]/40">
+                        <span className="inline-flex items-center gap-1 rounded-[4px] bg-white/10 px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-[#22c55e] border border-white/15">
                           Solved
                         </span>
                       )}
                       {isActive && (
-                        <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-[#090d0b]">
-                          <span className="h-1.5 w-1.5 rounded-full bg-[#090d0b]" />
+                        <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-sans text-[9px] font-bold uppercase tracking-wider text-[#020712]">
+                          <span className="h-1.5 w-1.5 rounded-full bg-[#020712]" />
                           Active Target
                         </span>
                       )}
                       {isLocked && (
-                        <span className="rounded-full border border-[#202d24] bg-[#16221a] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[#6b7280]">
+                        <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-[#cbd5e1]">
                           Classified
                         </span>
                       )}
                     </div>
 
-                    <span className="shrink-0 font-mono text-[10px] uppercase text-[#9ca3af]">
+                    <span className="shrink-0 font-mono text-[10px] uppercase text-[#cbd5e1]">
                       {node.kind === "sighting"
                         ? "Sighting"
                         : node.kind === "sos"
@@ -370,7 +363,7 @@ export function NodeTreeTimeline({
                         "text-xs sm:text-sm font-bold truncate",
                         isCompleted && "text-[#22c55e]",
                         isActive && "text-white",
-                        isLocked && "font-mono tracking-wider text-[#6b7280]",
+                        isLocked && "font-mono tracking-wider text-[#cbd5e1]/60",
                       )}
                     >
                       {node.name}
@@ -378,14 +371,14 @@ export function NodeTreeTimeline({
 
                     {/* Recovered Word Badge */}
                     {node.recoveredWord && (
-                      <span className="shrink-0 rounded-[4px] bg-[#14281b] px-2 py-0.5 font-mono text-[11px] font-bold tracking-widest text-[#22c55e] border border-[#22c55e]/40">
+                      <span className="shrink-0 rounded-[4px] bg-white/10 px-2 py-0.5 font-mono text-[11px] font-bold tracking-widest text-[#22c55e] border border-white/20">
                         {node.recoveredWord}
                       </span>
                     )}
                   </div>
 
                   {node.detail && (
-                    <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
+                    <p className="mt-1 font-sans text-xs leading-relaxed text-[#cbd5e1]">
                       {node.detail}
                     </p>
                   )}
@@ -397,7 +390,7 @@ export function NodeTreeTimeline({
       </div>
 
       {/* Footer info banner */}
-      <div className="mt-5 flex items-center justify-center gap-2 rounded-[10px] border border-dashed border-[#202d24] bg-[#14261a]/60 px-4 py-2.5 text-center">
+      <div className="liquid-glass-subtle mt-5 flex items-center justify-center gap-2 px-4 py-2.5 text-center">
         <Sparkle size={14} weight="fill" className="shrink-0 text-[#22c55e]" />
         <span className="font-sans text-xs font-semibold text-[#86efac]">
           {completedCount === 7

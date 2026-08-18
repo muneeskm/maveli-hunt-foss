@@ -9,6 +9,7 @@ import {
   InstagramLogo,
   Leaf,
   MapPin,
+  QrCode,
   Radio,
   ShieldWarning,
   Sparkle,
@@ -52,26 +53,26 @@ export function TeamBadge() {
   };
 
   return (
-    <Panel tone="mint" className="mb-5 p-4 bg-[#102117] border border-[#22c55e]/30 text-white">
+    <Panel className="mb-5 p-4 text-white">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <Users size={16} className="shrink-0 text-[#22c55e]" />
             <span className="truncate font-sans font-bold text-white">{team.name}</span>
           </div>
-          <p className="mt-0.5 font-sans text-xs text-[#9ca3af]">
+          <p className="mt-0.5 font-sans text-xs text-[#cbd5e1]">
             {team.member1} / {team.member2}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <span className="rounded-[6px] bg-[#14261a] border border-[#22c55e]/40 px-2.5 py-1 font-mono text-sm font-bold tracking-widest text-[#22c55e]">
+          <span className="liquid-glass-subtle px-3 py-1 font-mono text-sm font-bold tracking-widest text-[#22c55e]">
             {team.code}
           </span>
           <button
             type="button"
             onClick={copy}
             aria-label="Copy access code"
-            className="flex h-[32px] w-[40px] items-center justify-center rounded-[8px] border border-[#22c55e]/30 bg-[#16221a] text-[#22c55e] hover:bg-[#22c55e] hover:text-[#090d0b] transition-colors"
+            className="flex h-[32px] w-[40px] items-center justify-center rounded-[10px] border border-white/20 bg-white/5 text-[#22c55e] hover:bg-white/15 transition-colors backdrop-blur-md"
           >
             {copied ? <Check size={20} className="text-[#22c55e]" weight="bold" /> : <Copy size={20} />}
           </button>
@@ -86,22 +87,22 @@ export function TeamBadge() {
 export function StandbyStage() {
   return (
     <div className="space-y-5">
-      <Panel className="p-6 text-center bg-[#111813] border border-[#202d24]">
+      <Panel className="p-6 text-center">
         <TaglineBadge className="mx-auto">
           <Sparkle weight="fill" size={13} /> STANDBY MODE
         </TaglineBadge>
         <h1 className="font-display mt-4 text-2xl sm:text-3xl text-white">
           Squad Registered & <HighlightWord>Locked In</HighlightWord>
         </h1>
-        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
+        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
           The campus investigation grid is currently locked. Checkpoints and clue signals will activate once the hunt officially commences. Keep your squad access code ready.
         </p>
       </Panel>
 
       {/* Mandatory WhatsApp Group Callout */}
-      <div className="rounded-[14px] border-2 border-[#22c55e] bg-[#112419] p-5 shadow-sm text-white">
+      <div className="liquid-glass p-5 text-white">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#020712]">
             <WhatsappLogo size={24} weight="fill" />
           </div>
           <div className="min-w-0 flex-1">
@@ -109,18 +110,18 @@ export function StandbyStage() {
               <h3 className="font-sans text-base font-bold text-white">
                 Official Hunt WhatsApp Group
               </h3>
-              <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
+              <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#020712]">
                 REQUIRED
               </span>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
+            <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
               <strong>Every member must join.</strong> Kickoff announcements, live broadcasts, and game hints will be posted in this group.
             </p>
             <a
               href="https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv"
               target="_blank"
               rel="noreferrer"
-              className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5"
+              className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5 shadow-lg"
             >
               <WhatsappLogo size={18} weight="fill" />
               <span>Join WhatsApp Group ↗</span>
@@ -129,10 +130,10 @@ export function StandbyStage() {
         </div>
       </div>
 
-      <Panel tone="paper" className="p-4 bg-[#111813] border border-[#202d24]">
+      <Panel className="p-4">
         <div className="flex items-start gap-2.5">
           <Warning size={18} className="mt-0.5 shrink-0 text-[#22c55e]" weight="fill" />
-          <div className="text-xs leading-relaxed text-[#9ca3af]">
+          <div className="text-xs leading-relaxed text-[#cbd5e1]">
             <p className="font-semibold text-white">Hunt Readiness Checklist:</p>
             <ul className="mt-1 list-disc pl-4 space-y-0.5">
               <li>Both squad members must note down the squad access code from the badge above.</li>
@@ -159,12 +160,14 @@ export function SightingStage({ location }: { location: GameLocation }) {
   const hasHint = hints.some((h) => h.locationId === location.id);
   const word = words[location.id];
   const isArrival = location.order === 1;
+  const isCakeFarm = location.order === 2 || location.id === "s2";
   const isChristCafe = location.order === 3 || location.id === "s3";
+  const isStMarys = location.order === 4 || location.id === "s4";
 
   const submit = async () => {
     if (!team || busy) return;
     if (!value.trim()) {
-      setError(isChristCafe ? "Enter the timestamp from Maveli's Instagram post." : "Type the one word that differs.");
+      setError(isChristCafe ? "Enter the timestamp from Maveli's Instagram post (e.g. 12:13)." : "Type the one word that differs.");
       return;
     }
     setBusy(true);
@@ -178,7 +181,7 @@ export function SightingStage({ location }: { location: GameLocation }) {
       setError(
         res.ok
           ? isChristCafe
-            ? "That timestamp does not match Maveli's transmission. Check his latest Instagram post again."
+            ? "That timestamp does not match Maveli's transmission. Check his latest Instagram post again (hint: 12:13)."
             : "That word does not match. Compare the two images again."
           : res.message,
       );
@@ -191,7 +194,7 @@ export function SightingStage({ location }: { location: GameLocation }) {
     <div className="space-y-5">
       {/* Sighting 1: The Arrival Narrative Quote */}
       {isArrival && (
-        <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <Panel className="p-5 shadow-xl">
           <TaglineBadge className="mx-auto mb-2">
             <Sparkle weight="fill" size={13} /> SIGHTING 01
           </TaglineBadge>
@@ -209,21 +212,21 @@ export function SightingStage({ location }: { location: GameLocation }) {
 
       {/* Sighting 3: Christ Cafe Disconnection Narrative */}
       {isChristCafe && (
-        <Panel className="p-5 text-center bg-[#111813] border border-[#202d24]">
+        <Panel className="p-5 text-center shadow-xl">
           <TaglineBadge className="mx-auto mb-2">
             <Radio weight="fill" size={13} /> DISCONNECTION POINT
           </TaglineBadge>
           <h1 className="font-display mt-2 text-2xl sm:text-3xl text-white tracking-wide">
             Christ Cafe Signal Loss
           </h1>
-          <p className="mx-auto mt-2 max-w-[46ch] font-sans text-xs sm:text-sm leading-relaxed text-[#9ca3af]">
+          <p className="mx-auto mt-2 max-w-[46ch] font-sans text-xs sm:text-sm leading-relaxed text-[#cbd5e1]">
             Maveli lost his connection in this area. Inspect his Instagram posts (<strong>@maveli.thamburan_</strong>) to discover the exact timestamp of his last transmission.
           </p>
           <a
             href={settings.instagramUrl}
             target="_blank"
             rel="noreferrer"
-            className="btn btn-primary mx-auto mt-4 flex w-full max-w-sm items-center justify-center gap-2 text-xs font-bold py-2.5"
+            className="btn btn-primary mx-auto mt-4 flex w-full max-w-sm items-center justify-center gap-2 text-xs font-bold py-2.5 shadow-lg"
           >
             <InstagramLogo size={16} weight="fill" />
             <span>Check @maveli.thamburan_ on Instagram ↗</span>
@@ -231,24 +234,48 @@ export function SightingStage({ location }: { location: GameLocation }) {
         </Panel>
       )}
 
-      {!isArrival && !isChristCafe && (
+      {/* Sighting 4: St. Mary's Block Reception (Task 4) */}
+      {isStMarys && (
+        <Panel className="p-5 text-center shadow-xl">
+          <TaglineBadge className="mx-auto mb-2">
+            <MapPin weight="fill" size={13} /> FINAL DAY 1 SIGHTING
+          </TaglineBadge>
+          <h1 className="font-display mt-2 text-2xl sm:text-3xl text-white tracking-wide">
+            St. Mary&apos;s Reception
+          </h1>
+          <p className="mx-auto mt-2 max-w-[46ch] font-sans text-xs sm:text-sm leading-relaxed text-[#cbd5e1]">
+            Maveli was last spotted on his Instagram feed in front of the reception at St. Mary&apos;s Block. Locate and scan the QR code posted in front of the reception counter to lock in Day 1 evidence.
+          </p>
+          <a
+            href={settings.instagramUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-outline mx-auto mt-4 flex w-full max-w-sm items-center justify-center gap-2 text-xs font-bold py-2.5"
+          >
+            <InstagramLogo size={16} weight="fill" />
+            <span>View Reception Post on Instagram ↗</span>
+          </a>
+        </Panel>
+      )}
+
+      {!isArrival && !isChristCafe && !isStMarys && (
         <SectionLabel>{location.name}</SectionLabel>
       )}
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+      <Panel className="p-4 shadow-lg">
         <p className="text-[15px] leading-relaxed text-white">{location.clueText}</p>
       </Panel>
 
       {/* Mapillary Street View Box (for Sighting 1 / sightings with Mapillary links) */}
       {location.mapillaryUrl && (
-        <Panel tone="mint" className="p-4 bg-[#102117] border border-[#22c55e]/30">
+        <Panel tone="teal" className="p-4 shadow-xl">
           <div className="flex items-center gap-2">
-            <MapPin size={16} weight="fill" className="shrink-0 text-[#22c55e]" />
-            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
+            <MapPin size={16} weight="fill" className="shrink-0 text-[#38bdf8]" />
+            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#38bdf8]">
               Mapillary Street View Comparison
             </span>
           </div>
-          <p className="mt-2 text-xs leading-relaxed text-[#9ca3af]">
+          <p className="mt-2 text-xs leading-relaxed text-[#94a3b8]">
             <strong>What is Mapillary?</strong> Mapillary is a collaborative street-level imagery platform. Explore the 360° capture of the entrance and compare it with the campus photo below to find the altered sponsor poster.
           </p>
           <a
@@ -263,7 +290,7 @@ export function SightingStage({ location }: { location: GameLocation }) {
       )}
 
       {location.photoUrl && (
-        <div className="overflow-hidden rounded-[14px] border border-[#202d24] bg-[#111813]">
+        <div className="overflow-hidden rounded-[18px] border border-white/20 shadow-xl">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={location.photoUrl}
@@ -274,73 +301,92 @@ export function SightingStage({ location }: { location: GameLocation }) {
       )}
 
       {solved ? (
-        <Panel tone="yellow" className="p-5 text-center bg-[#14261a] border border-[#22c55e]">
+        <Panel className="p-5 text-center">
           <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
             Evidence Recovered
           </p>
           <p className="mt-2 font-mono text-3xl font-extrabold tracking-widest text-[#22c55e]">
-            {word?.word ?? (isChristCafe ? "15:12" : "CONFIRMED")}
+            {word?.word ?? (isChristCafe ? "12:13" : "CONFIRMED")}
           </p>
           {word?.wordClue && (
-            <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
+            <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#cbd5e1]">
               {word.wordClue}
             </p>
           )}
         </Panel>
       ) : (
-        <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <Panel className="p-5">
           <p className="font-sans font-bold text-sm text-white">
-            {isChristCafe ? "Enter Disconnection Timestamp" : "Type the word that differs"}
+            {isChristCafe ? "Enter Disconnection Timestamp" : isStMarys || isCakeFarm ? "Scan On-Site QR Code" : "Type the word that differs"}
           </p>
-          <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
+          <p className="mt-1 font-sans text-xs leading-relaxed text-[#cbd5e1]">
             {isChristCafe
-              ? "Enter the time from Maveli's Instagram post (e.g. 15:12 or 3:12 PM)."
-              : "Enter the exact changed word found in this sighting or scan on-site."}
+              ? "Enter the time from Maveli's Instagram post (e.g. 12:13 or 12:13 PM)."
+              : isStMarys
+                ? "Locate the QR code in front of the St. Mary's Block reception and scan it with your camera."
+                : isCakeFarm
+                  ? "Locate the QR code stationed at Cake Farm Cafe and scan it with your camera."
+                  : "Enter the exact changed word found in this sighting."}
           </p>
-          <div className="mt-3 space-y-3">
-            <input
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-                setError(null);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") submit();
-              }}
-              className="field text-center font-mono text-lg font-bold uppercase tracking-widest"
-              placeholder={isChristCafe ? "15:12" : "THE WORD"}
-              autoCapitalize="characters"
-              autoComplete="off"
-              spellCheck={false}
-              aria-label={isChristCafe ? "Disconnection timestamp" : "The word that differs"}
-            />
-            {error && (
-              <p className="flex items-start gap-2 text-xs font-medium text-red-400">
-                <WarningCircle size={16} className="mt-0.5 shrink-0" />
-                {error}
-              </p>
-            )}
-            <Btn onClick={submit} disabled={busy} className="w-full justify-center">
-              <span>{busy ? "Verifying..." : isChristCafe ? "Verify Timestamp" : "Verify Word"}</span>
-              <ArrowRight size={16} />
-            </Btn>
-          </div>
+
+          {isStMarys || isCakeFarm ? (
+            <div className="mt-4">
+              <a
+                href={`/scan/${location.token}`}
+                className="btn btn-primary flex w-full items-center justify-center gap-2 py-3 text-sm font-bold shadow-lg"
+              >
+                <QrCode size={18} />
+                <span>Simulate / Open QR Checkpoint ↗</span>
+              </a>
+            </div>
+          ) : (
+            <div className="mt-3 space-y-3">
+              <input
+                value={value}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") submit();
+                }}
+                className="liquid-glass-input text-center font-mono text-lg font-bold uppercase tracking-widest"
+                placeholder={isChristCafe ? "12:13" : "THE WORD"}
+                autoCapitalize="characters"
+                autoComplete="off"
+                spellCheck={false}
+                aria-label={isChristCafe ? "Disconnection timestamp" : "The word that differs"}
+              />
+              {error && (
+                <p className="flex items-start gap-2 text-xs font-medium text-red-400">
+                  <WarningCircle size={16} className="mt-0.5 shrink-0" />
+                  {error}
+                </p>
+              )}
+              <Btn onClick={submit} disabled={busy} className="w-full justify-center shadow-lg">
+                <span>{busy ? "Verifying..." : isChristCafe ? "Verify Timestamp" : "Verify Word"}</span>
+                <ArrowRight size={16} />
+              </Btn>
+            </div>
+          )}
         </Panel>
       )}
 
       {hasHint && (
-        <Panel tone="teal" className="p-4 bg-[#0e201e] border border-[#10b981]/30">
-          <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#6ee7b7]">
+        <div className="liquid-glass-subtle p-4">
+          <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
             <ShieldWarning size={15} /> Level 1 Hint
           </div>
-          <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#9ca3af]">{location.hintText}</p>
-        </Panel>
+          <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#cbd5e1]">{location.hintText}</p>
+        </div>
       )}
 
       <EvidenceBoard />
     </div>
   );
 }
+
+
 
 /* ---------- Day 1 dead end / night bridge (19:00 - 00:00) ---------- */
 
@@ -355,17 +401,17 @@ export function DeadEndStage() {
         <TaglineBadge className="mx-auto mb-2">
           DAY 1 · END OF TRAIL
         </TaglineBadge>
-        <h1 className="font-display mt-2 text-3xl font-extrabold text-white">
+        <h1 className="font-display mt-2 text-3xl font-extrabold text-white drop-shadow-md">
           Maveli Has Disappeared
         </h1>
-        <p className="mx-auto mt-2 max-w-[38ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
+        <p className="mx-auto mt-2 max-w-[38ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
           The Day 1 trail has stopped. Submissions are now closed for the day. Keep an eye out on Maveli&apos;s Instagram page tonight for tomorrow&apos;s clues.
         </p>
       </div>
 
-      <div className="rounded-[14px] border-2 border-[#22c55e] bg-[#112419] p-5 shadow-sm text-white">
+      <div className="liquid-glass p-5 text-white">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#38bdf8] text-[#020712]">
             <InstagramLogo size={24} weight="fill" />
           </div>
           <div className="min-w-0 flex-1">
@@ -373,18 +419,18 @@ export function DeadEndStage() {
               <h3 className="font-sans text-base font-bold text-white">
                 Night Broadcast Channel
               </h3>
-              <span className="rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
+              <span className="rounded-[4px] bg-[#38bdf8] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#020712]">
                 TONIGHT
               </span>
             </div>
-            <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
+            <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
               Keep an eye out on Maveli&apos;s Instagram page (<strong>@maveli.thamburan_</strong>) between 19:00 and 00:00 for Day 2 emergency signals.
             </p>
             <a
               href={settings.instagramUrl}
               target="_blank"
               rel="noreferrer"
-              className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5"
+              className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5 shadow-lg"
             >
               <InstagramLogo size={16} weight="fill" />
               <span>Open @maveli.thamburan_ on Instagram ↗</span>
@@ -393,11 +439,11 @@ export function DeadEndStage() {
         </div>
       </div>
 
-      <Panel tone="mint" className="p-5 bg-[#102117] border border-[#22c55e]/30">
+      <Panel className="p-5">
         <div className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-[#22c55e]">
           <Radio size={15} className="anim-blink" /> Signal Lost
         </div>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#cbd5e1]">
           {isNight
             ? "Maveli broke radio silence. He is trapped somewhere on campus and has found a way to communicate without the internet. Day 2 begins tomorrow at 14:40."
             : "The trail was deliberate. Maveli was leading us somewhere on purpose. Prepare for Day 2."}
@@ -418,7 +464,7 @@ export function SosStage() {
   return (
     <div className="space-y-5">
       <SectionLabel>Day 2 — Rescue</SectionLabel>
-      <Panel tone="yellow" className="p-5 bg-[#14261a] border border-[#22c55e]/40">
+      <Panel tone="yellow" className="p-5 shadow-xl">
         <div className="flex items-center gap-2">
           <Radio size={16} className="anim-blink text-[#22c55e]" />
           <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
@@ -428,12 +474,12 @@ export function SosStage() {
         <h2 className="font-display mt-2 text-2xl text-white">
           Find the Signal
         </h2>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#cbd5e1]">
           Maveli&apos;s SOS is broadcasting on campus. Reach the area and locate the Emergency Transmission marker.
         </p>
       </Panel>
       {sos && (
-        <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+        <Panel className="p-4 shadow-xl">
           <p className="font-sans text-sm leading-relaxed text-white">{sos.clueText}</p>
           <div className="mt-4">
             <QRScannerButton label="Scan the transmission QR" />
@@ -464,7 +510,7 @@ export function FinalStage() {
   return (
     <div className="space-y-5">
       <SectionLabel>Final Hunt</SectionLabel>
-      <Panel tone="mint" className="p-5 bg-[#102117] border border-[#22c55e]/30">
+      <Panel tone="mint" className="p-5 shadow-xl">
         <div className="flex items-center gap-2">
           <Leaf size={18} className="anim-blink text-[#22c55e]" />
           <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#86efac]">
@@ -474,12 +520,12 @@ export function FinalStage() {
         <h2 className="font-display mt-2 text-2xl text-white">
           Find the Sanctuary
         </h2>
-        <p className="mt-2 font-sans text-xs leading-relaxed text-[#9ca3af]">
+        <p className="mt-2 font-sans text-xs leading-relaxed text-[#cbd5e1]">
           The transmission indicated where Maveli is sheltered. Reach the location and scan the final marker.
         </p>
       </Panel>
       {fin && (
-        <Panel className="p-4 bg-[#111813] border border-[#202d24]">
+        <Panel className="p-4 shadow-xl">
           <p className="font-sans text-sm leading-relaxed text-white">{fin.clueText}</p>
           <div className="mt-4">
             <QRScannerButton label="Scan the final QR" />
@@ -495,7 +541,7 @@ export function FinalStage() {
 export function GateStage() {
   return (
     <div className="space-y-5">
-      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+      <Panel className="p-5 shadow-xl">
         <p className="font-sans text-sm leading-relaxed text-white">
           You are standing where Maveli is sheltered. The final marker demands proof: the five words, reconstructed in the exact order he left.
         </p>
@@ -522,7 +568,7 @@ export function RescuedStage() {
         <h1 className="font-display mt-3 text-3xl font-extrabold text-white">
           Maveli is Safe!
         </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
+        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
           {myWin
             ? "Your squad found him first! Maveli is safe thanks to your deduction."
             : "Your squad solved the trail. The hunt is complete."}
@@ -535,7 +581,7 @@ export function RescuedStage() {
         </Link>
         <Link
           href="/tracker"
-          className="mx-auto mt-3 flex max-w-xs items-center justify-center gap-1 text-xs font-medium text-[#9ca3af] hover:text-[#22c55e]"
+          className="mx-auto mt-3 flex max-w-xs items-center justify-center gap-1 text-xs font-medium text-[#94a3b8] hover:text-[#22c55e]"
         >
           Back to Tracker <ArrowRight size={14} />
         </Link>
@@ -562,44 +608,44 @@ export function EndedStage() {
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
           The Mystery is Solved!
         </h1>
-        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#9ca3af]">
+        <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
           Maveli has returned to his kingdom safely. Thank you to every squad who took part in the search across Christ College of Engineering.
         </p>
       </div>
 
       {winner ? (
-        <div className="rounded-[16px] border-2 border-[#22c55e] bg-[#102419] p-6 text-center shadow-sm">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
+        <div className="liquid-glass p-6 text-center text-white">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#22c55e] text-[#020712]">
             <Trophy size={32} weight="fill" />
           </div>
           <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#86efac]">
             🏆 Grand Champions
           </p>
-          <h2 className="font-display mt-1 text-2xl sm:text-3xl text-white">
+          <h2 className="font-display mt-1 text-2xl sm:text-3xl text-white drop-shadow-md">
             {winner.name}
           </h2>
-          <p className="mt-1 font-sans text-xs text-[#9ca3af]">
+          <p className="mt-1 font-sans text-xs text-[#cbd5e1]">
             Solved by {winner.member1} & {winner.member2}
           </p>
         </div>
       ) : (
-        <Panel tone="mint" className="p-6 bg-[#102117] border border-[#22c55e]/30">
+        <Panel className="p-6">
           <Trophy size={36} weight="fill" className="mx-auto text-[#22c55e]" />
           <p className="mt-3 font-sans text-base font-bold text-white">
             Leaderboard Finalizing
           </p>
-          <p className="mx-auto mt-1 max-w-[34ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
+          <p className="mx-auto mt-1 max-w-[34ch] font-sans text-xs leading-relaxed text-[#cbd5e1]">
             Official final standings and award announcements will be shared in the WhatsApp group.
           </p>
         </Panel>
       )}
 
       {/* Wholesome Community Note */}
-      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-left">
+      <Panel className="p-5 text-left">
         <h3 className="font-sans text-sm font-bold text-white">
           A Big Thank You from FOSS CCE! 💚
         </h3>
-        <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#9ca3af]">
+        <p className="mt-1.5 font-sans text-xs leading-relaxed text-[#cbd5e1]">
           Whether you solved the Mapillary difference, tracked Maveli through Instagram, decoded BitChat, or cracked the Sanctuary Gate — your curiosity and teamwork made this hunt unforgettable.
         </p>
         <div className="mt-4 flex flex-wrap items-center gap-3">

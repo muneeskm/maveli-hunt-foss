@@ -91,7 +91,7 @@ export default function HomePage() {
         <div className="text-center">
           <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
           <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
-            Syncing squad...
+            Syncing team...
           </p>
         </div>
       </div>
@@ -218,36 +218,42 @@ function JoinScreen({
   /* ---------- Post-Registration Success View ---------- */
   if (created) {
     return (
-      <main className="min-h-[100dvh] bg-[#090d0b] px-4 py-8 sm:px-6 sm:py-12">
-        <div className="mx-auto max-w-lg">
+      <main className="relative min-h-[100dvh] bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
+        {/* Pixel Art Mobile Background Layer */}
+        <div
+          className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
+          style={{ backgroundImage: "url('/mobile-bg.png')" }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-lg">
           {/* Header */}
           <div className="text-center">
             <TaglineBadge className="mx-auto">
               <Sparkle weight="fill" size={13} /> SQUAD ENROLLED
             </TaglineBadge>
 
-            <h1 className="font-display mt-4 text-3xl font-extrabold text-white sm:text-4xl leading-tight">
+            <h1 className="font-display mt-4 text-3xl font-extrabold text-white sm:text-4xl leading-tight drop-shadow-md">
               Save your squad <HighlightWord>credentials.</HighlightWord>
             </h1>
-            <p className="mt-2 font-sans text-base text-[#9ca3af]">
+            <p className="mt-2 font-sans text-base text-[#cbd5e1] drop-shadow-sm">
               Your squad is officially locked in for The Maveli Files.
             </p>
           </div>
 
-          {/* Access Code Box (FOSS Green Tinted Card) */}
-          <div className="mt-6 rounded-[14px] border-2 border-[#22c55e] bg-[#102317] p-6 text-center shadow-sm">
+          {/* Access Code Box (Pure Translucent Liquid Glass) */}
+          <div className="liquid-glass mt-6 p-6 text-center">
             <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
               Squad Access Code
             </p>
             <div className="mt-3 flex items-center justify-center gap-3">
-              <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#22c55e] sm:text-5xl">
+              <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#22c55e] sm:text-5xl drop-shadow-md">
                 {created.code}
               </span>
               <button
                 type="button"
                 onClick={copy}
                 aria-label="Copy access code"
-                className="flex h-11 w-11 items-center justify-center rounded-[6px] border border-[#22c55e] bg-[#162d1f] text-[#22c55e] hover:bg-[#22c55e] hover:text-[#090d0b] active:translate-y-[1px] transition-all"
+                className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-white/20 bg-white/10 text-[#22c55e] hover:bg-white/20 active:translate-y-[1px] transition-all backdrop-blur-md shadow-md"
               >
                 {copied ? (
                   <Check size={20} className="text-[#22c55e]" weight="bold" />
@@ -264,7 +270,7 @@ function JoinScreen({
             )}
 
             {/* Critical Save Notice */}
-            <div className="mt-5 rounded-[8px] border border-[#202d24] bg-[#16201a] p-3.5 text-left text-xs leading-relaxed text-white">
+            <div className="liquid-glass-subtle mt-5 p-3.5 text-left text-xs leading-relaxed text-white">
               <div className="flex items-start gap-2.5">
                 <Warning size={18} className="mt-0.5 shrink-0 text-[#22c55e]" weight="fill" />
                 <p>
@@ -276,9 +282,9 @@ function JoinScreen({
           </div>
 
           {/* Mandatory WhatsApp Group Callout */}
-          <div className="mt-5 rounded-[14px] border-2 border-[#22c55e] bg-[#112419] p-5 shadow-sm">
+          <div className="liquid-glass mt-5 p-5">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#020712]">
                 <WhatsappLogo size={24} weight="fill" />
               </div>
               <div className="min-w-0 flex-1">
@@ -286,18 +292,18 @@ function JoinScreen({
                   <h3 className="font-sans text-base font-bold text-white">
                     Join Official WhatsApp Group
                   </h3>
-                  <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
+                  <span className="rounded-[4px] bg-[#22c55e] px-2 py-0.5 font-mono text-[9px] font-bold text-[#020712]">
                     REQUIRED
                   </span>
                 </div>
-                <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
+                <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
                   <strong>Every squad member must join.</strong> Real-time broadcasts, game alerts, and starting instructions will be posted here.
                 </p>
                 <a
                   href="https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv"
                   target="_blank"
                   rel="noreferrer"
-                  className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5"
+                  className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-sm font-semibold py-2.5 shadow-lg"
                 >
                   <WhatsappLogo size={18} weight="fill" />
                   <span>Join WhatsApp Group ↗</span>
@@ -306,18 +312,18 @@ function JoinScreen({
             </div>
           </div>
 
-          {/* Team Summary Card (Mint Pastel Surface) */}
-          <Panel tone="mint" className="mt-5">
-            <div className="flex items-center justify-between border-b border-[#202d24] pb-3">
-              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#9ca3af]">
+          {/* Team Summary Card */}
+          <div className="liquid-glass mt-5 p-5 text-white">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#94a3b8]">
                 Registered Squad
               </span>
               <span className="font-sans text-sm font-bold text-white">{created.name}</span>
             </div>
 
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-[8px] border border-[#202d24] bg-[#16201a] p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+              <div className="liquid-glass-subtle p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#94a3b8]">
                   Member 1 (Lead)
                 </p>
                 <p className="mt-1 font-sans text-sm font-semibold text-white">
@@ -332,8 +338,8 @@ function JoinScreen({
                 )}
               </div>
 
-              <div className="rounded-[8px] border border-[#202d24] bg-[#16201a] p-3">
-                <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+              <div className="liquid-glass-subtle p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-[#94a3b8]">
                   Member 2
                 </p>
                 <p className="mt-1 font-sans text-sm font-semibold text-white">
@@ -348,11 +354,11 @@ function JoinScreen({
                 )}
               </div>
             </div>
-          </Panel>
+          </div>
 
           {/* Action Buttons */}
           <div className="mt-6">
-            <Btn onClick={onDone} className="w-full justify-center text-base py-3.5">
+            <Btn onClick={onDone} className="w-full justify-center text-base py-3.5 shadow-xl">
               <span>Continue to Hunt Tracker</span>
               <ArrowRight size={18} />
             </Btn>
@@ -364,8 +370,14 @@ function JoinScreen({
 
   /* ---------- Registration / Sign-In Form View ---------- */
   return (
-    <main className="flex min-h-[100dvh] flex-col justify-center bg-[#090d0b] px-4 py-8 sm:px-6 sm:py-12">
-      <div className="mx-auto w-full max-w-md">
+    <main className="relative min-h-[100dvh] flex flex-col justify-center bg-[#020712] px-4 py-8 sm:px-6 sm:py-12 overflow-x-hidden">
+      {/* Pixel Art Mobile Background Layer */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/mobile-bg.png')" }}
+      />
+
+      <div className="relative z-10 mx-auto w-full max-w-md">
         {/* Brand Header */}
         <div className="text-center">
           <div className="mb-4 flex items-center justify-center gap-2.5">
@@ -373,9 +385,9 @@ function JoinScreen({
             <img
               src="/foss-logo.png"
               alt="FOSS CCE"
-              className="h-10 w-10 rounded-full border border-[#202d24] object-cover shadow-sm"
+              className="h-10 w-10 rounded-full border border-white/20 object-cover shadow-lg"
             />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#9ca3af]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#94a3b8] drop-shadow-sm">
               FOSS CCE Presents
             </span>
           </div>
@@ -383,19 +395,19 @@ function JoinScreen({
             <Sparkle weight="fill" size={13} /> THE MAVELI FILES
           </TaglineBadge>
 
-          <h1 className="font-display text-4xl sm:text-5xl text-white leading-[1.08] tracking-[0.04em]">
+          <h1 className="font-display text-4xl sm:text-5xl text-white leading-[1.08] tracking-[0.04em] drop-shadow-lg">
             Search for Maveli <HighlightWord>in the wild.</HighlightWord>
           </h1>
-          <p className="mt-3 font-sans text-base text-[#9ca3af] max-w-[500px] mx-auto leading-relaxed">
+          <p className="mt-3 font-sans text-base text-[#cbd5e1] max-w-[500px] mx-auto leading-relaxed drop-shadow-md">
             Maveli was last seen at ████ ████ ████. Follow through his tracks and find him.
           </p>
         </div>
 
-        {/* Event Countdown Timer */}
-        <CountdownTimer className="mt-6" />
+        {/* Event Countdown Timer (Liquid Glass) */}
+        <CountdownTimer className="liquid-glass mt-6" />
 
-        {/* Mode Switcher Tabs */}
-        <div className="mt-6 flex items-center justify-center gap-1 rounded-[8px] border border-[#202d24] bg-[#111813] p-1">
+        {/* Mode Switcher Tabs (Liquid Glass Capsule) */}
+        <div className="liquid-glass-subtle mt-6 flex items-center justify-center gap-1 p-1">
           <button
             type="button"
             onClick={() => {
@@ -405,12 +417,12 @@ function JoinScreen({
             }}
             className={
               mode === "create"
-                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all"
-                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#9ca3af] hover:text-white transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[10px] bg-[#22c55e] py-2.5 font-sans text-xs font-bold text-[#020712] shadow-md transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[10px] py-2.5 font-sans text-xs font-medium text-[#cbd5e1] hover:text-white transition-colors"
             }
           >
             <UserPlus size={15} weight="bold" />
-            Register Squad
+            Register Team
           </button>
           <button
             type="button"
@@ -421,8 +433,8 @@ function JoinScreen({
             }}
             className={
               mode === "code"
-                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all shadow-sm"
-                : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#9ca3af] hover:text-white transition-colors"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[10px] bg-[#22c55e] py-2.5 font-sans text-xs font-bold text-[#020712] shadow-md transition-all"
+                : "flex-1 flex items-center justify-center gap-1.5 rounded-[10px] py-2.5 font-sans text-xs font-medium text-[#cbd5e1] hover:text-white transition-colors"
             }
           >
             <Key size={15} weight="bold" />
@@ -434,95 +446,141 @@ function JoinScreen({
         {mode === "create" ? (
           <div className="mt-6 space-y-4">
             {/* Squad Name Field */}
-            <Panel className="p-4">
-              <Field
-                label="Squad Name"
-                placeholder="e.g. Cipher Syndicate"
-                value={teamName}
-                onChange={(e) => setTeamName(e.target.value)}
-                autoComplete="off"
-                hint="Pick a creative squad name for the live leaderboard."
-              />
-            </Panel>
+            <div className="liquid-glass p-5 text-white">
+              <label className="block">
+                <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                  Squad Name
+                </span>
+                <input
+                  type="text"
+                  placeholder="e.g. Cipher Syndicate"
+                  value={teamName}
+                  onChange={(e) => setTeamName(e.target.value)}
+                  autoComplete="off"
+                  className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
+                />
+                <span className="mt-1.5 block font-sans text-xs text-[#94a3b8]">
+                  Pick a creative squad name for the live leaderboard.
+                </span>
+              </label>
+            </div>
 
-            {/* Member 1 Card */}
-            <Panel tone="mint" className="p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-[#202d24] pb-2">
+            {/* Member 1 Card (Liquid Glass) */}
+            <div className="liquid-glass p-5 text-white">
+              <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
                   Member 1 (Squad Lead)
                 </span>
               </div>
               <div className="space-y-3">
-                <Field
-                  label="Full Name"
-                  placeholder="e.g. Arjun Krishna"
-                  value={m1Name}
-                  onChange={(e) => setM1Name(e.target.value)}
-                  autoComplete="name"
-                />
-                <div className="grid grid-cols-2 gap-3">
-                  <SelectField
-                    label="Semester"
-                    value={m1Sem}
-                    onChange={(e) => setM1Sem(e.target.value)}
-                  >
-                    {SEMESTERS.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </SelectField>
-                  <Field
-                    label="Class / Branch"
-                    placeholder="e.g. CSE A"
-                    value={m1Class}
-                    onChange={(e) => setM1Class(e.target.value)}
-                    autoComplete="off"
+                <label className="block">
+                  <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                    Full Name
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="e.g. John Doe"
+                    value={m1Name}
+                    onChange={(e) => setM1Name(e.target.value)}
+                    autoComplete="name"
+                    className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
                   />
+                </label>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="block">
+                    <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                      Semester
+                    </span>
+                    <select
+                      value={m1Sem}
+                      onChange={(e) => setM1Sem(e.target.value)}
+                      className="liquid-glass-input w-full cursor-pointer px-3.5 py-2.5 font-sans text-sm font-semibold text-white outline-none"
+                    >
+                      {SEMESTERS.map((s) => (
+                        <option key={s} value={s} className="bg-[#0b1626] text-white">
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                      Class / Branch
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="e.g. CSE A"
+                      value={m1Class}
+                      onChange={(e) => setM1Class(e.target.value)}
+                      autoComplete="off"
+                      className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
+                    />
+                  </label>
                 </div>
               </div>
-            </Panel>
+            </div>
 
-            {/* Member 2 Card */}
-            <Panel tone="teal" className="p-4">
-              <div className="mb-3 flex items-center justify-between border-b border-[#202d24] pb-2">
+            {/* Member 2 Card (Liquid Glass) */}
+            <div className="liquid-glass p-5 text-white">
+              <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
                   Member 2 (Teammate)
                 </span>
               </div>
               <div className="space-y-3">
-                <Field
-                  label="Full Name"
-                  placeholder="e.g. Deepak Menon"
-                  value={m2Name}
-                  onChange={(e) => setM2Name(e.target.value)}
-                  autoComplete="name"
-                />
-                <div className="grid grid-cols-2 gap-3">
-                  <SelectField
-                    label="Semester"
-                    value={m2Sem}
-                    onChange={(e) => setM2Sem(e.target.value)}
-                  >
-                    {SEMESTERS.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </SelectField>
-                  <Field
-                    label="Class / Branch"
-                    placeholder="e.g. ECE B"
-                    value={m2Class}
-                    onChange={(e) => setM2Class(e.target.value)}
-                    autoComplete="off"
+                <label className="block">
+                  <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                    Full Name
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="e.g. Deepak Menon"
+                    value={m2Name}
+                    onChange={(e) => setM2Name(e.target.value)}
+                    autoComplete="name"
+                    className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
                   />
+                </label>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="block">
+                    <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                      Semester
+                    </span>
+                    <select
+                      value={m2Sem}
+                      onChange={(e) => setM2Sem(e.target.value)}
+                      className="liquid-glass-input w-full cursor-pointer px-3.5 py-2.5 font-sans text-sm font-semibold text-white outline-none"
+                    >
+                      {SEMESTERS.map((s) => (
+                        <option key={s} value={s} className="bg-[#0b1626] text-white">
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                      Class / Branch
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="e.g. ECE B"
+                      value={m2Class}
+                      onChange={(e) => setM2Class(e.target.value)}
+                      autoComplete="off"
+                      className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
+                    />
+                  </label>
                 </div>
               </div>
-            </Panel>
+            </div>
 
             {formError && (
-              <div className="rounded-[8px] border border-red-800 bg-[#2d1414] p-3 text-xs font-semibold text-red-200">
+              <div className="rounded-[12px] border border-red-500/40 bg-[#381111]/80 backdrop-blur-md p-3.5 text-xs font-semibold text-red-200 shadow-md">
                 <div className="flex items-start gap-2">
                   <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
                   <span>{formError}</span>
@@ -530,41 +588,47 @@ function JoinScreen({
               </div>
             )}
 
-            <Btn onClick={create} disabled={busy} className="w-full justify-center text-base py-3.5">
+            <Btn onClick={create} disabled={busy} className="w-full justify-center text-base py-3.5 shadow-xl">
               <Users size={18} />
               <span>{busy ? "Registering Squad..." : "Enroll Squad & Get Code"}</span>
               <ArrowRight size={18} />
             </Btn>
 
-            <p className="text-center font-sans text-xs text-[#6b7280]">
+            <p className="text-center font-sans text-xs text-[#cbd5e1] drop-shadow-sm">
               no registration fee · both teammates must be present on campus
             </p>
           </div>
         ) : (
           /* Tab 2: Sign in with Access Code */
           <div className="mt-6 space-y-4">
-            <Panel className="p-5 space-y-4">
+            <div className="liquid-glass p-6 space-y-4 text-white">
               <div>
                 <h2 className="font-sans text-sm font-bold text-white">
                   Authenticate Existing Squad
                 </h2>
-                <p className="mt-0.5 text-xs text-[#9ca3af]">
+                <p className="mt-0.5 text-xs text-[#94a3b8]">
                   Enter the 6-character code given after registration.
                 </p>
               </div>
 
-              <Field
-                label="Squad Access Code"
-                placeholder="XXXXXX"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
-                autoCapitalize="characters"
-                autoComplete="off"
-                spellCheck={false}
-              />
+              <label className="block">
+                <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+                  Squad Access Code
+                </span>
+                <input
+                  type="text"
+                  placeholder="XXXXXX"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 6))}
+                  autoCapitalize="characters"
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="liquid-glass-input w-full px-4 py-3 font-mono text-lg font-bold tracking-[0.2em] uppercase text-center outline-none"
+                />
+              </label>
 
               {codeError && (
-                <div className="rounded-[8px] border border-red-800 bg-[#2d1414] p-3 text-xs font-semibold text-red-200">
+                <div className="rounded-[12px] border border-red-500/40 bg-[#381111]/80 backdrop-blur-md p-3 text-xs font-semibold text-red-200 shadow-md">
                   <div className="flex items-start gap-2">
                     <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
                     <span>{codeError}</span>
@@ -572,20 +636,15 @@ function JoinScreen({
                 </div>
               )}
 
-              <Btn onClick={join} disabled={busy} className="w-full justify-center text-base py-3">
+              <Btn onClick={join} disabled={busy} className="w-full justify-center text-base py-3 shadow-xl">
                 <span>{busy ? "Authenticating..." : "Sign In to Squad"}</span>
                 <ArrowRight size={18} />
               </Btn>
-            </Panel>
-
-            <div className="rounded-[10px] border border-[#202d24] bg-[#111813] p-3.5 text-xs text-[#9ca3af]">
-              <div className="flex items-start gap-2">
-                <Info size={16} className="mt-0.5 shrink-0 text-[#22c55e]" />
-                <span>
-                  Teammate already registered? Ask them for the 6-character access code to join the live session.
-                </span>
-              </div>
             </div>
+
+            <p className="text-center font-sans text-xs text-[#cbd5e1] drop-shadow-sm">
+              Lost code? Contact volunteers near the registration desk.
+            </p>
           </div>
         )}
       </div>

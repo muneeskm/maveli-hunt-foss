@@ -18,7 +18,7 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
   return (
     <div>
       {!compact && <SectionLabel>Squad Evidence Board</SectionLabel>}
-      <Panel className="divide-y divide-[#202d24] p-0 overflow-hidden bg-[#111813] border border-[#202d24]">
+      <Panel className="divide-y divide-white/10 p-0 overflow-hidden">
         {sightings.map((loc) => {
           const done = found.has(loc.id);
           return (
@@ -26,13 +26,15 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
               key={loc.id}
               className={cn(
                 "flex items-start gap-3 p-4 transition-colors",
-                done ? "bg-[#102317]/60" : "bg-[#111813] opacity-60",
+                done ? "bg-white/[0.04]" : "bg-transparent opacity-60",
               )}
             >
               <span
                 className={cn(
-                  "mt-0.5 rounded-[4px] px-2 py-0.5 font-mono text-[10px] font-bold",
-                  done ? "bg-[#22c55e] text-[#090d0b]" : "bg-[#16221a] text-[#6b7280]",
+                  "mt-0.5 rounded-[6px] px-2 py-0.5 font-mono text-[10px] font-bold",
+                  done
+                    ? "bg-[#22c55e] text-[#020712]"
+                    : "bg-white/5 border border-white/10 text-[#cbd5e1]",
                 )}
               >
                 0{loc.order}
@@ -40,11 +42,11 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   {done ? (
-                    <span className="font-mono text-sm font-bold tracking-widest text-[#22c55e] bg-[#14281b] border border-[#22c55e]/40 px-2 py-0.5 rounded-[4px]">
+                    <span className="font-mono text-sm font-bold tracking-widest text-[#22c55e] bg-white/5 border border-white/20 px-2 py-0.5 rounded-[6px]">
                       {words[loc.id]?.word ?? "?????"}
                     </span>
                   ) : (
-                    <span className="font-mono text-sm font-medium tracking-widest text-[#6b7280]">
+                    <span className="font-mono text-sm font-medium tracking-widest text-[#94a3b8]">
                       •••••
                     </span>
                   )}
@@ -52,14 +54,14 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
                     {loc.name}
                   </span>
                 </div>
-                <div className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
+                <div className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
                   {done ? words[loc.id]?.wordClue ?? "Evidence recovered and verified." : "Evidence not yet discovered on campus."}
                 </div>
               </div>
               <span
                 className={cn(
                   "mt-1.5 h-2 w-2 shrink-0 rounded-full",
-                  done ? "bg-[#22c55e]" : "bg-[#202d24]",
+                  done ? "bg-[#22c55e]" : "bg-white/20",
                 )}
               />
             </div>

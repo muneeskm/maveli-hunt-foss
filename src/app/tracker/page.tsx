@@ -34,7 +34,7 @@ export default function TrackerPage() {
   if (!team) {
     if (sessionPending) {
       return (
-        <div className="flex min-h-[100dvh] items-center justify-center bg-[#090d0b]">
+        <div className="flex min-h-[100dvh] items-center justify-center bg-transparent">
           <div className="text-center">
             <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
             <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
@@ -86,19 +86,19 @@ export default function TrackerPage() {
         <img
           src="/maveli-logo.png"
           alt="The Maveli Files"
-          className="h-10 w-10 rounded-full border border-[#202d24] object-cover shadow-sm"
+          className="h-10 w-10 rounded-full border border-white/20 object-cover shadow-sm"
         />
-        <p className="font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-[#cbd5e1]">
           The Maveli Files
         </p>
-        <div className="mt-3 flex items-center gap-2 border-t border-[#202d24] pt-3">
+        <div className="mt-3 flex items-center gap-2 border-t border-white/10 pt-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/foss-logo.png"
             alt="FOSS CCE"
-            className="h-7 w-7 rounded-full border border-[#202d24] object-cover"
+            className="h-7 w-7 rounded-full border border-white/20 object-cover"
           />
-          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#9ca3af]">
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-[#cbd5e1]">
             Conducted by FOSS CCE
           </span>
         </div>

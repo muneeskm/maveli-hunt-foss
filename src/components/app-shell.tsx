@@ -40,56 +40,64 @@ export function AppShell({
   const tel = settings.volunteerPhone.replace(/[^+\d]/g, "");
 
   return (
-    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-      {/* Floating Pill Top Nav */}
-      <header className="sticky top-3 z-40 mx-auto max-w-xl px-4">
-        <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-sm">
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            {/* Logo square */}
-            <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/maveli-logo.png"
-                alt="Maveli"
-                className="h-[28px] w-[28px] object-cover"
-              />
+    <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      {/* Pixel Art Mobile Background Layer */}
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/mobile-bg.png')" }}
+      />
+
+      <div className="relative z-10">
+        {/* Floating Pill Top Nav */}
+        <header className="sticky top-3 z-40 mx-auto max-w-xl px-4">
+          <div className="liquid-glass-subtle flex items-center justify-between gap-2 px-3.5 py-2.5">
+            <Link href="/" className="flex items-center gap-2 shrink-0">
+              {/* Logo square */}
+              <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-white/10 border border-white/20 overflow-hidden shadow-sm">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/maveli-logo.png"
+                  alt="Maveli"
+                  className="h-[28px] w-[28px] object-cover"
+                />
+              </div>
+              <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-white drop-shadow-sm">
+                The Maveli Files
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <PhasePill phase={phase} />
+
+              {teamId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("Leave current squad session?")) {
+                      store.logout();
+                      router.replace("/");
+                    }
+                  }}
+                  className="flex h-[26px] shrink-0 items-center rounded-[8px] border border-white/15 bg-white/5 px-2.5 font-sans text-xs font-medium text-white hover:bg-red-950/60 hover:text-red-400 hover:border-red-800 transition-colors backdrop-blur-md"
+                >
+                  Exit
+                </button>
+              )}
             </div>
-            <span className="font-sans text-xs sm:text-sm font-bold tracking-tight text-white">
-              The Maveli Files
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <PhasePill phase={phase} />
-
-            {teamId && (
-              <button
-                type="button"
-                onClick={() => {
-                  if (window.confirm("Leave current squad session?")) {
-                    store.logout();
-                    router.replace("/");
-                  }
-                }}
-                className="flex h-[24px] shrink-0 items-center rounded-[6px] border border-[#202d24] bg-[#16221a] px-2.5 font-sans text-xs font-medium text-white hover:bg-red-950/50 hover:text-red-400 hover:border-red-800 transition-colors"
-              >
-                Exit
-              </button>
-            )}
           </div>
-        </div>
-      </header>
+        </header>
 
-      {visible.length > 0 && (
-        <div className="mx-auto mt-4 max-w-xl px-4">
-          <div className="flex items-center gap-2.5 rounded-[10px] border border-[#22c55e]/40 bg-[#102317] px-4 py-2.5 text-xs text-white">
-            <Broadcast size={16} weight="bold" className="shrink-0 text-[#22c55e]" />
-            <p className="truncate font-sans font-medium">{visible[0].message}</p>
+        {visible.length > 0 && (
+          <div className="mx-auto mt-4 max-w-xl px-4">
+            <div className="liquid-glass-subtle flex items-center gap-2.5 px-4 py-2.5 text-xs text-white">
+              <Broadcast size={16} weight="bold" className="shrink-0 text-[#22c55e]" />
+              <p className="truncate font-sans font-medium">{visible[0].message}</p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <main className="mx-auto max-w-xl px-4 pb-32 pt-5">{children}</main>
+        <main className="mx-auto max-w-xl px-4 pb-32 pt-5">{children}</main>
+      </div>
 
       {/* Floating Volunteer Call Button */}
       {teamId && (

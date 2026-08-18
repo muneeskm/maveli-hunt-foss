@@ -102,12 +102,12 @@ export function ReconstructionGate() {
 
   if (solved) {
     return (
-      <Panel tone="mint" className="p-6 text-center bg-[#102117] border border-[#22c55e]/40 text-white">
+      <Panel className="p-6 text-center text-white">
         <CheckCircle size={40} weight="fill" className="mx-auto text-[#22c55e]" />
-        <h2 className="font-display mt-3 text-2xl text-white">
+        <h2 className="font-display mt-3 text-2xl text-white drop-shadow-md">
           Maveli is Safe!
         </h2>
-        <p className="mt-1 font-sans text-xs leading-relaxed text-[#9ca3af]">
+        <p className="mt-1 font-sans text-xs leading-relaxed text-[#cbd5e1]">
           The instruction matched. Your squad proved the discovery.
         </p>
       </Panel>
@@ -117,8 +117,8 @@ export function ReconstructionGate() {
   return (
     <div>
       <SectionLabel>Final Reconstruction Gate</SectionLabel>
-      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
-        <p className="font-sans text-xs leading-relaxed text-[#9ca3af]">
+      <Panel className="p-5">
+        <p className="font-sans text-xs leading-relaxed text-[#cbd5e1]">
           The five words on your evidence board are fragments of one hidden
           instruction. Reconstruct it and enter the words in the exact sequence
           the instruction reads.
@@ -132,7 +132,7 @@ export function ReconstructionGate() {
               <input
                 value={words[i]}
                 onChange={(e) => setWord(i, e.target.value)}
-                className="field text-center font-mono text-lg font-bold uppercase tracking-widest"
+                className="liquid-glass-input text-center font-mono text-lg font-bold uppercase tracking-widest"
                 placeholder="?????"
                 autoCapitalize="characters"
                 autoComplete="off"
@@ -144,12 +144,12 @@ export function ReconstructionGate() {
           ))}
         </div>
         {error && (
-          <p className="mt-3 flex items-start gap-2 rounded-[6px] border border-red-800 bg-[#2d1414] p-2.5 font-sans text-xs font-semibold text-red-200">
+          <p className="mt-3 flex items-start gap-2 rounded-[10px] border border-red-500/40 bg-red-950/40 backdrop-blur-md p-2.5 font-sans text-xs font-semibold text-red-200">
             <WarningCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
             {error}
           </p>
         )}
-        <Btn onClick={submit} disabled={locked || busy} className="mt-4 w-full justify-center text-sm py-3">
+        <Btn onClick={submit} disabled={locked || busy} className="mt-4 w-full justify-center text-sm py-3 shadow-lg">
           <span>{locked ? `Locked for ${countdown}s` : busy ? "Checking..." : "Confirm Final Instruction"}</span>
         </Btn>
       </Panel>

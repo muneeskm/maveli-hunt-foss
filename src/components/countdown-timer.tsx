@@ -67,13 +67,13 @@ export function CountdownTimer({ targetDate, className, onComplete }: CountdownT
   return (
     <div
       className={cn(
-        "rounded-[16px] border border-[#202d24] bg-[#111813] p-4 shadow-sm",
+        "liquid-glass p-4 text-white",
         className,
       )}
     >
-      <div className="mb-3 flex items-center justify-between border-b border-[#202d24] pb-2.5">
+      <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2.5">
         <div className="flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#22c55e]/20 border border-[#22c55e]/40 text-[#22c55e]">
+          <span className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-white/10 border border-white/20 text-[#22c55e]">
             <Clock size={14} weight="bold" />
           </span>
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-white">
@@ -89,7 +89,7 @@ export function CountdownTimer({ targetDate, className, onComplete }: CountdownT
 
       <div className="grid grid-flow-col gap-2 sm:gap-3 text-center justify-center auto-cols-fr">
         {/* Days */}
-        <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-[10px] border border-[#202d24] bg-[#16201a] text-white">
+        <div className="liquid-glass-subtle flex flex-col items-center justify-center p-2.5 sm:p-3 text-white">
           <span
             className="countdown font-mono text-2xl sm:text-4xl font-extrabold text-white tracking-tight"
             aria-live="polite"
@@ -99,13 +99,13 @@ export function CountdownTimer({ targetDate, className, onComplete }: CountdownT
               {mounted ? String(days).padStart(2, "0") : "--"}
             </span>
           </span>
-          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#9ca3af]">
+          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#cbd5e1]">
             days
           </span>
         </div>
 
         {/* Hours */}
-        <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-[10px] border border-[#202d24] bg-[#16201a] text-white">
+        <div className="liquid-glass-subtle flex flex-col items-center justify-center p-2.5 sm:p-3 text-white">
           <span
             className="countdown font-mono text-2xl sm:text-4xl font-extrabold text-white tracking-tight"
             aria-live="polite"
@@ -115,39 +115,39 @@ export function CountdownTimer({ targetDate, className, onComplete }: CountdownT
               {mounted ? String(hours).padStart(2, "0") : "--"}
             </span>
           </span>
-          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#9ca3af]">
+          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#cbd5e1]">
             hours
           </span>
         </div>
 
         {/* Minutes */}
-        <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-[10px] border border-[#202d24] bg-[#16201a] text-white">
+        <div className="liquid-glass-subtle flex flex-col items-center justify-center p-2.5 sm:p-3 text-white">
           <span
             className="countdown font-mono text-2xl sm:text-4xl font-extrabold text-white tracking-tight"
             aria-live="polite"
-            aria-label={`${minutes} min`}
+            aria-label={`${minutes} minutes`}
           >
             <span style={{ "--value": minutes } as React.CSSProperties}>
               {mounted ? String(minutes).padStart(2, "0") : "--"}
             </span>
           </span>
-          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#9ca3af]">
+          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#cbd5e1]">
             min
           </span>
         </div>
 
         {/* Seconds */}
-        <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-[10px] border border-[#202d24] bg-[#16201a] text-white">
+        <div className="liquid-glass-subtle flex flex-col items-center justify-center p-2.5 sm:p-3 text-white">
           <span
-            className="countdown font-mono text-2xl sm:text-4xl font-extrabold text-[#22c55e] tracking-tight"
+            className="countdown font-mono text-2xl sm:text-4xl font-extrabold text-[#22c55e] tracking-tight drop-shadow-sm"
             aria-live="polite"
-            aria-label={`${seconds} sec`}
+            aria-label={`${seconds} seconds`}
           >
             <span style={{ "--value": seconds } as React.CSSProperties}>
               {mounted ? String(seconds).padStart(2, "0") : "--"}
             </span>
           </span>
-          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#22c55e]">
+          <span className="mt-1 font-mono text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#86efac]">
             sec
           </span>
         </div>

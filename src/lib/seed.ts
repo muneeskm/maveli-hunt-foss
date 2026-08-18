@@ -24,7 +24,6 @@ export const SEED_GATE_SLOTS = [
   "Word 2",
   "Word 3",
   "Word 4",
-  "Word 5",
 ];
 
 export const seedLocations = (): GameLocation[] => [
@@ -57,7 +56,7 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "/locations/s2-cake-farm.jpg",
     mapillaryUrl: "",
     clueText:
-      "Maveli stopped by Cake Farm Cafe courtyard. Find and scan the QR code stationed at Cake Farm Cafe.",
+      "Maveli stopped by Cake Farm Cafe courtyard. Find and scan the QR code stationed at Cake Farm Cafe to unlock Maveli's campus timeline and Instagram channel.",
     hintText: "Look around the cafe seating and ordering counter for the QR code sheet.",
     mapillaryNote:
       "Scan the QR code on-site at Cake Farm Cafe to unlock Maveli's Instagram transmission channel.",
@@ -73,10 +72,10 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "/locations/s3-umbrella.jpg",
     mapillaryUrl: "",
     clueText:
-      "Maveli was last tracked near Christ Cafe before losing connection. Check his Instagram feed to discover the exact disconnection timestamp.",
+      "Maveli was last tracked near Christ Cafe before losing connection. Check his Instagram feed (@maveli.thamburan_) to discover the exact disconnection timestamp.",
     hintText: "Inspect Maveli's Instagram posts to find the timestamp of his last transmission.",
     mapillaryNote:
-      "Enter the exact timestamp from Maveli's Instagram post to verify his disconnection point.",
+      "Enter the exact timestamp (12:13) from Maveli's Instagram post to verify his disconnection point.",
   },
   {
     id: "s4",
@@ -89,30 +88,14 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "/locations/s4-st-marys-block.jpg",
     mapillaryUrl: "",
     clueText:
-      "Maveli was seen walking across the courtyard toward St. Mary's Block. Locate the QR code near the building entrance.",
-    hintText: "Look near the front portico pillars of St. Mary's Block.",
+      "Maveli was last seen in front of the reception at St. Mary's Block on his Instagram feed. Find and scan the QR code located in front of the reception to conclude Day 1.",
+    hintText: "Check the reception counter area inside the St. Mary's Block entrance portico.",
     mapillaryNote:
-      "Scan the QR code on-site to verify the landmark evidence.",
-  },
-  {
-    id: "s5",
-    order: 5,
-    type: "sighting",
-    name: "Sighting 05 - Techies Park",
-    token: "s5-tau",
-    word: "",
-    wordClue: "",
-    photoUrl: "/locations/s5-techies-park.jpg",
-    mapillaryUrl: "",
-    clueText:
-      "Maveli was spotted near Techies Park amphitheatre. Find the marker hidden near the outdoor seating.",
-    hintText: "Search near the concrete benches facing the lawn.",
-    mapillaryNote:
-      "Scan the QR code on-site to verify the landmark evidence.",
+      "Scan the QR code in front of the St. Mary's Block reception to lock in Day 1 evidence.",
   },
   {
     id: "sos",
-    order: 6,
+    order: 5,
     type: "sos",
     name: "SOS Transmission",
     token: "sos-delta",
@@ -126,7 +109,7 @@ export const seedLocations = (): GameLocation[] => [
   },
   {
     id: "fin",
-    order: 7,
+    order: 6,
     type: "final",
     name: "Final Sanctuary",
     token: "fin-omega",

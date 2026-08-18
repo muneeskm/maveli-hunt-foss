@@ -76,7 +76,7 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center">
+    <div className="admin-scope flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center">
       <div className="w-full max-w-sm rounded-[16px] border border-[#202d24] bg-[#111813] p-8 shadow-sm">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-[10px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -114,8 +114,8 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
               {error}
             </p>
           )}
-          <Btn onClick={submit} disabled={busy} className="w-full justify-center text-sm py-2.5">
-            {busy ? "Checking..." : "Log In to Control Center"}
+          <Btn onClick={submit} disabled={busy} className="w-full justify-center">
+            <span>{busy ? "Authenticating..." : "Access Control Center"}</span>
           </Btn>
         </div>
       </div>
@@ -125,8 +125,8 @@ function AdminLogin({ onAuthed }: { onAuthed: () => void }) {
 
 /* ---------- dashboard ---------- */
 
-function useSnapshot() {
-  const [, force] = useReducer((x: number) => x + 1, 0);
+function useSnapshot(): DB {
+  const [, force] = useReducer((x) => x + 1, 0);
   useEffect(() => store.subscribe(() => force()), []);
   return store.snapshot();
 }
@@ -137,7 +137,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<Tab>("overview");
 
   return (
-    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
+    <div className="admin-scope min-h-[100dvh] bg-[#090d0b] text-white">
       <header className="sticky top-0 z-40 border-b border-[#202d24] bg-[#111813]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">

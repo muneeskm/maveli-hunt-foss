@@ -13,10 +13,10 @@ import type { GameLocation, GameState, Settings } from "./types";
  * grepping the output chunks for these values (see WALKTHROUGH.md).
  */
 
-export const DEMO_WORDS = ["CAKE", "FARM", "15:12", "BANYAN", "CLOCK"] as const;
+export const DEMO_WORDS = ["CAKE", "FARM", "12:13", "BANYAN"] as const;
 
-// Gate order: "CAKE FARM 15:12 BANYAN CLOCK"
-export const DEMO_GATE_ANSWER = ["CAKE", "FARM", "15:12", "BANYAN", "CLOCK"];
+// Gate order: "CAKE FARM 12:13 BANYAN"
+export const DEMO_GATE_ANSWER = ["CAKE", "FARM", "12:13", "BANYAN"];
 
 export const DEMO_BITCHAT_CODE = "MERIDIAN";
 export const DEMO_ADMIN_CODE = "FOSSCCE@MaveliFiles";
@@ -24,9 +24,8 @@ export const DEMO_ADMIN_CODE = "FOSSCCE@MaveliFiles";
 const DEMO_WORD_CLUES: Record<string, string> = {
   CAKE: "Sponsor poster difference discovered at the main entrance.",
   FARM: "QR Checkpoint confirmed at Cake Farm Cafe.",
-  "15:12": "Disconnection timestamp verified from Maveli's Instagram transmission.",
-  BANYAN: "A tree with hanging roots. It shades the courtyard.",
-  CLOCK: "It tells time. It stands tall near the entrance.",
+  "12:13": "Disconnection timestamp verified from Maveli's Instagram transmission.",
+  BANYAN: "Final Day 1 reception checkpoint locked at St. Mary's Block.",
 };
 
 const DEMO_WORDS_BY_ID: Record<string, string> = {
@@ -34,7 +33,6 @@ const DEMO_WORDS_BY_ID: Record<string, string> = {
   s2: DEMO_WORDS[1],
   s3: DEMO_WORDS[2],
   s4: DEMO_WORDS[3],
-  s5: DEMO_WORDS[4],
 };
 
 /** Demo locations = public content + the placeholder words/clues. */

@@ -26,9 +26,9 @@ export function LeaderboardView({
         <Chip tone="yellow">{rows.length} Squads</Chip>
       </div>
 
-      <Panel className="divide-y divide-[#202d24] p-0 overflow-hidden shadow-sm bg-[#111813] border border-[#202d24]">
+      <Panel className="divide-y divide-[rgba(56,189,248,0.15)] p-0 overflow-hidden shadow-xl">
         {visible.length === 0 && (
-          <p className="px-4 py-8 text-center font-sans text-sm text-[#9ca3af]">
+          <p className="px-4 py-8 text-center font-sans text-sm text-[#94a3b8]">
             No squads registered yet.
           </p>
         )}

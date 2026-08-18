@@ -171,11 +171,11 @@ export function Timeline() {
       </div>
 
       {!cakeFarmScanned ? (
-        <div className="mt-2 rounded-[14px] border border-[#202d24] bg-[#111813] p-5 text-center shadow-sm">
-          <p className="font-mono text-xs uppercase tracking-wider text-[#86efac]">
+        <div className="liquid-glass mt-2 p-5 text-center">
+          <p className="font-mono text-xs uppercase tracking-wider text-[#38bdf8]">
             Route Encryption Active
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-[#9ca3af]">
+          <p className="mt-2 text-xs leading-relaxed text-[#cbd5e1]">
             Maveli&apos;s campus timeline is encrypted. Scan the QR code at <strong>Cake Farm Cafe</strong> to unlock his full route history.
           </p>
         </div>
@@ -183,7 +183,7 @@ export function Timeline() {
         <ol className="relative mt-2">
           {/* the rail */}
           <span
-            className="absolute bottom-5 left-4 top-5 w-px bg-[#202d24]"
+            className="absolute bottom-5 left-4 top-5 w-px bg-white/15"
             aria-hidden="true"
           />
 
@@ -191,7 +191,7 @@ export function Timeline() {
             <li key={e.key} className="relative">
               {e.section && (
                 <div className="flex items-center pb-2 pt-1">
-                  <span className="relative z-10 ml-[7px] bg-[#090d0b] border border-[#202d24] rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#22c55e]">
+                  <span className="relative z-10 ml-[7px] bg-white/10 border border-white/20 backdrop-blur-md rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
                     {e.section}
                   </span>
                 </div>
@@ -206,11 +206,11 @@ export function Timeline() {
                 {/* badge on the rail */}
                 <span
                   className={cn(
-                    "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                    e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e]",
+                    "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors shadow-sm",
+                    e.status === "done" && "border-[#22c55e] bg-white/10 text-[#22c55e] backdrop-blur-md",
                     e.status === "current" &&
-                      "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b]",
-                    e.status === "upcoming" && "border-[#202d24] bg-[#111813] text-[#6b7280]",
+                      "anim-blink border-[#22c55e] bg-[#22c55e] text-[#020712]",
+                    e.status === "upcoming" && "border-white/15 bg-white/5 text-[#cbd5e1] backdrop-blur-md",
                   )}
                 >
                   {e.icon}
@@ -221,13 +221,13 @@ export function Timeline() {
                     className={cn(
                       "text-[15px] font-semibold leading-snug text-white",
                       e.title.includes("████") && "font-mono tracking-widest text-[#22c55e]",
-                      e.status === "upcoming" && !e.title.includes("████") && "text-[#6b7280]",
+                      e.status === "upcoming" && !e.title.includes("████") && "text-[#cbd5e1]",
                     )}
                   >
                     {e.title}
                   </p>
                   {e.detail && (
-                    <p className="mt-0.5 text-[13px] leading-relaxed text-[#9ca3af]">
+                    <p className="mt-0.5 text-[13px] leading-relaxed text-[#cbd5e1]">
                       {e.detail}
                     </p>
                   )}
@@ -242,8 +242,8 @@ export function Timeline() {
                   className={cn(
                     "mt-1 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-wider",
                     e.status === "done" && "text-[#22c55e]",
-                    e.status === "current" && "text-[#090d0b] bg-[#22c55e] px-1.5 py-0.5 rounded-[4px] font-bold",
-                    e.status === "upcoming" && "text-[#6b7280]",
+                    e.status === "current" && "text-[#020712] bg-[#22c55e] px-1.5 py-0.5 rounded-[4px] font-bold",
+                    e.status === "upcoming" && "text-[#94a3b8]",
                   )}
                 >
                   {e.status === "done"

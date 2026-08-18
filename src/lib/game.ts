@@ -10,7 +10,7 @@ import type {
   Team,
 } from "./types";
 
-export const SIGHTINGS = 5;
+export const SIGHTINGS = 4;
 
 export function sightingScans(teamId: string, scans: Scan[], locations: GameLocation[]) {
   const sightingIds = locations
@@ -51,7 +51,7 @@ export function stageOf(
   answers: Answer[],
   gateOpen: boolean,
 ): StageInfo {
-  const sightingIds = locations
+  const sightings = locations
     .filter((l) => l.type === "sighting")
     .sort((a, b) => a.order - b.order);
   const solved = sightingScans(teamId, scans, locations).length;
@@ -68,8 +68,8 @@ export function stageOf(
   if (phase === "ended") return { key: "ended", label: "Event over" };
 
   if (phase === "day1" || phase === "night") {
-    if (solved < SIGHTINGS) {
-      const next = sightingIds[solved];
+    if (solved < sightings.length) {
+      const next = sightings[solved];
       return { key: `sighting-${next.order}`, label: next.name, location: next };
     }
     return { key: "deadend", label: "Day 1 dead end" };

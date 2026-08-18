@@ -201,7 +201,7 @@ const PHASE_LABEL: Record<Phase, string> = {
 export function PhasePill({ phase }: { phase: Phase }) {
   const isAlarm = phase === "day2" || phase === "rescued";
   return (
-    <div className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#202d24] bg-[#111813] px-3 py-1 text-xs">
+    <div className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur-md px-3 py-1 text-xs text-white shadow-sm">
       <span
         className={cn(
           "h-2 w-2 shrink-0 rounded-full",

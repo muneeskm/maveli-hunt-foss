@@ -135,12 +135,12 @@ export default function ScanTokenPage() {
 
   const bar = (
     <header className="sticky top-3 z-40 mx-auto max-w-md px-4">
-      <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-sm">
+      <div className="liquid-glass-subtle flex items-center justify-between gap-2 px-3.5 py-2.5">
         <Link
           href="/tracker"
           className="flex items-center gap-2 font-sans text-xs font-bold text-white"
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[6px] bg-white/10 border border-white/20 overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/maveli-logo.png"
@@ -152,7 +152,7 @@ export default function ScanTokenPage() {
         </Link>
         <Link
           href="/leaderboard"
-          className="rounded-[6px] border border-[#202d24] bg-[#16221a] px-2.5 py-1 font-sans text-xs font-medium text-white hover:bg-[#1a2c20] transition-colors"
+          className="rounded-[6px] border border-white/15 bg-white/5 px-2.5 py-1 font-sans text-xs font-medium text-white hover:bg-white/10 transition-colors"
         >
           Leaderboard
         </Link>
@@ -160,17 +160,27 @@ export default function ScanTokenPage() {
     </header>
   );
 
+  const bgLayer = (
+    <div
+      className="fixed inset-0 z-0 bg-cover bg-top bg-no-repeat pointer-events-none"
+      style={{ backgroundImage: "url('/mobile-bg.png')" }}
+    />
+  );
+
   if (view.kind === "checking") {
     return (
-      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-        {bar}
-        <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
-            <Radio size={28} className="anim-blink text-[#22c55e]" />
+      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          {bar}
+          <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
+            <div className="liquid-glass-subtle flex h-16 w-16 items-center justify-center rounded-full">
+              <Radio size={28} className="anim-blink text-[#22c55e]" />
+            </div>
+            <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
+              Decoding campus evidence...
+            </p>
           </div>
-          <p className="mt-4 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
-            Decoding campus evidence...
-          </p>
         </div>
       </div>
     );
@@ -178,62 +188,68 @@ export default function ScanTokenPage() {
 
   if (view.kind === "out_of_order") {
     return (
-      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-        {bar}
-        <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
-          <div className="text-center">
-            <TaglineBadge className="mx-auto mb-3">
-              <WarningCircle size={14} weight="bold" /> OUT OF SEQUENCE
-            </TaglineBadge>
-            <h1 className="font-display text-3xl sm:text-4xl text-white">
-              Whoa there, <HighlightWord>Time Traveler!</HighlightWord> ⏳
-            </h1>
-          </div>
-
-          <Panel tone="yellow" className="mt-6 p-6 text-center bg-[#14261a] border border-[#22c55e]/40">
-            <p className="font-mono text-xs uppercase tracking-wider text-[#86efac]">
-              Sequence Check
-            </p>
-            <p className="mt-3 font-sans text-sm leading-relaxed text-white">
-              You just scanned <strong>{view.targetLocationName}</strong> (Node 0{view.targetOrder}),
-              but your squad hasn&apos;t uncovered{" "}
-              <strong>Sighting 0{view.expectedOrder}</strong> ({view.expectedLocationName}) yet!
-            </p>
-
-            <div className="mt-4 rounded-[8px] border border-[#202d24] bg-[#16201a] p-3 text-xs italic text-[#86efac]">
-              💡 Maveli says: &quot;Hold your horses! My footprints move forward in time,
-              not quantum entanglement. Follow the trail in sequence!&quot;
+      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          {bar}
+          <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
+            <div className="text-center">
+              <TaglineBadge className="mx-auto mb-3">
+                <WarningCircle size={14} weight="bold" /> OUT OF SEQUENCE
+              </TaglineBadge>
+              <h1 className="font-display text-3xl sm:text-4xl text-white drop-shadow-md">
+                Whoa there, <HighlightWord>Time Traveler!</HighlightWord> ⏳
+              </h1>
             </div>
-          </Panel>
 
-          <div className="mt-6 space-y-3">
-            <Btn onClick={continueTracker} className="w-full justify-center text-base py-3.5">
-              <span>Head to Sighting 0{view.expectedOrder}</span>
-              <ArrowRight size={18} />
-            </Btn>
-          </div>
-        </main>
+            <Panel className="mt-6 p-6 text-center">
+              <p className="font-mono text-xs uppercase tracking-wider text-[#86efac]">
+                Sequence Check
+              </p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-white">
+                You just scanned <strong>{view.targetLocationName}</strong> (Node 0{view.targetOrder}),
+                but your squad hasn&apos;t uncovered{" "}
+                <strong>Sighting 0{view.expectedOrder}</strong> ({view.expectedLocationName}) yet!
+              </p>
+
+              <div className="liquid-glass-subtle mt-4 p-3 text-xs italic text-[#86efac]">
+                💡 Maveli says: &quot;Hold your horses! My footprints move forward in time,
+                not quantum entanglement. Follow the trail in sequence!&quot;
+              </div>
+            </Panel>
+
+            <div className="mt-6 space-y-3">
+              <Btn onClick={continueTracker} className="w-full justify-center text-base py-3.5 shadow-xl">
+                <span>Head to Sighting 0{view.expectedOrder}</span>
+                <ArrowRight size={18} />
+              </Btn>
+            </div>
+          </main>
+        </div>
       </div>
     );
   }
 
   if (view.kind === "unknown") {
     return (
-      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-        {bar}
-        <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#3f1515] border border-red-800">
-            <XCircle size={32} className="text-red-400" />
+      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          {bar}
+          <div className="flex min-h-[80dvh] flex-col items-center justify-center px-6 text-center">
+            <div className="liquid-glass-subtle flex h-16 w-16 items-center justify-center rounded-full border-red-500/30">
+              <XCircle size={32} className="text-red-400" />
+            </div>
+            <h1 className="font-display mt-4 text-2xl text-white drop-shadow-md">
+              Not a Hunt Marker
+            </h1>
+            <p className="mx-auto mt-2 max-w-[32ch] font-sans text-xs text-[#cbd5e1] drop-shadow-sm">
+              This code does not belong to The Maveli Files. Check the physical landmark marker and try again.
+            </p>
+            <Btn onClick={continueTracker} className="mt-6 shadow-xl">
+              Back to Tracker
+            </Btn>
           </div>
-          <h1 className="font-display mt-4 text-2xl text-white">
-            Not a Hunt Marker
-          </h1>
-          <p className="mx-auto mt-2 max-w-[32ch] font-sans text-xs text-[#9ca3af]">
-            This code does not belong to The Maveli Files. Check the physical landmark marker and try again.
-          </p>
-          <Btn onClick={continueTracker} className="mt-6">
-            Back to Tracker
-          </Btn>
         </div>
       </div>
     );
@@ -242,166 +258,211 @@ export default function ScanTokenPage() {
   if (view.kind === "sighting") {
     const isFirst = !view.duplicate;
     return (
-      <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-        {bar}
-        <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
-          <div className="text-center">
-            <TaglineBadge className="mx-auto mb-3">
-              <Sparkle weight="fill" size={13} />
-              {isFirst ? "EVIDENCE RECOVERED" : "ALREADY RECOVERED"}
-            </TaglineBadge>
-            <h1 className="font-display text-3xl sm:text-4xl text-white">
-              {view.name}
-            </h1>
-          </div>
-
-          {view.photoUrl && (
-            <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-[14px] border border-[#202d24] shadow-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={view.photoUrl}
-                alt={view.name}
-                className="h-full w-full object-cover"
-              />
+      <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          {bar}
+          <main className="mx-auto flex min-h-[calc(100dvh-70px)] max-w-md flex-col justify-center px-5 py-8">
+            <div className="text-center">
+              <TaglineBadge className="mx-auto mb-3">
+                <Sparkle weight="fill" size={13} />
+                {isFirst ? "EVIDENCE RECOVERED" : "ALREADY RECOVERED"}
+              </TaglineBadge>
+              <h1 className="font-display text-3xl sm:text-4xl text-white drop-shadow-md">
+                {view.name}
+              </h1>
             </div>
-          )}
 
-          <Panel tone="yellow" className="mt-5 p-6 text-center bg-[#14261a] border border-[#22c55e]/40">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
-              Decrypted Word 0{view.order}
-            </p>
-            {revealed ? (
-              <div className="anim-mask mt-3">
-                <p className="font-mono text-4xl font-extrabold tracking-widest text-[#22c55e]">
-                  {view.word || "RECORDED"}
-                </p>
-                {view.wordClue && (
-                  <p className="mx-auto mt-3 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
-                    {view.wordClue}
-                  </p>
-                )}
+            {view.photoUrl && (
+              <div className="relative mt-5 aspect-video w-full overflow-hidden rounded-[18px] border border-white/20 shadow-xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={view.photoUrl}
+                  alt={view.name}
+                  className="h-full w-full object-cover"
+                />
               </div>
-            ) : (
-              <>
-                <p className="mt-3 select-none font-mono text-4xl font-bold tracking-widest text-[#86efac]">
-                  •••••
-                </p>
-                <Btn
-                  variant="outline"
-                  onClick={() => setRevealed(true)}
-                  className="mt-4 bg-[#16221a] border border-[#22c55e]/40 text-[#22c55e]"
-                >
-                  <Eye size={16} /> Reveal Word
-                </Btn>
-              </>
             )}
-          </Panel>
 
-          {/* Instagram Spotlight Card if Cake Farm Cafe (order 2) */}
-          {view.order === 2 && (
-            <div className="mt-5 rounded-[14px] border-2 border-[#22c55e] bg-[#102419] p-5 text-left shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
-                  <InstagramLogo size={24} weight="fill" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-sans text-base font-bold text-white">
-                      Maveli&apos;s Instagram Transmission
-                    </h3>
-                    <span className="rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
-                      CRITICAL
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
-                    Maveli is transmitting updates via his Instagram profile (<strong>@maveli.thamburan_</strong>). Track his latest posts and stories to uncover his next destination and timestamp clues.
+            <Panel className="mt-5 p-6 text-center">
+              <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
+                Decrypted Word 0{view.order}
+              </p>
+              {revealed ? (
+                <div className="anim-mask mt-3">
+                  <p className="font-mono text-4xl font-extrabold tracking-widest text-[#22c55e] drop-shadow-md">
+                    {view.word || "RECORDED"}
                   </p>
-                  <a
-                    href="https://www.instagram.com/maveli.thamburan_?igsh=MWo1ZW5mc3h3bTllOA==&igsi=MWo1ZW5mc3h3bTllOA=="
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5"
+                  {view.wordClue && (
+                    <p className="mx-auto mt-3 max-w-[36ch] font-sans text-xs leading-relaxed text-[#cbd5e1]">
+                      {view.wordClue}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <p className="mt-3 select-none font-mono text-4xl font-bold tracking-widest text-[#86efac]">
+                    •••••
+                  </p>
+                  <Btn
+                    variant="outline"
+                    onClick={() => setRevealed(true)}
+                    className="mt-4 border-white/20 bg-white/5 text-[#22c55e] hover:bg-white/10"
                   >
-                    <InstagramLogo size={16} weight="fill" />
-                    <span>Open @maveli.thamburan_ on Instagram ↗</span>
-                  </a>
+                    <Eye size={16} /> Reveal Word
+                  </Btn>
+                </>
+              )}
+            </Panel>
+
+            {/* Instagram Spotlight Card if Cake Farm Cafe (order 2) */}
+            {view.order === 2 && (
+              <div className="liquid-glass mt-5 p-5 text-left">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#020712]">
+                    <InstagramLogo size={24} weight="fill" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-sans text-base font-bold text-white">
+                        Maveli&apos;s Instagram Transmission
+                      </h3>
+                      <span className="rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#020712]">
+                        CRITICAL
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
+                      Maveli is transmitting updates via his Instagram profile (<strong>@maveli.thamburan_</strong>). Track his latest posts and stories to uncover his next destination and timestamp clues.
+                    </p>
+                    <a
+                      href="https://www.instagram.com/maveli.thamburan_?igsh=MWo1ZW5mc3h3bTllOA==&igsi=MWo1ZW5mc3h3bTllOA=="
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5 shadow-lg"
+                    >
+                      <InstagramLogo size={16} weight="fill" />
+                      <span>Open @maveli.thamburan_ on Instagram ↗</span>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <p className="mt-4 text-center font-sans text-xs text-[#9ca3af]">
-            {isFirst
-              ? "✓ Checkpoint automatically logged to your squad's Evidence Board & Leaderboard!"
-              : "Your squad already recorded this sighting. Continue to the next node."}
-          </p>
+            {/* Day 1 Completion & Night Story Announcement Card (order 4) */}
+            {view.order === 4 && (
+              <div className="liquid-glass mt-5 p-5 text-left">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#38bdf8] text-[#020712]">
+                    <InstagramLogo size={24} weight="fill" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-sans text-base font-bold text-white">
+                        Day 1 Complete · Watch Tonight&apos;s Story! 🌙
+                      </h3>
+                      <span className="rounded-[4px] bg-[#38bdf8] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#020712]">
+                        NIGHT EVENT
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
+                      You&apos;ve completed all Day 1 checkpoints! Maveli has gone underground for the night. <strong>Be sure to watch Maveli&apos;s Instagram Story (@maveli.thamburan_) tonight between 19:00 and 00:00</strong> for emergency signals and clues for Day 2.
+                    </p>
+                    <a
+                      href="https://www.instagram.com/maveli.thamburan_?igsh=MWo1ZW5mc3h3bTllOA==&igsi=MWo1ZW5mc3h3bTllOA=="
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5 shadow-lg"
+                    >
+                      <InstagramLogo size={16} weight="fill" />
+                      <span>Follow @maveli.thamburan_ for Night Stories ↗</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5">
-            <span>Continue to Tracker</span>
-            <ArrowRight size={18} />
-          </Btn>
-        </main>
+            <p className="mt-4 text-center font-sans text-xs text-[#cbd5e1] drop-shadow-sm">
+              {isFirst
+                ? "✓ Checkpoint automatically logged to your squad's Evidence Board & Leaderboard!"
+                : "Your squad already recorded this sighting. Continue to the next node."}
+            </p>
+
+            <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5 shadow-xl">
+              <span>Continue to Tracker</span>
+              <ArrowRight size={18} />
+            </Btn>
+          </main>
+        </div>
       </div>
     );
   }
 
   if (view.kind === "sos-locking") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center text-white">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
-          <Radio size={36} className="anim-blink text-[#22c55e]" />
+      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          <div className="liquid-glass-subtle mx-auto flex h-20 w-20 items-center justify-center rounded-full">
+            <Radio size={36} className="anim-blink text-[#22c55e]" />
+          </div>
+          <h1 className="font-display mt-6 text-3xl text-white drop-shadow-md">
+            Signal Locking...
+          </h1>
+          <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#cbd5e1]">
+            Stay in the vicinity. The transmission packet is resolving...
+          </p>
         </div>
-        <h1 className="font-display mt-6 text-3xl text-white">
-          Signal Locking...
-        </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
-          Stay in the vicinity. The transmission packet is resolving...
-        </p>
       </div>
     );
   }
 
   if (view.kind === "sos-alarm") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 py-10 text-center text-white">
-        <TaglineBadge className="mx-auto mb-3">
-          EMERGENCY ALERT
-        </TaglineBadge>
-        <h1 className="font-display mt-2 text-3xl sm:text-4xl text-white">
-          Maveli SOS Detected!
-        </h1>
-        <Panel tone="mint" className="mt-6 w-full max-w-sm p-5 text-left bg-[#102117] border border-[#22c55e]/40">
-          <div className="flex items-center gap-2 border-b border-[#202d24] pb-2">
-            <CheckCircle size={18} weight="fill" className="shrink-0 text-[#22c55e]" />
-            <p className="font-sans text-xs font-bold text-white">Transmission Received</p>
-          </div>
-          <p className="mt-3 font-sans text-xs leading-relaxed text-[#9ca3af]">
-            Maveli is alive, but trapped. He has been broadcasting on an offline channel. The next clue tells you where he is sheltered.
-          </p>
-        </Panel>
-        <Btn onClick={continueTracker} className="mt-6 w-full max-w-sm justify-center text-base py-3.5">
-          <span>Follow the SOS</span>
-          <ArrowRight size={18} />
-        </Btn>
+      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 py-10 text-center text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10 w-full max-w-sm">
+          <TaglineBadge className="mx-auto mb-3">
+            EMERGENCY ALERT
+          </TaglineBadge>
+          <h1 className="font-display mt-2 text-3xl sm:text-4xl text-white drop-shadow-md">
+            Maveli SOS Detected!
+          </h1>
+          <Panel className="mt-6 w-full p-5 text-left">
+            <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+              <CheckCircle size={18} weight="fill" className="shrink-0 text-[#22c55e]" />
+              <p className="font-sans text-xs font-bold text-white">Transmission Received</p>
+            </div>
+            <p className="mt-3 font-sans text-xs leading-relaxed text-[#cbd5e1]">
+              Maveli is alive, but trapped. He has been broadcasting on an offline channel. The next clue tells you where he is sheltered.
+            </p>
+          </Panel>
+          <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5 shadow-xl">
+            <span>Follow the SOS</span>
+            <ArrowRight size={18} />
+          </Btn>
+        </div>
       </div>
     );
   }
 
   if (view.kind === "sos-dup") {
     return (
-      <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-[#090d0b] px-6 text-center text-white">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
-          <CheckCircle size={32} className="text-[#22c55e]" />
+      <div className="relative flex min-h-[100dvh] flex-col items-center justify-center bg-[#020712] px-6 text-center text-white overflow-x-hidden">
+        {bgLayer}
+        <div className="relative z-10">
+          <div className="liquid-glass-subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+            <CheckCircle size={32} className="text-[#22c55e]" />
+          </div>
+          <h1 className="font-display mt-4 text-2xl text-white drop-shadow-md">
+            SOS Already Received
+          </h1>
+          <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#cbd5e1]">
+            Your squad already recovered this transmission. The next clue is ready in the tracker.
+          </p>
+          <Btn onClick={continueTracker} className="mt-6 shadow-xl">
+            Go to Tracker <ArrowRight size={16} />
+          </Btn>
         </div>
-        <h1 className="font-display mt-4 text-2xl text-white">
-          SOS Already Received
-        </h1>
-        <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
-          Your squad already recovered this transmission. The next clue is ready in the tracker.
-        </p>
-        <Btn onClick={continueTracker} className="mt-6">
-          Go to Tracker <ArrowRight size={16} />
-        </Btn>
       </div>
     );
   }
@@ -412,46 +473,49 @@ export default function ScanTokenPage() {
     game.winnerTeamId === team.id;
 
   return (
-    <div className="min-h-[100dvh] bg-[#090d0b] text-white">
-      {bar}
-      <main className="mx-auto max-w-md px-5 py-8">
-        {solved ? (
-          <div className="py-10 text-center">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#14261a] border border-[#22c55e]/40">
-              <Leaf size={36} weight="fill" className="text-[#22c55e]" />
-            </div>
-            <h1 className="font-display mt-4 text-3xl text-white">
-              Maveli is Safe!
-            </h1>
-            <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#9ca3af]">
-              Your squad proved the final instruction. The hunt is complete.
-            </p>
-            <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5">
-              <span>Continue</span>
-              <ArrowRight size={18} />
-            </Btn>
-          </div>
-        ) : (
-          <div className="space-y-5">
-            <Panel tone="mint" className="p-6 text-center bg-[#102117] border border-[#22c55e]/40">
-              <Detective size={32} weight="bold" className="mx-auto text-[#22c55e]" />
-              <h1 className="font-display mt-2 text-2xl text-white">
-                You Found the Sanctuary
+    <div className="relative min-h-[100dvh] bg-[#020712] text-white overflow-x-hidden">
+      {bgLayer}
+      <div className="relative z-10">
+        {bar}
+        <main className="mx-auto max-w-md px-5 py-8">
+          {solved ? (
+            <div className="py-10 text-center">
+              <div className="liquid-glass-subtle mx-auto flex h-16 w-16 items-center justify-center rounded-full">
+                <Leaf size={36} weight="fill" className="text-[#22c55e]" />
+              </div>
+              <h1 className="font-display mt-4 text-3xl text-white drop-shadow-md">
+                Maveli is Safe!
               </h1>
-              <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#9ca3af]">
-                Maveli is here. The final marker demands proof. Reconstruct the instruction from your five words in exact order.
+              <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#cbd5e1]">
+                Your squad proved the final instruction. The hunt is complete.
               </p>
-              {view.duplicate && (
-                <p className="mt-3 flex items-start justify-center gap-2 rounded-[6px] border border-[#202d24] bg-[#16201a] p-2 text-xs text-[#9ca3af]">
-                  <WarningCircle size={16} className="mt-0.5 shrink-0 text-amber-400" />
-                  This marker was already scanned by your squad.
+              <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5 shadow-xl">
+                <span>Continue</span>
+                <ArrowRight size={18} />
+              </Btn>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <Panel className="p-6 text-center">
+                <Detective size={32} weight="bold" className="mx-auto text-[#22c55e]" />
+                <h1 className="font-display mt-2 text-2xl text-white">
+                  You Found the Sanctuary
+                </h1>
+                <p className="mx-auto mt-2 max-w-[36ch] font-sans text-xs leading-relaxed text-[#cbd5e1]">
+                  Maveli is here. The final marker demands proof. Reconstruct the instruction from your five words in exact order.
                 </p>
-              )}
-            </Panel>
-            <ReconstructionGate />
-          </div>
-        )}
-      </main>
+                {view.duplicate && (
+                  <p className="liquid-glass-subtle mt-3 flex items-start justify-center gap-2 p-2 text-xs text-[#cbd5e1]">
+                    <WarningCircle size={16} className="mt-0.5 shrink-0 text-amber-400" />
+                    This marker was already scanned by your squad.
+                  </p>
+                )}
+              </Panel>
+              <ReconstructionGate />
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
