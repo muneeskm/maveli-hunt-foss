@@ -23,13 +23,13 @@ export function LeaderboardView({
     <div>
       <div className="mb-3 flex items-center justify-between">
         <SectionLabel>Live Leaderboard</SectionLabel>
-        <Chip tone="yellow">{rows.length} Squads</Chip>
+        <Chip tone="yellow">{rows.length} Teams</Chip>
       </div>
 
       <Panel className="divide-y divide-[rgba(56,189,248,0.15)] p-0 overflow-hidden shadow-xl">
         {visible.length === 0 && (
           <p className="px-4 py-8 text-center font-sans text-sm text-[#94a3b8]">
-            No squads registered yet.
+            No teams registered yet.
           </p>
         )}
         {visible.map((row, i) => {
@@ -70,7 +70,7 @@ export function LeaderboardView({
                       ? `LAST SCAN ${formatTime(
                           Math.max(...row.scans.map((s) => s.at)),
                         )}`
-                      : "SQUAD ENROLLED"}
+                      : "TEAM ENROLLED"}
                 </div>
               </div>
               <Chip

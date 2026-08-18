@@ -38,7 +38,7 @@ export default function TrackerPage() {
           <div className="text-center">
             <span className="anim-blink mx-auto block h-2.5 w-2.5 rounded-full bg-[#22c55e]" />
             <p className="mt-3 font-mono text-xs uppercase tracking-widest text-[#22c55e]">
-              Syncing squad...
+              Syncing team...
             </p>
           </div>
         </div>

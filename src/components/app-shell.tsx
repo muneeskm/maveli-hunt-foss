@@ -76,7 +76,7 @@ export function AppShell({
                 <button
                   type="button"
                   onClick={() => {
-                    if (window.confirm("Leave current squad session?")) {
+                    if (window.confirm("Leave current team session?")) {
                       store.logout();
                       router.replace("/");
                     }
@@ -142,7 +142,7 @@ export function AppShell({
               </button>
             </div>
             <p className="mb-5 font-sans text-sm text-[#9ca3af]">
-              A student volunteer will assist your squad without giving the secret away.
+              A student volunteer will assist your team without giving the secret away.
             </p>
             <div className="grid grid-cols-2 gap-3">
               <a

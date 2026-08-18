@@ -144,7 +144,7 @@ export const demoStore = {
     const cleanName = name.trim();
     if (db.teams.some((t) => t.name.toLowerCase() === cleanName.toLowerCase())) {
       return Promise.reject(
-        new Error(`A squad named "${cleanName}" already exists. Please choose a unique squad name.`),
+        new Error(`A team named "${cleanName}" already exists. Please choose a unique team name.`),
       );
     }
     let code = accessCode();

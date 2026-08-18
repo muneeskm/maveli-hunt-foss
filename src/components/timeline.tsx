@@ -124,7 +124,7 @@ export function Timeline() {
         key: "rescued",
         icon: <CheckCircle size={16} weight="fill" />,
         title: "Maveli is safe",
-        detail: "Your squad solved the mystery.",
+        detail: "Your team solved the mystery.",
       },
     ];
 

@@ -108,7 +108,7 @@ export async function POST(req: Request) {
       );
     }
     return NextResponse.json(
-      { error: "Could not register the squad. Please try again." },
+      { error: "Could not register the team. Please try again." },
       { status: 500 },
     );
   }

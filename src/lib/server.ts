@@ -412,10 +412,10 @@ export async function createTeam(
     member2Class: member2Class.trim(),
   };
 
-  // Enforce unique squad name (case-insensitive)
-  const existingSquad = await getTeamByName(clean.name);
-  if (existingSquad) {
-    throw new Error(`A squad named "${clean.name}" already exists. Please choose a unique squad name.`);
+  // Enforce unique team name (case-insensitive)
+  const existingTeam = await getTeamByName(clean.name);
+  if (existingTeam) {
+    throw new Error(`A team named "${clean.name}" already exists. Please choose a unique team name.`);
   }
 
   const id = randomUUID();

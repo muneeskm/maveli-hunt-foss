@@ -151,7 +151,7 @@ function JoinScreen({
     const name2 = m2Name.trim();
     const sem2 = m2Sem.trim();
     const class2 = m2Class.trim();
-    const tName = teamName.trim() || `${name1.split(" ")[0] || "Team"} & ${name2.split(" ")[0] || "Squad"}`;
+    const tName = teamName.trim() || `${name1.split(" ")[0] || "Team"} & ${name2.split(" ")[0] || "Team"}`;
 
     if (!name1 || !sem1 || !class1) {
       setFormError("Member 1 requires Full Name, Semester, and Class.");
@@ -232,21 +232,21 @@ function JoinScreen({
           {/* Header */}
           <div className="text-center">
             <TaglineBadge className="mx-auto">
-              <Sparkle weight="fill" size={13} /> SQUAD ENROLLED
+              <Sparkle weight="fill" size={13} /> TEAM ENROLLED
             </TaglineBadge>
 
             <h1 className="font-display mt-4 text-3xl font-extrabold text-white sm:text-4xl leading-tight drop-shadow-md">
-              Save your squad <HighlightWord>credentials.</HighlightWord>
+              Save your team <HighlightWord>credentials.</HighlightWord>
             </h1>
             <p className="mt-2 font-sans text-base text-[#cbd5e1] drop-shadow-sm">
-              Your squad is officially locked in for The Maveli Files.
+              Your team is officially locked in for The Maveli Files.
             </p>
           </div>
 
           {/* Access Code Box (Pure Translucent Liquid Glass) */}
           <div className="liquid-glass mt-6 p-6 text-center">
             <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
-              Squad Access Code
+              Team Access Code
             </p>
             <div className="mt-3 flex items-center justify-center gap-3">
               <span className="font-mono text-4xl font-extrabold tracking-[0.24em] text-[#22c55e] sm:text-5xl drop-shadow-md">
@@ -300,7 +300,7 @@ function JoinScreen({
                   </span>
                 </div>
                 <p className="mt-1 text-xs leading-relaxed text-[#cbd5e1]">
-                  <strong>Every squad member must join.</strong> Real-time broadcasts, game alerts, and starting instructions will be posted here.
+                  <strong>Every team member must join.</strong> Real-time broadcasts, game alerts, and starting instructions will be posted here.
                 </p>
                 <a
                   href="https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv"
@@ -319,7 +319,7 @@ function JoinScreen({
           <div className="liquid-glass mt-5 p-5 text-white">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#94a3b8]">
-                Registered Squad
+                Registered Team
               </span>
               <span className="font-sans text-sm font-bold text-white">{created.name}</span>
             </div>
@@ -451,11 +451,11 @@ function JoinScreen({
         {/* Tab 1: Register Team */}
         {mode === "create" ? (
           <div className="mt-6 space-y-4">
-            {/* Squad Name Field */}
+            {/* Team Name Field */}
             <div className="liquid-glass p-5 text-white">
               <label className="block">
                 <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
-                  Squad Name
+                  Team Name
                 </span>
                 <input
                   type="text"
@@ -466,7 +466,7 @@ function JoinScreen({
                   className="liquid-glass-input w-full px-3.5 py-2.5 font-sans text-sm font-medium outline-none"
                 />
                 <span className="mt-1.5 block font-sans text-xs text-[#94a3b8]">
-                  Pick a creative squad name for the live leaderboard.
+                  Pick a creative team name for the live leaderboard.
                 </span>
               </label>
             </div>
@@ -475,7 +475,7 @@ function JoinScreen({
             <div className="liquid-glass p-5 text-white">
               <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
                 <span className="font-sans text-xs font-bold uppercase tracking-wider text-white">
-                  Member 1 (Squad Lead)
+                  Member 1 (Team Lead)
                 </span>
               </div>
               <div className="space-y-3">
@@ -596,7 +596,7 @@ function JoinScreen({
 
             <Btn onClick={create} disabled={busy} className="w-full justify-center text-base py-3.5 shadow-xl">
               <Users size={18} />
-              <span>{busy ? "Registering Squad..." : "Enroll Squad & Get Code"}</span>
+              <span>{busy ? "Registering Team..." : "Enroll Team & Get Code"}</span>
               <ArrowRight size={18} />
             </Btn>
 
@@ -610,7 +610,7 @@ function JoinScreen({
             <div className="liquid-glass p-6 space-y-4 text-white">
               <div>
                 <h2 className="font-sans text-sm font-bold text-white">
-                  Authenticate Existing Squad
+                  Authenticate Existing Team
                 </h2>
                 <p className="mt-0.5 text-xs text-[#94a3b8]">
                   Enter the 6-character code given after registration.
@@ -619,7 +619,7 @@ function JoinScreen({
 
               <label className="block">
                 <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
-                  Squad Access Code
+                  Team Access Code
                 </span>
                 <input
                   type="text"
@@ -643,7 +643,7 @@ function JoinScreen({
               )}
 
               <Btn onClick={join} disabled={busy} className="w-full justify-center text-base py-3 shadow-xl">
-                <span>{busy ? "Authenticating..." : "Sign In to Squad"}</span>
+                <span>{busy ? "Authenticating..." : "Sign In to Team"}</span>
                 <ArrowRight size={18} />
               </Btn>
             </div>

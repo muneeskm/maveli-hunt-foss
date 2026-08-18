@@ -211,7 +211,7 @@ export default function ScanTokenPage() {
               </p>
               <p className="mt-3 font-sans text-sm leading-relaxed text-white">
                 You just scanned <strong>{view.targetLocationName}</strong> (Node 0{view.targetOrder}),
-                but your squad hasn&apos;t uncovered{" "}
+                but your team hasn&apos;t uncovered{" "}
                 <strong>Sighting 0{view.expectedOrder}</strong> ({view.expectedLocationName}) yet!
               </p>
 
@@ -386,8 +386,8 @@ export default function ScanTokenPage() {
 
             <p className="mt-4 text-center font-sans text-xs text-[#cbd5e1] drop-shadow-sm">
               {isFirst
-                ? "✓ Checkpoint automatically logged to your squad's Evidence Board & Leaderboard!"
-                : "Your squad already recorded this sighting. Continue to the next node."}
+                ? "✓ Checkpoint automatically logged to your team's Evidence Board & Leaderboard!"
+                : "Your team already recorded this sighting. Continue to the next node."}
             </p>
 
             <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5 shadow-xl">
@@ -460,7 +460,7 @@ export default function ScanTokenPage() {
             SOS Already Received
           </h1>
           <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#cbd5e1]">
-            Your squad already recovered this transmission. The next clue is ready in the tracker.
+            Your team already recovered this transmission. The next clue is ready in the tracker.
           </p>
           <Btn onClick={continueTracker} className="mt-6 shadow-xl">
             Go to Tracker <ArrowRight size={16} />
@@ -490,7 +490,7 @@ export default function ScanTokenPage() {
                 Maveli is Safe!
               </h1>
               <p className="mx-auto mt-2 max-w-[34ch] font-sans text-xs text-[#cbd5e1]">
-                Your squad proved the final instruction. The hunt is complete.
+                Your team proved the final instruction. The hunt is complete.
               </p>
               <Btn onClick={continueTracker} className="mt-6 w-full justify-center text-base py-3.5 shadow-xl">
                 <span>Continue</span>
@@ -510,7 +510,7 @@ export default function ScanTokenPage() {
                 {view.duplicate && (
                   <p className="liquid-glass-subtle mt-3 flex items-start justify-center gap-2 p-2 text-xs text-[#cbd5e1]">
                     <WarningCircle size={16} className="mt-0.5 shrink-0 text-amber-400" />
-                    This marker was already scanned by your squad.
+                    This marker was already scanned by your team.
                   </p>
                 )}
               </Panel>

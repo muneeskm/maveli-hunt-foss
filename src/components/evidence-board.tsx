@@ -17,7 +17,7 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
 
   return (
     <div>
-      {!compact && <SectionLabel>Squad Evidence Board</SectionLabel>}
+      {!compact && <SectionLabel>Team Evidence Board</SectionLabel>}
       <Panel className="divide-y divide-white/10 p-0 overflow-hidden">
         {sightings.map((loc) => {
           const done = found.has(loc.id);

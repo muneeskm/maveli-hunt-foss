@@ -277,7 +277,7 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
           })}
         </div>
         <p className="mt-3 text-[11px] leading-relaxed text-[#9ca3af]">
-          Phase transitions automatically unlock stage content for all squads. Teams will reflect changes within their 4-second polling cycle.
+          Phase transitions automatically unlock stage content for all teams. Teams will reflect changes within their 4-second polling cycle.
         </p>
       </Panel>
 
@@ -299,7 +299,7 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
                         {b.audience}
                       </span>
                       {b.teamId && (
-                        <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Squad"}</span>
+                        <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Team"}</span>
                       )}
                       <span>· {formatTime(b.at)}</span>
                     </div>
@@ -355,7 +355,7 @@ function TeamsTab({ db, locations }: { db: DB; locations: ReturnType<typeof stor
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <SectionHeader>Registered Squads ({db.teams.length})</SectionHeader>
+        <SectionHeader>Registered Teams ({db.teams.length})</SectionHeader>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -368,8 +368,8 @@ function TeamsTab({ db, locations }: { db: DB; locations: ReturnType<typeof stor
       {teams.length === 0 ? (
         <Panel className="p-6 text-center text-sm text-[#9ca3af] bg-[#111813] border border-[#202d24]">
           {db.teams.length === 0
-            ? "No squads registered yet. Teams register via the home screen."
-            : "No squads match your search query."}
+            ? "No teams registered yet. Teams register via the home screen."
+            : "No teams match your search query."}
         </Panel>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
@@ -485,7 +485,7 @@ function TeamCard({
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
-                Level 1 · Push Hint to Squad
+                Level 1 · Push Hint to Team
               </p>
             </div>
             <div className="flex gap-2">
@@ -550,7 +550,7 @@ function TeamCard({
             </div>
           </div>
 
-          {/* Contact & Squad Reset Bar */}
+          {/* Contact & Team Reset Bar */}
           <div className="flex items-center justify-between border-t border-[#202d24] pt-3">
             <a
               href={`tel:${tel}`}
@@ -562,12 +562,12 @@ function TeamCard({
               size="sm"
               variant="danger"
               onClick={() => {
-                if (window.confirm(`Reset all progress for squad "${team.name}"?`)) {
+                if (window.confirm(`Reset all progress for team "${team.name}"?`)) {
                   store.resetTeam(teamId);
                 }
               }}
             >
-              <TrashSimple size={14} /> <span>Reset Squad</span>
+              <TrashSimple size={14} /> <span>Reset Team</span>
             </Btn>
           </div>
         </div>
@@ -701,7 +701,7 @@ function BroadcastTab({ db }: { db: DB }) {
       <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>Dispatch a Broadcast</SectionHeader>
         <p className="mt-1 text-xs text-[#9ca3af]">
-          Send high-priority tactical announcements to squads in the field.
+          Send high-priority tactical announcements to teams in the field.
         </p>
 
         <div className="mt-4 space-y-3.5">
@@ -722,7 +722,7 @@ function BroadcastTab({ db }: { db: DB }) {
                       : "border-[#202d24] bg-[#16221a] text-[#9ca3af] hover:text-white",
                   )}
                 >
-                  {a === "all" ? "Everyone" : a === "day1" ? "Day 1 Active" : a === "day2" ? "Day 2 Active" : "Specific Squad"}
+                  {a === "all" ? "Everyone" : a === "day1" ? "Day 1 Active" : a === "day2" ? "Day 2 Active" : "Specific Team"}
                 </button>
               ))}
             </div>
@@ -731,15 +731,15 @@ function BroadcastTab({ db }: { db: DB }) {
           {audience === "team" && (
             <div className="space-y-1.5">
               <label className="block font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
-                Select Target Squad
+                Select Target Team
               </label>
               <select
                 value={teamId}
                 onChange={(e) => setTeamId(e.target.value)}
                 className="field text-xs"
-                aria-label="Target Squad"
+                aria-label="Target Team"
               >
-                <option value="">Choose squad...</option>
+                <option value="">Choose team...</option>
                 {db.teams.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.name} ({t.code})
@@ -748,7 +748,7 @@ function BroadcastTab({ db }: { db: DB }) {
               </select>
               {!teamId && (
                 <p className="font-sans text-xs text-amber-400">
-                  Please choose a target squad to send a private transmission.
+                  Please choose a target team to send a private transmission.
                 </p>
               )}
             </div>
@@ -788,7 +788,7 @@ function BroadcastTab({ db }: { db: DB }) {
                     {b.audience}
                   </span>
                   {b.teamId && (
-                    <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Squad"}</span>
+                    <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Team"}</span>
                   )}
                   <span>· {formatTime(b.at)}</span>
                 </div>
@@ -947,7 +947,7 @@ function SettingsTab({ db }: { db: DB }) {
         <div className="mt-4 space-y-4">
           <label className="block">
             <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
-              BitChat guide text (shown to squads in Day 2)
+              BitChat guide text (shown to teams in Day 2)
             </span>
             <textarea
               value={form.bitchatGuide}
@@ -1040,7 +1040,7 @@ function DangerTab({ db }: { db: DB }) {
           </h2>
         </div>
         <p className="mt-2 text-xs text-[#d1d5db] leading-relaxed">
-          Keeps all registered squads in place, but wipes all scans, answers, hints, and active winners. Game resets to Standby phase.
+          Keeps all registered teams in place, but wipes all scans, answers, hints, and active winners. Game resets to Standby phase.
         </p>
         <div className="mt-3.5 space-y-2">
           <label className="block font-mono text-[10px] uppercase text-amber-300">
@@ -1057,7 +1057,7 @@ function DangerTab({ db }: { db: DB }) {
               variant="outline"
               disabled={restartConfirm !== "RESTART"}
               onClick={() => {
-                if (window.confirm("Confirm: Restart game progress for all squads?")) {
+                if (window.confirm("Confirm: Restart game progress for all teams?")) {
                   store.restartGame();
                   setRestartConfirm("");
                 }
@@ -1078,7 +1078,7 @@ function DangerTab({ db }: { db: DB }) {
           </h2>
         </div>
         <p className="mt-2 text-xs text-[#d1d5db] leading-relaxed">
-          Permanently destroys ALL registered squads, scans, answers, broadcasts, and game state. Use only when preparing a brand new event.
+          Permanently destroys ALL registered teams, scans, answers, broadcasts, and game state. Use only when preparing a brand new event.
         </p>
         <div className="mt-3.5 space-y-2">
           <label className="block font-mono text-[10px] uppercase text-red-300">
@@ -1097,7 +1097,7 @@ function DangerTab({ db }: { db: DB }) {
               onClick={() => {
                 if (
                   window.confirm(
-                    "CRITICAL: ALL registered squads, scans, answers, and broadcasts will be PERMANENTLY deleted. Proceed?",
+                    "CRITICAL: ALL registered teams, scans, answers, and broadcasts will be PERMANENTLY deleted. Proceed?",
                   )
                 ) {
                   store.newGame();

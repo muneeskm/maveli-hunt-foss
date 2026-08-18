@@ -108,7 +108,7 @@ export function ReconstructionGate() {
           Maveli is Safe!
         </h2>
         <p className="mt-1 font-sans text-xs leading-relaxed text-[#cbd5e1]">
-          The instruction matched. Your squad proved the discovery.
+          The instruction matched. Your team proved the discovery.
         </p>
       </Panel>
     );

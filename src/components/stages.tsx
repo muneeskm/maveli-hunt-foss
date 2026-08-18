@@ -92,10 +92,10 @@ export function StandbyStage() {
           <Sparkle weight="fill" size={13} /> STANDBY MODE
         </TaglineBadge>
         <h1 className="font-display mt-4 text-2xl sm:text-3xl text-white">
-          Squad Registered & <HighlightWord>Locked In</HighlightWord>
+          Team Registered & <HighlightWord>Locked In</HighlightWord>
         </h1>
         <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
-          The campus investigation grid is currently locked. Checkpoints and clue signals will activate once the hunt officially commences. Keep your squad access code ready.
+          The campus investigation grid is currently locked. Checkpoints and clue signals will activate once the hunt officially commences. Keep your team access code ready.
         </p>
       </Panel>
 
@@ -136,7 +136,7 @@ export function StandbyStage() {
           <div className="text-xs leading-relaxed text-[#cbd5e1]">
             <p className="font-semibold text-white">Hunt Readiness Checklist:</p>
             <ul className="mt-1 list-disc pl-4 space-y-0.5">
-              <li>Both squad members must note down the squad access code from the badge above.</li>
+              <li>Both team members must note down the team access code from the badge above.</li>
               <li>Make sure both members have joined the WhatsApp group.</li>
               <li>Keep your phone charged for scanning QR codes on campus.</li>
             </ul>
@@ -570,8 +570,8 @@ export function RescuedStage() {
         </h1>
         <p className="mx-auto mt-2 max-w-[34ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
           {myWin
-            ? "Your squad found him first! Maveli is safe thanks to your deduction."
-            : "Your squad solved the trail. The hunt is complete."}
+            ? "Your team found him first! Maveli is safe thanks to your deduction."
+            : "Your team solved the trail. The hunt is complete."}
         </p>
         <Link
           href="/leaderboard"
@@ -609,7 +609,7 @@ export function EndedStage() {
           The Mystery is Solved!
         </h1>
         <p className="mx-auto mt-2 max-w-[42ch] font-sans text-sm leading-relaxed text-[#cbd5e1]">
-          Maveli has returned to his kingdom safely. Thank you to every squad who took part in the search across Christ College of Engineering.
+          Maveli has returned to his kingdom safely. Thank you to every team who took part in the search across Christ College of Engineering.
         </p>
       </div>
 
