@@ -421,12 +421,12 @@ function JoinScreen({
             }}
             className={
               mode === "code"
-                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all"
+                ? "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] bg-[#22c55e] py-2 font-sans text-xs font-bold text-[#090d0b] transition-all shadow-sm"
                 : "flex-1 flex items-center justify-center gap-1.5 rounded-[6px] py-2 font-sans text-xs font-medium text-[#9ca3af] hover:text-white transition-colors"
             }
           >
             <Key size={15} weight="bold" />
-            Access Code
+            Join with Code
           </button>
         </div>
 

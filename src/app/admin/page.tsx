@@ -820,13 +820,76 @@ function SettingsTab({ db }: { db: DB }) {
       adminCode: form.adminCode,
       sosLockSeconds: Math.max(1, Number(form.sosLockSeconds) || 4),
       mapillaryNote: form.mapillaryNote,
+      eventStartIso: form.eventStartIso || "2026-08-19T14:40:00+05:30",
+      day1EndIso: form.day1EndIso || "2026-08-19T15:40:00+05:30",
+      day2StartIso: form.day2StartIso || "2026-08-20T14:40:00+05:30",
+      day2EndIso: form.day2EndIso || "2026-08-20T15:40:00+05:30",
     });
     setSaved(true);
     window.setTimeout(() => setSaved(false), 2000);
   };
 
+  const setDemoKickoff = (minsFromNow: number) => {
+    const d = new Date(Date.now() + minsFromNow * 60 * 1000);
+    set("eventStartIso", d.toISOString());
+  };
+
+  const resetOfficialSchedule = () => {
+    set("eventStartIso", "2026-08-19T14:40:00+05:30");
+    set("day1EndIso", "2026-08-19T15:40:00+05:30");
+    set("day2StartIso", "2026-08-20T14:40:00+05:30");
+    set("day2EndIso", "2026-08-20T15:40:00+05:30");
+  };
+
   return (
     <div className="space-y-5">
+      {/* Event Schedule & Kickoff Countdown */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#202d24] pb-3">
+          <div>
+            <SectionHeader>Event Timetable & Kickoff Schedule</SectionHeader>
+            <p className="mt-0.5 text-xs text-[#9ca3af]">
+              Controls the live kickoff countdown timer on the landing & tracker pages.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Btn size="sm" variant="ghost" onClick={() => setDemoKickoff(1)}>
+              Demo: Start in 1m
+            </Btn>
+            <Btn size="sm" variant="ghost" onClick={resetOfficialSchedule}>
+              Reset to 19/08 Official
+            </Btn>
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Day 1 Kickoff (Countdown Target)"
+            value={form.eventStartIso ?? "2026-08-19T14:40:00+05:30"}
+            onChange={(e) => set("eventStartIso", e.target.value)}
+            hint="Format: YYYY-MM-DDTHH:MM:SS+05:30 (Default 19/08 14:40)"
+          />
+          <Field
+            label="Day 1 Submission Close"
+            value={form.day1EndIso ?? "2026-08-19T15:40:00+05:30"}
+            onChange={(e) => set("day1EndIso", e.target.value)}
+            hint="Format: YYYY-MM-DDTHH:MM:SS+05:30 (Default 19/08 15:40)"
+          />
+          <Field
+            label="Day 2 Kickoff Time"
+            value={form.day2StartIso ?? "2026-08-20T14:40:00+05:30"}
+            onChange={(e) => set("day2StartIso", e.target.value)}
+            hint="Format: YYYY-MM-DDTHH:MM:SS+05:30 (Default 20/08 14:40)"
+          />
+          <Field
+            label="Day 2 Final Cutoff"
+            value={form.day2EndIso ?? "2026-08-20T15:40:00+05:30"}
+            onChange={(e) => set("day2EndIso", e.target.value)}
+            hint="Format: YYYY-MM-DDTHH:MM:SS+05:30 (Default 20/08 15:40)"
+          />
+        </div>
+      </Panel>
+
       {/* Contact & Social Links */}
       <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
         <SectionHeader>Volunteer Contacts & Social Links</SectionHeader>

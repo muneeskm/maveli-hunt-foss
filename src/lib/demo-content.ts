@@ -13,18 +13,18 @@ import type { GameLocation, GameState, Settings } from "./types";
  * grepping the output chunks for these values (see WALKTHROUGH.md).
  */
 
-export const DEMO_WORDS = ["TEMPLE", "NORTH", "THREE", "BANYAN", "CLOCK"] as const;
+export const DEMO_WORDS = ["CAKE", "FARM", "15:12", "BANYAN", "CLOCK"] as const;
 
-// Gate order: "NORTH TEMPLE CLOCK BANYAN THREE"
-export const DEMO_GATE_ANSWER = ["NORTH", "TEMPLE", "CLOCK", "BANYAN", "THREE"];
+// Gate order: "CAKE FARM 15:12 BANYAN CLOCK"
+export const DEMO_GATE_ANSWER = ["CAKE", "FARM", "15:12", "BANYAN", "CLOCK"];
 
 export const DEMO_BITCHAT_CODE = "MERIDIAN";
 export const DEMO_ADMIN_CODE = "FOSSCCE@MaveliFiles";
 
 const DEMO_WORD_CLUES: Record<string, string> = {
-  TEMPLE: "A place of worship. He is not inside it, but near it.",
-  NORTH: "A direction. Check a compass before you move on.",
-  THREE: "A small number. Count your steps from the landmark.",
+  CAKE: "Sponsor poster difference discovered at the main entrance.",
+  FARM: "QR Checkpoint confirmed at Cake Farm Cafe.",
+  "15:12": "Disconnection timestamp verified from Maveli's Instagram transmission.",
   BANYAN: "A tree with hanging roots. It shades the courtyard.",
   CLOCK: "It tells time. It stands tall near the entrance.",
 };

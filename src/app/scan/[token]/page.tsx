@@ -8,6 +8,7 @@ import {
   CheckCircle,
   Detective,
   Eye,
+  InstagramLogo,
   Leaf,
   Radio,
   Sparkle,
@@ -296,9 +297,42 @@ export default function ScanTokenPage() {
             )}
           </Panel>
 
+          {/* Instagram Spotlight Card if Cake Farm Cafe (order 2) */}
+          {view.order === 2 && (
+            <div className="mt-5 rounded-[14px] border-2 border-[#22c55e] bg-[#102419] p-5 text-left shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#22c55e] text-[#090d0b]">
+                  <InstagramLogo size={24} weight="fill" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-sans text-base font-bold text-white">
+                      Maveli&apos;s Instagram Transmission
+                    </h3>
+                    <span className="rounded-[4px] bg-[#22c55e] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#090d0b]">
+                      CRITICAL
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-[#9ca3af]">
+                    Maveli is transmitting updates via his Instagram profile (<strong>@maveli.thamburan_</strong>). Track his latest posts and stories to uncover his next destination and timestamp clues.
+                  </p>
+                  <a
+                    href="https://www.instagram.com/maveli.thamburan_?igsh=MWo1ZW5mc3h3bTllOA==&igsi=MWo1ZW5mc3h3bTllOA=="
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-primary mt-3 flex w-full items-center justify-center gap-2 text-xs font-bold py-2.5"
+                  >
+                    <InstagramLogo size={16} weight="fill" />
+                    <span>Open @maveli.thamburan_ on Instagram ↗</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          )}
+
           <p className="mt-4 text-center font-sans text-xs text-[#9ca3af]">
             {isFirst
-              ? "✓ Word automatically logged to your squad's Evidence Board!"
+              ? "✓ Checkpoint automatically logged to your squad's Evidence Board & Leaderboard!"
               : "Your squad already recorded this sighting. Continue to the next node."}
           </p>
 

@@ -37,6 +37,11 @@ interface Entry {
 export function Timeline() {
   const { team, locations, scans, answers, words } = useGame();
 
+  const cakeFarmScanned = useMemo(
+    () => scans.some((s) => s.locationId === "s2" || s.locationId === "s1"),
+    [scans],
+  );
+
   const entries = useMemo<Entry[]>(() => {
     const sightings = locations
       .filter((l) => l.type === "sighting")
@@ -58,31 +63,41 @@ export function Timeline() {
       {
         key: "start",
         icon: <Flag size={16} weight="fill" />,
-        title: "The hunt begins",
-        detail: "Mavelli was last seen somewhere on campus.",
-        meta: `Started ${formatTime(team?.createdAt ?? Date.now())}`,
+        title: "The Arrival — Campus Gate",
+        detail: "Maveli entered Christ College of Engineering.",
+        meta: `Recorded ${formatTime(team?.createdAt ?? Date.now())}`,
         section: "Day 1",
       },
       ...sightings.map((loc) => {
-        const done = solvedCount >= loc.order;
+        const isDone = solvedCount >= loc.order;
         const word = words[loc.id];
+        const isRedactedChristCafe = loc.id === "s3";
+
         return {
           key: loc.id,
           icon: <MapPin size={16} weight="fill" />,
-          title: loc.name,
-          detail: done
-            ? word
-              ? `Word recovered: ${word.word}`
-              : "Evidence recovered"
-            : "Evidence not recovered",
-          meta: done && scanAt(loc.id) ? `Recovered ${formatTime(scanAt(loc.id)!)}` : undefined,
+          title: isRedactedChristCafe ? "████ ████ ████" : loc.name,
+          detail: isRedactedChristCafe
+            ? isDone
+              ? "Christ Cafe — Disconnection timestamp verified."
+              : "[SIGNAL LOST — MAVELI WENT OFFLINE AT THIS WAYPOINT]"
+            : isDone
+              ? word
+                ? `Evidence recovered: "${word.word}"`
+                : "Waypoint confirmed"
+              : "Classified campus waypoint",
+          meta: isRedactedChristCafe && !isDone
+            ? "Maveli Offline"
+            : isDone && scanAt(loc.id)
+              ? `Confirmed ${formatTime(scanAt(loc.id)!)}`
+              : undefined,
         };
       }),
       {
         key: "deadend",
         icon: <X size={16} weight="bold" />,
         title: "The trail goes cold",
-        detail: "The last clue led nowhere. Mavelli has disappeared.",
+        detail: "Maveli vanished from campus surveillance.",
         meta: "Day 1 ends",
         section: "Night",
       },
@@ -90,26 +105,26 @@ export function Timeline() {
         key: "sos",
         icon: <Radio size={16} weight="fill" />,
         title: "Emergency transmission",
-        detail: "Find the MAVELLI EMERGENCY TRANSMISSION poster and scan it.",
+        detail: "Find the MAVELI EMERGENCY TRANSMISSION poster.",
         section: "Day 2",
       },
       {
         key: "bitchat",
         icon: <ChatCircle size={16} weight="fill" />,
         title: "BitChat transmission",
-        detail: "Enter the code from Mavelli's message.",
+        detail: "Verify the transmission passcode from Maveli.",
       },
       {
         key: "final",
         icon: <Detective size={16} weight="fill" />,
-        title: "The hiding place",
-        detail: "Reconstruct the five words in the exact order.",
+        title: "Sanctuary Gate",
+        detail: "Reconstruct the recovered words in exact sequence.",
       },
       {
         key: "rescued",
         icon: <CheckCircle size={16} weight="fill" />,
-        title: "Mavelli is safe",
-        detail: "Your team completed the hunt.",
+        title: "Maveli is safe",
+        detail: "Your squad solved the mystery.",
       },
     ];
 
@@ -146,82 +161,102 @@ export function Timeline() {
 
   return (
     <div>
-      <SectionLabel>Your Trail</SectionLabel>
-      <ol className="relative mt-2">
-        {/* the rail */}
-        <span
-          className="absolute bottom-5 left-4 top-5 w-px bg-[#202d24]"
-          aria-hidden="true"
-        />
+      <div className="flex items-center justify-between">
+        <SectionLabel>Maveli&apos;s Campus Timeline</SectionLabel>
+        {cakeFarmScanned && (
+          <span className="font-mono text-[10px] uppercase tracking-wider text-[#22c55e]">
+            ● Unlocked
+          </span>
+        )}
+      </div>
 
-        {entries.map((e) => (
-          <li key={e.key} className="relative">
-            {e.section && (
-              <div className="flex items-center pb-2 pt-1">
-                <span className="relative z-10 ml-[7px] bg-[#090d0b] border border-[#202d24] rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#22c55e]">
-                  {e.section}
-                </span>
-              </div>
-            )}
+      {!cakeFarmScanned ? (
+        <div className="mt-2 rounded-[14px] border border-[#202d24] bg-[#111813] p-5 text-center shadow-sm">
+          <p className="font-mono text-xs uppercase tracking-wider text-[#86efac]">
+            Route Encryption Active
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-[#9ca3af]">
+            Maveli&apos;s campus timeline is encrypted. Scan the QR code at <strong>Cake Farm Cafe</strong> to unlock his full route history.
+          </p>
+        </div>
+      ) : (
+        <ol className="relative mt-2">
+          {/* the rail */}
+          <span
+            className="absolute bottom-5 left-4 top-5 w-px bg-[#202d24]"
+            aria-hidden="true"
+          />
 
-            <div
-              className={cn(
-                "relative flex items-start gap-4 pb-6",
-                e.status === "upcoming" && "opacity-45",
+          {entries.map((e) => (
+            <li key={e.key} className="relative">
+              {e.section && (
+                <div className="flex items-center pb-2 pt-1">
+                  <span className="relative z-10 ml-[7px] bg-[#090d0b] border border-[#202d24] rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-[#22c55e]">
+                    {e.section}
+                  </span>
+                </div>
               )}
-            >
-              {/* badge on the rail */}
-              <span
+
+              <div
                 className={cn(
-                  "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e]",
-                  e.status === "current" &&
-                    "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b]",
-                  e.status === "upcoming" && "border-[#202d24] bg-[#111813] text-[#6b7280]",
+                  "relative flex items-start gap-4 pb-6",
+                  e.status === "upcoming" && "opacity-45",
                 )}
               >
-                {e.icon}
-              </span>
-
-              <div className="min-w-0 flex-1 pt-0.5">
-                <p
+                {/* badge on the rail */}
+                <span
                   className={cn(
-                    "text-[15px] font-semibold leading-snug text-white",
+                    "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
+                    e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e]",
+                    e.status === "current" &&
+                      "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b]",
+                    e.status === "upcoming" && "border-[#202d24] bg-[#111813] text-[#6b7280]",
+                  )}
+                >
+                  {e.icon}
+                </span>
+
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p
+                    className={cn(
+                      "text-[15px] font-semibold leading-snug text-white",
+                      e.title.includes("████") && "font-mono tracking-widest text-[#22c55e]",
+                      e.status === "upcoming" && !e.title.includes("████") && "text-[#6b7280]",
+                    )}
+                  >
+                    {e.title}
+                  </p>
+                  {e.detail && (
+                    <p className="mt-0.5 text-[13px] leading-relaxed text-[#9ca3af]">
+                      {e.detail}
+                    </p>
+                  )}
+                  {e.meta && (
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#86efac]">
+                      {e.meta}
+                    </p>
+                  )}
+                </div>
+
+                <span
+                  className={cn(
+                    "mt-1 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-wider",
+                    e.status === "done" && "text-[#22c55e]",
+                    e.status === "current" && "text-[#090d0b] bg-[#22c55e] px-1.5 py-0.5 rounded-[4px] font-bold",
                     e.status === "upcoming" && "text-[#6b7280]",
                   )}
                 >
-                  {e.title}
-                </p>
-                {e.detail && (
-                  <p className="mt-0.5 text-[13px] leading-relaxed text-[#9ca3af]">
-                    {e.detail}
-                  </p>
-                )}
-                {e.meta && (
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#6b7280]">
-                    {e.meta}
-                  </p>
-                )}
+                  {e.status === "done"
+                    ? "Confirmed"
+                    : e.status === "current"
+                      ? "Active"
+                      : "Upcoming"}
+                </span>
               </div>
-
-              <span
-                className={cn(
-                  "mt-1 shrink-0 font-mono text-[10px] font-semibold uppercase tracking-wider",
-                  e.status === "done" && "text-[#22c55e]",
-                  e.status === "current" && "text-[#090d0b] bg-[#22c55e] px-1.5 py-0.5 rounded-[4px] font-bold",
-                  e.status === "upcoming" && "text-[#6b7280]",
-                )}
-              >
-                {e.status === "done"
-                  ? "Recovered"
-                  : e.status === "current"
-                    ? "Here"
-                    : "Up next"}
-              </span>
-            </div>
-          </li>
-        ))}
-      </ol>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

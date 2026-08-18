@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { Clock, Sparkle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
+import { useGame } from "@/hooks/use-game";
+
 interface CountdownTimerProps {
   targetDate?: string | Date | number;
   className?: string;
+  onComplete?: () => void;
 }
 
-// Default target: August 19, 2026 at 14:40 IST (configurable via NEXT_PUBLIC_EVENT_DATE)
-const DEFAULT_TARGET_TIMESTAMP =
-  typeof process !== "undefined" && process.env.NEXT_PUBLIC_EVENT_DATE
-    ? new Date(process.env.NEXT_PUBLIC_EVENT_DATE).getTime()
-    : new Date("2026-08-19T14:40:00+05:30").getTime();
+// Default target: August 19, 2026 at 14:40 IST (configurable via NEXT_PUBLIC_EVENT_DATE or settings.eventStartIso)
+const DEFAULT_TARGET_ISO = "2026-08-19T14:40:00+05:30";
 
 interface TimeLeft {
   days: number;
@@ -33,10 +33,16 @@ function calculateTimeLeft(targetMs: number): TimeLeft {
   return { days, hours, minutes, seconds, total: diff };
 }
 
-export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
-  const targetMs = targetDate
-    ? new Date(targetDate).getTime()
-    : DEFAULT_TARGET_TIMESTAMP;
+export function CountdownTimer({ targetDate, className, onComplete }: CountdownTimerProps) {
+  const { settings } = useGame();
+  const effectiveTarget =
+    targetDate ??
+    settings.eventStartIso ??
+    (typeof process !== "undefined" && process.env.NEXT_PUBLIC_EVENT_DATE
+      ? process.env.NEXT_PUBLIC_EVENT_DATE
+      : DEFAULT_TARGET_ISO);
+
+  const targetMs = new Date(effectiveTarget).getTime() || new Date(DEFAULT_TARGET_ISO).getTime();
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() =>
     calculateTimeLeft(targetMs),
@@ -46,10 +52,14 @@ export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
   useEffect(() => {
     setMounted(true);
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft(targetMs));
+      const remaining = calculateTimeLeft(targetMs);
+      setTimeLeft(remaining);
+      if (remaining.total <= 0) {
+        onComplete?.();
+      }
     }, 1000);
     return () => clearInterval(timer);
-  }, [targetMs]);
+  }, [targetMs, onComplete]);
 
   const { days, hours, minutes, seconds, total } = timeLeft;
   const isLive = mounted && total <= 0;
@@ -67,7 +77,7 @@ export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
             <Clock size={14} weight="bold" />
           </span>
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-white">
-            {isLive ? "Hunt Kickoff" : "Time till Doomsday..."}
+            {isLive ? "Hunt Kickoff" : "Event countdown"}
           </span>
         </div>
         {isLive && (

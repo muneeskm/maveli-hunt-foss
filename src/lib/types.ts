@@ -76,6 +76,10 @@ export interface Settings {
   adminCode: string; // shared admin login
   sosLockSeconds: number; // drama delay before the SOS alarm resolves
   mapillaryNote: string; // guidance shown on sighting 1
+  eventStartIso?: string; // Kickoff: 2026-08-19T14:40:00+05:30
+  day1EndIso?: string; // Day 1 End: 2026-08-19T15:40:00+05:30
+  day2StartIso?: string; // Day 2 Start: 2026-08-20T14:40:00+05:30
+  day2EndIso?: string; // Day 2 End: 2026-08-20T15:40:00+05:30
 }
 
 export interface GameState {

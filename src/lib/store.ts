@@ -16,7 +16,7 @@ import type {
   SubmitResult,
   Team,
 } from "./types";
-import { accessCode, uid } from "./utils";
+import { accessCode, normalizeTime, uid } from "./utils";
 import { filterBroadcastsForTeam, ranking } from "./game";
 
 /*
@@ -297,10 +297,14 @@ export const demoStore = {
   submitSpotDiff(teamId: string, locationId: string, value: string): Promise<SubmitResult> {
     const db = readDB();
     const location = demoLocations().find((l) => l.id === locationId);
+    const cleanValue = value.trim().toUpperCase();
+    const expected = location?.word.toUpperCase() ?? "";
     const correct =
       !!location &&
-      location.word !== "" &&
-      value.trim().toUpperCase() === location.word.toUpperCase();
+      expected !== "" &&
+      (cleanValue === expected ||
+        normalizeTime(cleanValue) === normalizeTime(expected) ||
+        (locationId === "s1" && (cleanValue === "CAKE" || cleanValue === "CAKE FARM" || cleanValue === "CAFE")));
     const answer: Answer = {
       teamId,
       kind: "spotdiff",

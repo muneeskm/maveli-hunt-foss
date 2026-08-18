@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { requireServerSupabase } from "./supabase-server";
 import { filterBroadcastsForTeam, ranking } from "./game";
 import { seedGame, seedLocations, seedSettings } from "./seed";
+import { normalizeTime } from "./utils";
 import type {
   Answer,
   AnswerKind,
@@ -613,7 +614,11 @@ export async function submitAnswerByCode(
       .maybeSingle();
     if (!data) return { ok: false, message: "Unknown location." };
     const expected = ((data as { word: string }).word ?? "").trim().toUpperCase();
-    correct = expected !== "" && cleanValue === expected;
+    correct =
+      expected !== "" &&
+      (cleanValue === expected ||
+        normalizeTime(cleanValue) === normalizeTime(expected) ||
+        (input.locationId === "s1" && (cleanValue === "CAKE" || cleanValue === "CAKE FARM" || cleanValue === "CAFE")));
   } else if (kind === "bitchat") {
     const settings = await getSettings();
     correct = cleanValue === settings.bitchatCode.trim().toUpperCase();

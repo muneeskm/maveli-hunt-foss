@@ -32,18 +32,19 @@ export const seedLocations = (): GameLocation[] => [
     id: "s1",
     order: 1,
     type: "sighting",
-    name: "Sighting 01 - Main Gate",
+    name: "Sighting 01 - The Arrival (Main Gate)",
     token: "s1-kappa",
     word: "", // answer lives server-side (locations.word)
     wordClue: "", // answer lives server-side
     photoUrl: "/locations/s1-main-gate.jpg",
-    mapillaryUrl: "",
+    mapillaryUrl:
+      "https://www.mapillary.com/app/?lat=10.354009631796927&lng=76.21246825414289&z=17&pKey=510423848695905&focus=photo&x=0.5065599523580567&y=0.5078155992984406&zoom=0",
     clueText:
-      "Maveli was spotted near the main entrance arch of Christ College of Engineering. Find and scan the QR code located near the main gate.",
+      "Maveli remembers entering through the campus main gate. Compare the street-level Mapillary view of the entrance with the website photo to spot what changed, then proceed to that sponsor location to continue the search.",
     hintText:
-      "Check the stone arch pillars near Gate 1.",
+      "Compare the poster boards near the entrance. One shows the Cake Farm Cafe logo.",
     mapillaryNote:
-      "Scan the QR code on-site to verify the landmark evidence.",
+      "Open Mapillary for an interactive 360° capture of the entrance. Compare it with the photo on this site to identify the altered sponsor poster.",
   },
   {
     id: "s2",
@@ -56,26 +57,26 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "/locations/s2-cake-farm.jpg",
     mapillaryUrl: "",
     clueText:
-      "Maveli stopped by Cake Farm Cafe courtyard. Find the QR code stationed near the cafe stall.",
-    hintText: "Look around the cafe seating and ordering counter.",
+      "Maveli stopped by Cake Farm Cafe courtyard. Find and scan the QR code stationed at Cake Farm Cafe.",
+    hintText: "Look around the cafe seating and ordering counter for the QR code sheet.",
     mapillaryNote:
-      "Scan the QR code on-site to verify the landmark evidence.",
+      "Scan the QR code on-site at Cake Farm Cafe to unlock Maveli's Instagram transmission channel.",
   },
   {
     id: "s3",
     order: 3,
     type: "sighting",
-    name: "Sighting 03 - Green Umbrella",
+    name: "Sighting 03 - Christ Cafe",
     token: "s3-lambda",
     word: "",
     wordClue: "",
     photoUrl: "/locations/s3-umbrella.jpg",
     mapillaryUrl: "",
     clueText:
-      "Maveli took shade under the green outdoor umbrella seating. Scan the QR code placed by the umbrella table.",
-    hintText: "Check the circular umbrella seating area near the garden.",
+      "Maveli was last tracked near Christ Cafe before losing connection. Check his Instagram feed to discover the exact disconnection timestamp.",
+    hintText: "Inspect Maveli's Instagram posts to find the timestamp of his last transmission.",
     mapillaryNote:
-      "Scan the QR code on-site to verify the landmark evidence.",
+      "Enter the exact timestamp from Maveli's Instagram post to verify his disconnection point.",
   },
   {
     id: "s4",
@@ -104,8 +105,8 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "/locations/s5-techies-park.jpg",
     mapillaryUrl: "",
     clueText:
-      "The final sighting was at Techies Park. Scan the QR code on the signboard to decrypt the last sighting.",
-    hintText: "Check the green Techies Park board beside the walkway.",
+      "Maveli was spotted near Techies Park amphitheatre. Find the marker hidden near the outdoor seating.",
+    hintText: "Search near the concrete benches facing the lawn.",
     mapillaryNote:
       "Scan the QR code on-site to verify the landmark evidence.",
   },
@@ -113,15 +114,15 @@ export const seedLocations = (): GameLocation[] => [
     id: "sos",
     order: 6,
     type: "sos",
-    name: "Emergency Transmission",
+    name: "SOS Transmission",
     token: "sos-delta",
     word: "",
     wordClue: "",
     photoUrl: "",
     mapillaryUrl: "",
     clueText:
-      "Search this block. Somewhere inside it, Maveli's emergency signal is broadcasting. Find the transmission poster and scan the code on it.",
-    hintText: "Check the notice boards near the stairwells.",
+      "Maveli broke radio silence with an SOS broadcast on campus. Reach the broadcasting area and scan the Emergency SOS poster.",
+    hintText: "Look for the brightly printed MAVELI EMERGENCY TRANSMISSION poster.",
   },
   {
     id: "fin",
@@ -134,7 +135,7 @@ export const seedLocations = (): GameLocation[] => [
     photoUrl: "",
     mapillaryUrl: "",
     clueText:
-      "This is where Maveli is hiding. Reconstruct the instruction from the five words you collected and prove it at the gate.",
+      "This is where Maveli is sheltered. Reconstruct the instruction from the recovered clues and prove it at the gate.",
     hintText: "",
   },
 ];
@@ -148,14 +149,19 @@ export const seedGame = (): GameState => ({
 });
 
 export const seedSettings = (): Settings => ({
-  volunteerPhone: "+91 00000 00000", // TODO: real volunteer number
-  volunteerWhatsapp: "https://wa.me/910000000000", // TODO: real WhatsApp link
-  instagramUrl: "https://instagram.com", // TODO: Mavelli's Instagram handle
+  volunteerPhone: "+91 94000 00000",
+  volunteerWhatsapp: "https://chat.whatsapp.com/FFQ517Asdpv13omB9ArMwv",
+  instagramUrl:
+    "https://www.instagram.com/maveli.thamburan_?igsh=MWo1ZW5mc3h3bTllOA==&igsi=MWo1ZW5mc3h3bTllOA==",
   bitchatGuide:
-    "Mavelli has been broadcasting on BitChat. Open the BitChat app, find the account named in the SOS, and read the latest message. It contains a code. Enter that code here.",
+    "Maveli has been broadcasting on BitChat. Open the BitChat app, find the account named in the SOS, and read the latest message. It contains a code. Enter that code here.",
   bitchatCode: "", // secret - lives server-side (settings.bitchat_code)
   adminCode: "", // secret - lives server-side (settings.admin_code)
   sosLockSeconds: 4,
   mapillaryNote:
-    "Open Mapillary (app or mapillary.com) and find the view for this spot. Compare it with the photo on this site and type the one word that differs.",
+    "Open Mapillary to explore open street-level imagery of the campus gate. Spot the sponsor difference (Cake Farm Cafe) to proceed.",
+  eventStartIso: "2026-08-19T14:40:00+05:30",
+  day1EndIso: "2026-08-19T15:40:00+05:30",
+  day2StartIso: "2026-08-20T14:40:00+05:30",
+  day2EndIso: "2026-08-20T15:40:00+05:30",
 });

@@ -24,3 +24,15 @@ export function formatTime(ts: number) {
     minute: "2-digit",
   });
 }
+
+export function normalizeTime(val: string): string {
+  const clean = val.replace(/\s+/g, "").toUpperCase();
+  const match = clean.match(/^(\d{1,2})[:.]?(\d{2})?(AM|PM)?$/);
+  if (!match) return clean;
+  let [, hStr, mStr, meridiem] = match;
+  let h = parseInt(hStr, 10);
+  const m = mStr ? parseInt(mStr, 10) : 0;
+  if (meridiem === "PM" && h < 12) h += 12;
+  if (meridiem === "AM" && h === 12) h = 0;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
