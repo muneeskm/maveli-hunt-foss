@@ -205,7 +205,7 @@ export function PhasePill({ phase }: { phase: Phase }) {
       <span
         className={cn(
           "h-2 w-2 shrink-0 rounded-full",
-          isAlarm ? "bg-red-500 anim-blink" : "bg-[#22c55e] shadow-[0_0_6px_#22c55e]",
+          isAlarm ? "bg-red-500 anim-blink" : "bg-[#22c55e]",
         )}
       />
       <span className="font-mono text-[10px] font-bold tracking-wider text-white">

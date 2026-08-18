@@ -15,6 +15,7 @@ export function BitchatStep() {
   const { team, settings, answers } = useGame();
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   const solved = useMemo(
     () => answers.some((a) => a.kind === "bitchat" && a.correct),
@@ -24,20 +25,26 @@ export function BitchatStep() {
   if (!team) return null;
 
   const submit = async () => {
+    if (busy) return;
     if (!code.trim()) {
       setError("Enter the code from Mavelli's message.");
       return;
     }
-    const res = await store.submitBitchat(team.id, code);
-    if (res.ok && res.correct) {
-      setError(null);
-      return;
+    setBusy(true);
+    try {
+      const res = await store.submitBitchat(team.id, code);
+      if (res.ok && res.correct) {
+        setError(null);
+        return;
+      }
+      setError(
+        res.ok
+          ? "That code does not match the transmission. Re-read the BitChat message."
+          : res.message,
+      );
+    } finally {
+      setBusy(false);
     }
-    setError(
-      res.ok
-        ? "That code does not match the transmission. Re-read the BitChat message."
-        : res.message,
-    );
   };
 
   if (solved) {
@@ -66,6 +73,12 @@ export function BitchatStep() {
           <input
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 24))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                submit();
+              }
+            }}
             className="field text-center font-mono text-lg font-bold uppercase tracking-widest"
             placeholder="......."
             autoCapitalize="characters"
@@ -81,8 +94,8 @@ export function BitchatStep() {
             {error}
           </p>
         )}
-        <Btn onClick={submit} className="mt-4 w-full justify-center text-sm py-2.5">
-          Verify Code
+        <Btn onClick={submit} disabled={busy} className="mt-4 w-full justify-center text-sm py-2.5">
+          {busy ? "Verifying..." : "Verify Code"}
         </Btn>
       </Panel>
     </div>

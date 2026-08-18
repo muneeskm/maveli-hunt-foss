@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
+import { CountdownTimer } from "@/components/countdown-timer";
 import {
   BitchatStage,
   DeadEndStage,
@@ -56,12 +57,14 @@ export default function TrackerPage() {
       broadcasts={broadcasts}
       settings={settings}
     >
+      <CountdownTimer className="mb-4" />
+
       <TeamBadge />
 
       {stage.key === "waiting" && <StandbyStage />}
 
       {stage.key.startsWith("sighting-") && stage.location && (
-        <SightingStage location={stage.location} />
+        <SightingStage key={stage.key} location={stage.location} />
       )}
 
       {stage.key === "deadend" && <DeadEndStage />}

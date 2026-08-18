@@ -66,7 +66,7 @@ export default function HomePage() {
       try {
         localStorage.setItem(INTRO_COMPLETED_KEY, "true");
         sessionStorage.setItem(INTRO_SEEN_KEY, "1");
-      } catch {}
+      } catch { }
     }
     setStep("join");
   }, []);
@@ -78,7 +78,7 @@ export default function HomePage() {
       try {
         localStorage.setItem(INTRO_COMPLETED_KEY, "true");
         sessionStorage.setItem(INTRO_SEEN_KEY, "1");
-      } catch {}
+      } catch { }
     }
     go(returnTo ?? "/tracker");
   };
@@ -235,7 +235,7 @@ function JoinScreen({
           </div>
 
           {/* Access Code Box (FOSS Green Tinted Card) */}
-          <div className="mt-6 rounded-[14px] border-2 border-[#22c55e] bg-[#102317] p-6 text-center shadow-[0_0_30px_rgba(34,197,94,0.15)]">
+          <div className="mt-6 rounded-[14px] border-2 border-[#22c55e] bg-[#102317] p-6 text-center shadow-sm">
             <p className="font-mono text-xs uppercase tracking-widest text-[#86efac]">
               Squad Access Code
             </p>
@@ -387,7 +387,7 @@ function JoinScreen({
             Search for Maveli <HighlightWord>in the wild.</HighlightWord>
           </h1>
           <p className="mt-3 font-sans text-base text-[#9ca3af] max-w-[500px] mx-auto leading-relaxed">
-            Register your 2-member squad to unlock access credentials and track the clues left across campus.
+            Maveli was last seen at ████ ████ ████. Follow through his tracks and find him.
           </p>
         </div>
 

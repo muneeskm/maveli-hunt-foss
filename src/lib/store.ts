@@ -86,6 +86,12 @@ export function notify() {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
+function auditLog(db: DB, actor: string, action: string, target: string) {
+  db.auditLog = db.auditLog ?? [];
+  db.auditLog.unshift({ actor, action, target, at: Date.now() });
+  if (db.auditLog.length > 200) db.auditLog.length = 200;
+}
+
 export const demoStore = {
   /* ---------- game ---------- */
   game(): GameState {
@@ -94,12 +100,14 @@ export const demoStore = {
   setPhase(phase: Phase): Promise<void> {
     const db = readDB();
     db.game.phase = phase;
+    auditLog(db, "admin", "set-phase", phase);
     writeDB(db);
     return Promise.resolve();
   },
   setWinner(teamId: string | null): Promise<void> {
     const db = readDB();
     db.game.winnerTeamId = teamId;
+    auditLog(db, "admin", teamId ? "set-winner" : "clear-winner", teamId ?? "");
     writeDB(db);
     return Promise.resolve();
   },
@@ -276,6 +284,7 @@ export const demoStore = {
     );
     if (!existing) {
       db.scans.push({ teamId, locationId, at: Date.now() });
+      auditLog(db, "admin", "grant-location", `${teamId}:${locationId}`);
       writeDB(db);
     }
     return Promise.resolve();
@@ -326,6 +335,14 @@ export const demoStore = {
     return Promise.resolve({ ok: true, correct, answer });
   },
   submitReconstruction(teamId: string, words: string[]): Promise<SubmitResult> {
+    const lock = this.gateLockSeconds();
+    if (lock > 0) {
+      return Promise.resolve({
+        ok: false,
+        message: `Gate is locked after 5 failed attempts. Please wait ${lock}s.`,
+        lockSeconds: lock,
+      });
+    }
     const db = readDB();
     const normalized = words.map((w) => w.trim().toUpperCase());
     const correct =
@@ -343,7 +360,13 @@ export const demoStore = {
       db.game.winnerTeamId = teamId;
     }
     writeDB(db);
-    return Promise.resolve({ ok: true, correct, answer });
+    const newLock = this.gateLockSeconds();
+    return Promise.resolve({
+      ok: true,
+      correct,
+      answer,
+      lockSeconds: newLock > 0 ? newLock : undefined,
+    });
   },
 
   /* ---------- collected words ---------- */
@@ -372,6 +395,7 @@ export const demoStore = {
     );
     if (!existing) {
       db.hints.push({ teamId, locationId, at: Date.now() });
+      auditLog(db, "admin", "push-hint", `${teamId}:${locationId}`);
       writeDB(db);
     }
     return Promise.resolve();
@@ -381,6 +405,7 @@ export const demoStore = {
     db.scans = db.scans.filter((s) => s.teamId !== teamId);
     db.answers = db.answers.filter((a) => a.teamId !== teamId);
     db.hints = db.hints.filter((h) => h.teamId !== teamId);
+    auditLog(db, "admin", "reset-team", teamId);
     writeDB(db);
     return Promise.resolve();
   },
@@ -396,6 +421,9 @@ export const demoStore = {
       clean === this.settings().adminCode ||
       clean === "FOSSCCE@MaveliFiles" ||
       clean === "mavelli-admin";
+    const db = readDB();
+    auditLog(db, "admin", ok ? "login:success" : "login:fail", "dashboard");
+    writeDB(db);
     if (ok && typeof window !== "undefined") {
       window.localStorage.setItem(ADMIN_SESSION_KEY, "1");
     }
@@ -435,6 +463,7 @@ export const demoStore = {
       teamId,
       at: Date.now(),
     });
+    auditLog(db, "admin", "broadcast", `${audience}${teamId ? `:${teamId}` : ""}`);
     writeDB(db);
     return Promise.resolve();
   },
@@ -446,6 +475,7 @@ export const demoStore = {
   updateSettings(patch: Partial<Settings>): Promise<void> {
     const db = readDB();
     db.settings = { ...db.settings, ...patch };
+    auditLog(db, "admin", "update-settings", Object.keys(patch).join(","));
     writeDB(db);
     return Promise.resolve();
   },
@@ -456,7 +486,22 @@ export const demoStore = {
     return ranking(db.teams, db.scans, db.answers, demoLocations(), db.game.winnerTeamId);
   },
   gateLockSeconds(): number {
-    return 0; // demo locks client-side in the gate component
+    const team = this.sessionTeam();
+    if (!team) return 0;
+    const db = readDB();
+    const windowStart = Date.now() - 10 * 60 * 1000;
+    const fails = db.answers
+      .filter(
+        (a) =>
+          a.teamId === team.id &&
+          a.kind === "reconstruction" &&
+          !a.correct &&
+          a.at >= windowStart,
+      )
+      .sort((a, b) => b.at - a.at);
+    if (fails.length < 5) return 0;
+    const lastWrong = fails[0].at;
+    return Math.max(0, Math.ceil(30 - (Date.now() - lastWrong) / 1000));
   },
 
   /* ---------- lifecycle ---------- */
@@ -467,6 +512,7 @@ export const demoStore = {
     db.answers = [];
     db.hints = [];
     db.broadcasts = [];
+    auditLog(db, "admin", "restart-game", "all-teams");
     writeDB(db);
     return Promise.resolve();
   },
@@ -478,6 +524,7 @@ export const demoStore = {
     db.answers = [];
     db.hints = [];
     db.broadcasts = [];
+    auditLog(db, "admin", "new-game", "full-wipe");
     writeDB(db);
     return Promise.resolve();
   },

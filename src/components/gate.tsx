@@ -25,12 +25,12 @@ export function ReconstructionGate() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  // server-side lock (real mode): the server refuses attempts for 60s after
-  // 5 wrong answers, even across devices
+  // Synchronize store / server lockout state
   useEffect(() => {
     if (gateLockSeconds > 0) {
       setFailCount(MAX_FAILS);
       setLocked(true);
+      setCountdown(gateLockSeconds);
     }
   }, [gateLockSeconds]);
 
@@ -41,20 +41,22 @@ export function ReconstructionGate() {
 
   useEffect(() => {
     if (!locked) return;
-    setCountdown(LOCK_SECONDS);
+    if (countdown <= 0) {
+      setCountdown(gateLockSeconds > 0 ? gateLockSeconds : LOCK_SECONDS);
+    }
     const t = window.setInterval(() => {
-      setCountdown((c) => (c <= 1 ? 0 : c - 1));
+      setCountdown((c) => {
+        if (c <= 1) {
+          setLocked(false);
+          setFailCount(0);
+          setError(null);
+          return 0;
+        }
+        return c - 1;
+      });
     }, 1000);
     return () => window.clearInterval(t);
-  }, [locked]);
-
-  useEffect(() => {
-    if (locked && countdown === 0) {
-      setLocked(false);
-      setFailCount(0);
-      setError(null);
-    }
-  }, [locked, countdown]);
+  }, [locked, gateLockSeconds, countdown]);
 
   if (!team) return null;
 
@@ -78,7 +80,8 @@ export function ReconstructionGate() {
       if (res.lockSeconds && res.lockSeconds > 0) {
         setFailCount(MAX_FAILS);
         setLocked(true);
-        setError(null);
+        setCountdown(res.lockSeconds);
+        setError(`Gate is locked after 5 failed attempts. Please wait ${res.lockSeconds}s.`);
         return;
       }
       const next = failCount + 1;
@@ -90,6 +93,7 @@ export function ReconstructionGate() {
       );
       if (next >= MAX_FAILS) {
         setLocked(true);
+        setCountdown(LOCK_SECONDS);
       }
     } finally {
       setBusy(false);

@@ -217,59 +217,92 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* High-level Metrics */}
       <div className="grid grid-cols-3 gap-3">
         <Stat label="Teams" value={String(db.teams.length)} icon={<Users size={16} />} />
         <Stat label="Scans" value={String(db.scans.length)} icon={<Flag size={16} />} />
         <Stat label="Rescued" value={String(finished)} icon={<Trophy size={16} />} />
       </div>
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
-        <SectionHeader>Phase control</SectionHeader>
-        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {PHASES.map((p) => (
-            <Btn
-              key={p.phase}
-              variant={db.game.phase === p.phase ? "primary" : "ghost"}
-              size="sm"
-              onClick={() => setPhase(p.phase, p.confirm)}
-            >
-              {p.label}
-            </Btn>
-          ))}
-        </div>
-        <p className="mt-3 text-xs leading-relaxed text-[#9ca3af]">
-          Content unlocks per phase. End event locks the leaderboard and
-          records the winner. Teams keep playing until then.
-        </p>
-      </Panel>
-
+      {/* Winner Spotlight (if active) */}
       {winner && (
         <Panel className="border border-[#22c55e]/40 bg-[#102317] p-4 text-white">
-          <SectionHeader>Winner</SectionHeader>
-          <p className="mt-2 text-lg font-bold text-[#22c55e]">{winner.name}</p>
-          <p className="text-sm text-[#9ca3af]">
-            {winner.member1} / {winner.member2}
-          </p>
+          <SectionHeader>First Discovery / Winner</SectionHeader>
+          <div className="mt-2 flex items-center justify-between">
+            <div>
+              <p className="text-xl font-bold text-[#22c55e]">{winner.name}</p>
+              <p className="text-xs text-[#9ca3af]">
+                {winner.member1} / {winner.member2} · Code {winner.code}
+              </p>
+            </div>
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#14281b] border border-[#22c55e]/40 text-[#22c55e]">
+              <Trophy size={20} weight="fill" />
+            </span>
+          </div>
         </Panel>
       )}
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24]">
-        <SectionHeader>Recent broadcasts</SectionHeader>
+      {/* Phase Control Panel */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <div className="flex items-center justify-between border-b border-[#202d24] pb-3">
+          <div>
+            <SectionHeader>Event Phase Control</SectionHeader>
+            <p className="mt-0.5 text-xs text-[#9ca3af]">
+              Active phase: <span className="font-mono font-bold text-[#22c55e] uppercase">{db.game.phase}</span>
+            </p>
+          </div>
+          <PhasePill phase={db.game.phase} />
+        </div>
+
+        <div className="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+          {PHASES.map((p) => {
+            const isActive = db.game.phase === p.phase;
+            const isDanger = p.phase === "ended";
+            return (
+              <Btn
+                key={p.phase}
+                variant={isActive ? "primary" : isDanger ? "danger" : "ghost"}
+                size="sm"
+                onClick={() => setPhase(p.phase, p.confirm)}
+                className={cn(
+                  "justify-center py-2.5",
+                  isActive && "font-bold shadow-sm",
+                )}
+              >
+                {isActive && <Check size={14} weight="bold" />}
+                <span>{p.label}</span>
+              </Btn>
+            );
+          })}
+        </div>
+        <p className="mt-3 text-[11px] leading-relaxed text-[#9ca3af]">
+          Phase transitions automatically unlock stage content for all squads. Teams will reflect changes within their 4-second polling cycle.
+        </p>
+      </Panel>
+
+      {/* Recent Broadcasts Feed */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24]">
+        <SectionHeader>Recent Dispatch Broadcasts</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-[#9ca3af]">No broadcasts yet.</p>
+          <p className="mt-3 text-xs text-[#9ca3af]">No broadcasts dispatched yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-[#202d24]">
-            {[...db.broadcasts].reverse().slice(0, 8).map((b) => (
-              <li key={b.id} className="py-2">
-                <div className="flex items-start gap-2">
-                  <BroadcastIcon size={14} className="mt-0.5 shrink-0 text-[#22c55e]" />
-                  <div className="min-w-0">
+          <ul className="mt-3 divide-y divide-[#202d24]">
+            {[...db.broadcasts].reverse().slice(0, 5).map((b) => (
+              <li key={b.id} className="py-2.5">
+                <div className="flex items-start gap-2.5">
+                  <BroadcastIcon size={15} className="mt-0.5 shrink-0 text-[#22c55e]" />
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-white">{b.message}</p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
-                      {b.audience}
-                      {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
-                    </p>
+                    <div className="mt-1 flex items-center gap-2 font-mono text-[10px] uppercase text-[#9ca3af]">
+                      <span className="rounded bg-[#16221a] px-1.5 py-0.5 border border-[#202d24] text-[#86efac]">
+                        {b.audience}
+                      </span>
+                      {b.teamId && (
+                        <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Squad"}</span>
+                      )}
+                      <span>· {formatTime(b.at)}</span>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -283,7 +316,7 @@ function OverviewTab({ db, locations }: { db: DB; locations: ReturnType<typeof s
 
 function Stat({ label, value, icon }: { label: string; value: string; icon: ReactNode }) {
   return (
-    <Panel className="p-3 bg-[#111813] border border-[#202d24]">
+    <Panel className="p-3.5 bg-[#111813] border border-[#202d24]">
       <div className="flex items-center gap-1.5 text-[#22c55e]">
         {icon}
         <span className="font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">{label}</span>
@@ -321,20 +354,22 @@ function TeamsTab({ db, locations }: { db: DB; locations: ReturnType<typeof stor
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <SectionHeader>Teams ({db.teams.length})</SectionHeader>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <SectionHeader>Registered Squads ({db.teams.length})</SectionHeader>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search name / code"
-          className="field field-sm w-56"
+          placeholder="Search name / code / members..."
+          className="field field-sm w-full sm:w-64"
           aria-label="Search teams"
         />
       </div>
 
       {teams.length === 0 ? (
         <Panel className="p-6 text-center text-sm text-[#9ca3af] bg-[#111813] border border-[#202d24]">
-          No teams yet. They register on the site.
+          {db.teams.length === 0
+            ? "No squads registered yet. Teams register via the home screen."
+            : "No squads match your search query."}
         </Panel>
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
@@ -376,55 +411,88 @@ function TeamCard({
   const tel = db.settings.volunteerPhone.replace(/[^+\d]/g, "");
 
   return (
-    <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
+    <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white transition-colors hover:border-[#202d24]">
+      {/* Collapsed Header (Clean high-signal triage row) */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-3 text-left"
       >
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="truncate font-semibold text-white">{team.name}</span>
-            <Chip className="shrink-0">{team.code}</Chip>
+            <span className="truncate font-semibold text-white text-base">{team.name}</span>
+            <Chip className="shrink-0 bg-[#14281b] border-[#22c55e]/40 text-[#22c55e] font-mono">
+              {team.code}
+            </Chip>
+            {finishedAt && (
+              <span className="rounded-full bg-[#22c55e]/20 border border-[#22c55e]/40 px-2 py-0.5 font-mono text-[9px] font-bold text-[#22c55e]">
+                RESCUED
+              </span>
+            )}
           </div>
-          <p className="mt-0.5 text-xs text-[#9ca3af]">
+
+          <p className="mt-1 text-xs text-[#9ca3af] truncate">
             {team.member1} / {team.member2} · joined {formatTime(team.createdAt)}
           </p>
-          <div className="mt-2 flex items-center gap-2">
+
+          <div className="mt-2.5 flex items-center gap-2.5">
             <ProgressDots n={progress} total={5} />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#22c55e]">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#86efac]">
               {stage.label}
             </span>
           </div>
         </div>
+
         <CaretDown
-          size={16}
+          size={18}
           className={cn(
-            "shrink-0 text-[#9ca3af] transition-transform",
-            open && "rotate-180",
+            "shrink-0 text-[#9ca3af] transition-transform duration-200",
+            open && "rotate-180 text-[#22c55e]",
           )}
         />
       </button>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
-        {progress === 5 && <Chip tone="leaf">All words</Chip>}
-        {sos && <Chip>SOS</Chip>}
-        {bitchat && <Chip tone="leaf">BitChat ✓</Chip>}
-        {final && <Chip>Final found</Chip>}
-        {finishedAt && <Chip tone="leaf">RESCUED {formatTime(finishedAt)}</Chip>}
-      </div>
-
+      {/* Expanded Controls (Grouped logically) */}
       {open && (
-        <div className="mt-4 space-y-3 border-t border-[#202d24] pt-4">
-          <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#9ca3af]">
-              Level 1 - push hint
+        <div className="mt-4 space-y-4 border-t border-[#202d24] pt-4">
+          {/* Milestone Status Badges */}
+          <div className="rounded-[8px] bg-[#16201a] border border-[#202d24] p-2.5">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af] mb-1.5">
+              Checkpoint Status
             </p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              <span className={cn("chip", progress === 5 ? "chip-leaf" : "")}>
+                Words: {progress}/5
+              </span>
+              <span className={cn("chip", sos ? "chip-mint" : "")}>
+                SOS {sos ? "✓" : "—"}
+              </span>
+              <span className={cn("chip", bitchat ? "chip-leaf" : "")}>
+                BitChat {bitchat ? "✓" : "—"}
+              </span>
+              <span className={cn("chip", final ? "chip-mint" : "")}>
+                Sanctuary {final ? "✓" : "—"}
+              </span>
+              {finishedAt && (
+                <span className="chip chip-leaf">
+                  Finished {formatTime(finishedAt)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Intervention Group 1: Level 1 Hint */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+                Level 1 · Push Hint to Squad
+              </p>
+            </div>
             <div className="flex gap-2">
               <select
                 value={hintLoc || defaultHint}
                 onChange={(e) => setHintLoc(e.target.value)}
-                className="field field-sm"
+                className="field field-sm flex-1 text-xs"
                 aria-label="Hint location"
               >
                 {locations.map((l) => (
@@ -441,23 +509,26 @@ function TeamCard({
                   setOpen(false);
                 }}
               >
-                Push
+                Push Hint
               </Btn>
             </div>
           </div>
 
-          <div>
-            <p className="mb-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[#9ca3af]">
-              Level 3 - admin advance
-            </p>
+          {/* Intervention Group 2: Level 3 Admin Advance */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+                Level 3 · Admin Advance Node
+              </p>
+            </div>
             <div className="flex gap-2">
               <select
                 value={advLoc}
                 onChange={(e) => setAdvLoc(e.target.value)}
-                className="field field-sm"
+                className="field field-sm flex-1 text-xs"
                 aria-label="Advance location"
               >
-                <option value="">Select location...</option>
+                <option value="">Select location to grant...</option>
                 {locations.map((l) => (
                   <option key={l.id} value={l.id}>
                     {l.order}. {l.name}
@@ -466,7 +537,7 @@ function TeamCard({
               </select>
               <Btn
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 onClick={() => {
                   if (!advLoc) return;
                   store.grantLocation(teamId, advLoc);
@@ -474,25 +545,29 @@ function TeamCard({
                   setOpen(false);
                 }}
               >
-                Grant
+                Grant Node
               </Btn>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            <a href={`tel:${tel}`} className="btn btn-ghost btn-sm">
-              <Phone size={16} /> Call
+          {/* Contact & Squad Reset Bar */}
+          <div className="flex items-center justify-between border-t border-[#202d24] pt-3">
+            <a
+              href={`tel:${tel}`}
+              className="btn btn-ghost btn-sm text-xs gap-1.5 text-[#9ca3af] hover:text-white"
+            >
+              <Phone size={14} /> <span>Call Lead ({team.member1})</span>
             </a>
             <Btn
               size="sm"
               variant="danger"
               onClick={() => {
-                if (window.confirm(`Reset progress for ${team.name}?`)) {
+                if (window.confirm(`Reset all progress for squad "${team.name}"?`)) {
                   store.resetTeam(teamId);
                 }
               }}
             >
-              <TrashSimple size={16} /> Reset
+              <TrashSimple size={14} /> <span>Reset Squad</span>
             </Btn>
           </div>
         </div>
@@ -509,7 +584,7 @@ function ProgressDots({ n, total }: { n: number; total: number }) {
           key={i}
           className={cn(
             "h-1.5 w-1.5 rounded-full",
-            i < n ? "bg-[#22c55e] shadow-[0_0_4px_#22c55e]" : "bg-[#202d24]",
+            i < n ? "bg-[#22c55e]" : "bg-[#202d24]",
           )}
         />
       ))}
@@ -525,17 +600,17 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <SectionHeader>Investigation QR codes</SectionHeader>
-            <p className="mt-1 text-sm text-[#9ca3af]">
-              QR codes for all 7 checkpoints (Sightings 1–5, SOS Transmission, and Final Sanctuary).
-              Print on A4 or test scan URLs directly below.
+            <SectionHeader>Investigation Checkpoint QR Codes</SectionHeader>
+            <p className="mt-1 text-xs text-[#9ca3af]">
+              QR markers for all 7 checkpoints (Sightings 1–5, SOS Transmission, and Final Sanctuary).
+              Print onto sheets or use test links directly.
             </p>
           </div>
-          <Btn onClick={() => window.print()}>
-            <Printer size={18} /> Print QR cards
+          <Btn variant="primary" onClick={() => window.print()}>
+            <Printer size={16} weight="bold" /> <span>Print QR Cards</span>
           </Btn>
         </div>
       </Panel>
@@ -547,7 +622,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
           return (
             <Panel
               key={l.id}
-              className="flex flex-col items-center justify-between p-5 text-center transition-all bg-[#111813] border border-[#202d24] text-white hover:border-[#22c55e]"
+              className="flex flex-col items-center justify-between p-5 text-center transition-all bg-[#111813] border border-[#202d24] text-white hover:border-[#22c55e]/60 shadow-sm"
             >
               <div className="w-full">
                 <div className="flex items-center justify-between border-b border-[#202d24] pb-2 text-left">
@@ -559,7 +634,7 @@ function QRTab({ locations }: { locations: ReturnType<typeof store.locations> })
                   </span>
                 </div>
 
-                <p className="mt-2 text-sm font-bold uppercase tracking-tight text-white">
+                <p className="mt-2.5 text-sm font-bold uppercase tracking-tight text-white">
                   {l.name}
                 </p>
                 <p className="font-mono text-[10px] text-[#9ca3af]">{l.token}</p>
@@ -622,36 +697,49 @@ function BroadcastTab({ db }: { db: DB }) {
   };
 
   return (
-    <div className="space-y-4">
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>Send a broadcast</SectionHeader>
-        <div className="mt-3 space-y-3">
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {(["all", "day1", "day2", "team"] as const).map((a) => (
-              <button
-                key={a}
-                type="button"
-                onClick={() => setAudience(a)}
-                className={cn(
-                  "rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
-                  audience === a
-                    ? "border-[#22c55e] bg-[#22c55e] text-[#090d0b] font-bold"
-                    : "border-[#202d24] bg-[#16221a] text-[#9ca3af] hover:text-white",
-                )}
-              >
-                {a === "all" ? "Everyone" : a === "day1" ? "Day 1" : a === "day2" ? "Day 2" : "One team"}
-              </button>
-            ))}
+    <div className="space-y-5">
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>Dispatch a Broadcast</SectionHeader>
+        <p className="mt-1 text-xs text-[#9ca3af]">
+          Send high-priority tactical announcements to squads in the field.
+        </p>
+
+        <div className="mt-4 space-y-3.5">
+          <div>
+            <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+              Target Audience
+            </label>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {(["all", "day1", "day2", "team"] as const).map((a) => (
+                <button
+                  key={a}
+                  type="button"
+                  onClick={() => setAudience(a)}
+                  className={cn(
+                    "rounded-lg border px-3 py-2 text-xs font-semibold transition-colors",
+                    audience === a
+                      ? "border-[#22c55e] bg-[#22c55e] text-[#090d0b] font-bold shadow-sm"
+                      : "border-[#202d24] bg-[#16221a] text-[#9ca3af] hover:text-white",
+                  )}
+                >
+                  {a === "all" ? "Everyone" : a === "day1" ? "Day 1 Active" : a === "day2" ? "Day 2 Active" : "Specific Squad"}
+                </button>
+              ))}
+            </div>
           </div>
+
           {audience === "team" && (
             <div className="space-y-1.5">
+              <label className="block font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+                Select Target Squad
+              </label>
               <select
                 value={teamId}
                 onChange={(e) => setTeamId(e.target.value)}
-                className="field text-sm"
-                aria-label="Team"
+                className="field text-xs"
+                aria-label="Target Squad"
               >
-                <option value="">Select squad...</option>
+                <option value="">Choose squad...</option>
                 {db.teams.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.name} ({t.code})
@@ -660,38 +748,50 @@ function BroadcastTab({ db }: { db: DB }) {
               </select>
               {!teamId && (
                 <p className="font-sans text-xs text-amber-400">
-                  Please choose a target squad to send a private broadcast.
+                  Please choose a target squad to send a private transmission.
                 </p>
               )}
             </div>
           )}
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Message to teams..."
-            className="field min-h-24 resize-y"
-            aria-label="Broadcast message"
-          />
-          <Btn onClick={send} disabled={!canSend} className="w-full sm:w-auto">
-            {sent ? <Check size={18} /> : <BroadcastIcon size={18} />}
-            {sent ? "Sent" : "Send broadcast"}
+
+          <div>
+            <label className="mb-1.5 block font-mono text-[10px] uppercase tracking-wider text-[#9ca3af]">
+              Announcement Content
+            </label>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type transmission to dispatch..."
+              className="field min-h-24 resize-y text-sm"
+              aria-label="Broadcast message"
+            />
+          </div>
+
+          <Btn variant="primary" onClick={send} disabled={!canSend} className="w-full sm:w-auto">
+            {sent ? <Check size={16} weight="bold" /> : <BroadcastIcon size={16} />}
+            <span>{sent ? "Broadcast Dispatched" : "Dispatch Broadcast"}</span>
           </Btn>
         </div>
       </Panel>
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>History</SectionHeader>
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>Broadcast History ({db.broadcasts.length})</SectionHeader>
         {db.broadcasts.length === 0 ? (
-          <p className="mt-2 text-sm text-[#9ca3af]">No broadcasts yet.</p>
+          <p className="mt-3 text-xs text-[#9ca3af]">No broadcasts sent yet.</p>
         ) : (
-          <ul className="mt-2 divide-y divide-[#202d24]">
+          <ul className="mt-3 divide-y divide-[#202d24]">
             {[...db.broadcasts].reverse().map((b) => (
-              <li key={b.id} className="py-2">
+              <li key={b.id} className="py-2.5">
                 <p className="text-sm font-medium text-white">{b.message}</p>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-[#9ca3af]">
-                  {b.audience}
-                  {b.teamId ? ` · ${db.teams.find((t) => t.id === b.teamId)?.name ?? ""}` : ""} · {formatTime(b.at)}
-                </p>
+                <div className="mt-1 flex items-center gap-2 font-mono text-[10px] uppercase text-[#9ca3af]">
+                  <span className="rounded bg-[#16221a] px-1.5 py-0.5 border border-[#202d24] text-[#86efac]">
+                    {b.audience}
+                  </span>
+                  {b.teamId && (
+                    <span>· {db.teams.find((t) => t.id === b.teamId)?.name ?? "Squad"}</span>
+                  )}
+                  <span>· {formatTime(b.at)}</span>
+                </div>
               </li>
             ))}
           </ul>
@@ -726,75 +826,101 @@ function SettingsTab({ db }: { db: DB }) {
   };
 
   return (
-    <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-      <SectionHeader>Event settings</SectionHeader>
-      <div className="mt-3 grid gap-4 sm:grid-cols-2">
-        <Field
-          label="Volunteer phone"
-          value={form.volunteerPhone}
-          onChange={(e) => set("volunteerPhone", e.target.value)}
-        />
-        <Field
-          label="WhatsApp link"
-          value={form.volunteerWhatsapp}
-          onChange={(e) => set("volunteerWhatsapp", e.target.value)}
-          hint="wa.me link shown to teams"
-        />
-        <Field
-          label="Instagram URL"
-          value={form.instagramUrl}
-          onChange={(e) => set("instagramUrl", e.target.value)}
-        />
-        <Field
-          label="BitChat code"
-          value={form.bitchatCode}
-          onChange={(e) => set("bitchatCode", e.target.value)}
-          hint="The code Mavelli sends via BitChat"
-        />
-        <Field
-          label="Admin code"
-          value={form.adminCode}
-          onChange={(e) => set("adminCode", e.target.value)}
-          hint="Shared login for this dashboard"
-        />
-        <Field
-          label="SOS lock seconds"
-          value={form.sosLockSeconds}
-          onChange={(e) => set("sosLockSeconds", Number(e.target.value))}
-          inputMode="numeric"
-        />
-        <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
-            BitChat guide (shown to teams)
-          </span>
-          <textarea
-            value={form.bitchatGuide}
-            onChange={(e) => set("bitchatGuide", e.target.value)}
-            className="field min-h-20 resize-y"
+    <div className="space-y-5">
+      {/* Contact & Social Links */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>Volunteer Contacts & Social Links</SectionHeader>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <Field
+            label="Volunteer phone number"
+            value={form.volunteerPhone}
+            onChange={(e) => set("volunteerPhone", e.target.value)}
+            hint="For direct telephone contact links"
           />
-        </label>
-        <label className="block sm:col-span-2">
-          <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
-            Mapillary note (sighting 1)
-          </span>
-          <textarea
-            value={form.mapillaryNote}
-            onChange={(e) => set("mapillaryNote", e.target.value)}
-            className="field min-h-20 resize-y"
+          <Field
+            label="WhatsApp group link"
+            value={form.volunteerWhatsapp}
+            onChange={(e) => set("volunteerWhatsapp", e.target.value)}
+            hint="wa.me group link shown to teams"
           />
-        </label>
-      </div>
-      <Btn onClick={save} className="mt-4">
-        {saved ? <Check size={18} /> : <SlidersHorizontal size={18} />}
-        {saved ? "Saved" : "Save settings"}
-      </Btn>
-    </Panel>
+          <Field
+            label="Instagram URL"
+            value={form.instagramUrl}
+            onChange={(e) => set("instagramUrl", e.target.value)}
+            className="sm:col-span-2"
+          />
+        </div>
+      </Panel>
+
+      {/* Security, Game Codes & Lockouts */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>Game Credentials & Lockout Timers</SectionHeader>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <Field
+            label="BitChat Secret Code"
+            value={form.bitchatCode}
+            onChange={(e) => set("bitchatCode", e.target.value)}
+            hint="Code verified in Day 2 BitChat transmission"
+          />
+          <Field
+            label="Admin Dashboard Password"
+            value={form.adminCode}
+            onChange={(e) => set("adminCode", e.target.value)}
+            hint="Dashboard access password"
+          />
+          <Field
+            label="SOS Scan Cooldown (seconds)"
+            value={form.sosLockSeconds}
+            onChange={(e) => set("sosLockSeconds", Number(e.target.value))}
+            inputMode="numeric"
+            hint="Default 4 seconds"
+          />
+        </div>
+      </Panel>
+
+      {/* Guidance Notes & Instructions */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>In-Game Stage Guidance Text</SectionHeader>
+        <div className="mt-4 space-y-4">
+          <label className="block">
+            <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+              BitChat guide text (shown to squads in Day 2)
+            </span>
+            <textarea
+              value={form.bitchatGuide}
+              onChange={(e) => set("bitchatGuide", e.target.value)}
+              className="field min-h-20 resize-y text-xs"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block font-sans text-xs font-semibold text-white">
+              Mapillary hint note (shown in Sighting 01)
+            </span>
+            <textarea
+              value={form.mapillaryNote}
+              onChange={(e) => set("mapillaryNote", e.target.value)}
+              className="field min-h-20 resize-y text-xs"
+            />
+          </label>
+        </div>
+
+        <div className="mt-5 border-t border-[#202d24] pt-4">
+          <Btn variant="primary" onClick={save} className="w-full sm:w-auto">
+            {saved ? <Check size={16} weight="bold" /> : <SlidersHorizontal size={16} />}
+            <span>{saved ? "Settings Saved" : "Save All Settings"}</span>
+          </Btn>
+        </div>
+      </Panel>
+    </div>
   );
 }
 
 /* ---------- danger ---------- */
 
 function DangerTab({ db }: { db: DB }) {
+  const [restartConfirm, setRestartConfirm] = useState("");
+  const [wipeConfirm, setWipeConfirm] = useState("");
+
   const exportJSON = async () => {
     const json = await store.exportJSON();
     const blob = new Blob([json], { type: "application/json" });
@@ -807,78 +933,120 @@ function DangerTab({ db }: { db: DB }) {
   };
 
   return (
-    <div className="space-y-4">
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>End event</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
-          Locks the leaderboard and records the winner from the archive. Teams
-          see the "event over" screen.
+    <div className="space-y-5">
+      {/* 1. Safe Operational Utility: Export Data */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <SectionHeader>Export Event Snapshot</SectionHeader>
+            <p className="mt-1 text-xs text-[#9ca3af]">
+              Download complete event record (teams, scans, answers, hints, broadcasts, audit trail) as JSON backup.
+            </p>
+          </div>
+          <Btn variant="outline" onClick={exportJSON}>
+            <DownloadSimple size={16} /> <span>Export JSON</span>
+          </Btn>
+        </div>
+      </Panel>
+
+      {/* 2. Event Conclusion */}
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
+        <SectionHeader>Conclude / End Event</SectionHeader>
+        <p className="mt-1 text-xs text-[#9ca3af] leading-relaxed">
+          Freezes the leaderboard, preserves final standings, and shifts all players to the "Event Over" screen.
         </p>
         <Btn
-          variant="danger"
-          className="mt-3"
+          variant="outline"
+          className="mt-3.5"
           onClick={() => {
-            if (window.confirm("End the event and lock results?")) {
+            if (window.confirm("Conclude the event and freeze leaderboard standings?")) {
               store.setPhase("ended");
             }
           }}
         >
-          <Flag size={18} /> End event
+          <Flag size={16} /> <span>End Event & Lock Board</span>
         </Btn>
       </Panel>
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>Restart game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
-          Keeps teams registered, wipes all scans, answers, and hints. Game
-          returns to standby.
+      {/* 3. Restart Game (High Friction: Type-to-Confirm) */}
+      <div className="rounded-[14px] border border-amber-800/60 bg-[#1a130e] p-5 text-white">
+        <div className="flex items-center gap-2 text-amber-400">
+          <SlidersHorizontal size={18} />
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] font-bold">
+            Restart Game (Soft Wipe)
+          </h2>
+        </div>
+        <p className="mt-2 text-xs text-[#d1d5db] leading-relaxed">
+          Keeps all registered squads in place, but wipes all scans, answers, hints, and active winners. Game resets to Standby phase.
         </p>
-        <Btn
-          variant="ghost"
-          className="mt-3"
-          onClick={() => {
-            if (window.confirm("Restart the game? Teams stay registered, all progress is wiped.")) {
-              store.restartGame();
-            }
-          }}
-        >
-          <SlidersHorizontal size={18} /> Restart game
-        </Btn>
-      </Panel>
+        <div className="mt-3.5 space-y-2">
+          <label className="block font-mono text-[10px] uppercase text-amber-300">
+            Type <span className="font-bold underline">RESTART</span> to authorize:
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <input
+              value={restartConfirm}
+              onChange={(e) => setRestartConfirm(e.target.value.toUpperCase())}
+              placeholder="RESTART"
+              className="field field-sm w-40 font-mono text-center uppercase"
+            />
+            <Btn
+              variant="outline"
+              disabled={restartConfirm !== "RESTART"}
+              onClick={() => {
+                if (window.confirm("Confirm: Restart game progress for all squads?")) {
+                  store.restartGame();
+                  setRestartConfirm("");
+                }
+              }}
+            >
+              Restart Progress
+            </Btn>
+          </div>
+        </div>
+      </div>
 
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>New game</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
-          Wipes everything including registered teams. Use only for a brand new
-          event.
+      {/* 4. Full Factory Reset (High Friction: Type-to-Confirm) */}
+      <div className="rounded-[14px] border border-red-900/80 bg-[#220d0d] p-5 text-white">
+        <div className="flex items-center gap-2 text-red-400">
+          <TrashSimple size={18} />
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] font-bold">
+            New Game / Full Wipe (Hard Reset)
+          </h2>
+        </div>
+        <p className="mt-2 text-xs text-[#d1d5db] leading-relaxed">
+          Permanently destroys ALL registered squads, scans, answers, broadcasts, and game state. Use only when preparing a brand new event.
         </p>
-        <Btn
-          variant="danger"
-          className="mt-3"
-          onClick={() => {
-            if (
-              window.confirm(
-                "New game: ALL teams, scans, answers, and broadcasts will be permanently wiped. Continue?",
-              )
-            ) {
-              store.newGame();
-            }
-          }}
-        >
-          <TrashSimple size={18} /> New game (wipe all)
-        </Btn>
-      </Panel>
-
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
-        <SectionHeader>Export data</SectionHeader>
-        <p className="mt-2 text-sm leading-relaxed text-[#9ca3af]">
-          Downloads the full game record (teams, scans, answers, hints,
-          broadcasts, settings) as JSON.
-        </p>
-        <Btn variant="ghost" className="mt-3" onClick={exportJSON}>
-          <DownloadSimple size={18} /> Export JSON
-        </Btn>
-      </Panel>
+        <div className="mt-3.5 space-y-2">
+          <label className="block font-mono text-[10px] uppercase text-red-300">
+            Type <span className="font-bold underline">WIPE</span> to authorize:
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <input
+              value={wipeConfirm}
+              onChange={(e) => setWipeConfirm(e.target.value.toUpperCase())}
+              placeholder="WIPE"
+              className="field field-sm w-40 font-mono text-center uppercase"
+            />
+            <Btn
+              variant="danger"
+              disabled={wipeConfirm !== "WIPE"}
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "CRITICAL: ALL registered squads, scans, answers, and broadcasts will be PERMANENTLY deleted. Proceed?",
+                  )
+                ) {
+                  store.newGame();
+                  setWipeConfirm("");
+                }
+              }}
+            >
+              Permanent Full Wipe
+            </Btn>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -901,12 +1069,12 @@ function AuditTab({ db }: { db: DB }) {
 
   return (
     <div className="space-y-4">
-      <Panel className="p-4 bg-[#111813] border border-[#202d24] text-white">
+      <Panel className="p-5 bg-[#111813] border border-[#202d24] text-white">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <SectionHeader>System audit trail ({logs.length})</SectionHeader>
-            <p className="mt-1 text-sm text-[#9ca3af]">
-              Every administrative action, phase change, hint push, broadcast, settings update, and login attempt is logged.
+            <SectionHeader>System Audit Trail ({logs.length})</SectionHeader>
+            <p className="mt-1 text-xs text-[#9ca3af]">
+              Every administrative intervention, phase change, hint push, broadcast dispatch, settings modification, and login attempt is logged here.
             </p>
           </div>
           <input
@@ -921,7 +1089,7 @@ function AuditTab({ db }: { db: DB }) {
 
       {filtered.length === 0 ? (
         <Panel className="p-6 text-center text-sm text-[#9ca3af] bg-[#111813] border border-[#202d24]">
-          {logs.length === 0 ? "No audit events recorded yet." : "No audit events match your filter."}
+          {logs.length === 0 ? "No audit events recorded yet." : "No audit events match your filter query."}
         </Panel>
       ) : (
         <Panel className="p-0 overflow-hidden bg-[#111813] border border-[#202d24]">
@@ -932,13 +1100,16 @@ function AuditTab({ db }: { db: DB }) {
                   <th className="px-4 py-3">Timestamp</th>
                   <th className="px-4 py-3">Actor</th>
                   <th className="px-4 py-3">Action</th>
-                  <th className="px-4 py-3">Target</th>
+                  <th className="px-4 py-3">Target Details</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#202d24] font-sans">
                 {filtered.map((entry, i) => {
                   const isFail = entry.action.includes("fail");
-                  const isSuccess = entry.action.includes("success") || entry.action.startsWith("set-");
+                  const isSuccess =
+                    entry.action.includes("success") ||
+                    entry.action.startsWith("set-") ||
+                    entry.action.startsWith("grant-");
                   return (
                     <tr key={`${entry.at}-${entry.action}-${i}`} className="hover:bg-[#16221a]/50 transition-colors">
                       <td className="whitespace-nowrap px-4 py-2.5 font-mono text-[11px] text-[#9ca3af]">

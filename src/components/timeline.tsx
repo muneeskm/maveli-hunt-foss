@@ -174,9 +174,9 @@ export function Timeline() {
               <span
                 className={cn(
                   "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.2)]",
+                  e.status === "done" && "border-[#22c55e] bg-[#14281b] text-[#22c55e]",
                   e.status === "current" &&
-                    "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b] shadow-[0_0_12px_rgba(34,197,94,0.4)]",
+                    "anim-blink border-[#22c55e] bg-[#22c55e] text-[#090d0b]",
                   e.status === "upcoming" && "border-[#202d24] bg-[#111813] text-[#6b7280]",
                 )}
               >

@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fcfaf5",
+  themeColor: "#090d0b",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -58,7 +58,7 @@ export default function RootLayout({
       lang="en"
       className={`${bricolageGrotesque.variable} ${oleoScript.variable} ${inter.variable} ${robotoMono.variable}`}
     >
-      <body className="bg-[#fcfaf5] text-[#1a3300] font-sans antialiased selection:bg-[#ffe95c] selection:text-[#1a3300]">
+      <body className="bg-[#090d0b] text-white font-sans antialiased selection:bg-[#22c55e] selection:text-[#090d0b]">
         {children}
       </body>
     </html>

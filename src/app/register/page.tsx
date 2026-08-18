@@ -1,1 +1,7 @@
-export { default } from "@/app/page";
+"use client";
+
+import JoinScreen from "@/app/page";
+
+export default function RegisterPage() {
+  return <JoinScreen />;
+}

@@ -43,7 +43,7 @@ export function AppShell({
     <div className="min-h-[100dvh] bg-[#090d0b] text-white">
       {/* Floating Pill Top Nav */}
       <header className="sticky top-3 z-40 mx-auto max-w-xl px-4">
-        <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
+        <div className="flex items-center justify-between gap-2 rounded-[16px] border border-[#202d24] bg-[#111813]/95 px-3.5 py-2.5 backdrop-blur-md shadow-sm">
           <Link href="/" className="flex items-center gap-2 shrink-0">
             {/* Logo square */}
             <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-[8px] bg-[#14261a] border border-[#22c55e]/40 overflow-hidden">

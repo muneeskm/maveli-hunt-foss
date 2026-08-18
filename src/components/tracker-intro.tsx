@@ -432,7 +432,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
       <header className="relative z-10 mx-auto flex w-full max-w-lg items-center justify-between border-b border-[#202d24] pb-2.5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#22c55e] anim-blink shadow-[0_0_8px_#22c55e]" />
+            <span className="h-2 w-2 rounded-full bg-[#22c55e] anim-blink" />
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#86efac]">
               {introMessages.headerLabel}
             </p>
@@ -499,11 +499,6 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
           aria-valuemax={100}
           tabIndex={0}
         >
-          {/* Subtle neon green glow wash behind Maveli when 100% locked */}
-          {signal >= 100 && (
-            <div className="absolute inset-4 rounded-full bg-[#22c55e]/20 blur-xl anim-rise pointer-events-none" />
-          )}
-
           {/* Hand-Drawn SVG Signal Rings BEHIND and AROUND Maveli */}
           <svg
             className="absolute inset-0 h-full w-full -rotate-90 pointer-events-none"
@@ -661,7 +656,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
           {/* Dialogue Note Body */}
           <div
             key={currentNote.key}
-            className="panel rounded-[12px] border border-[#202d24] bg-[#111813] p-4 sm:p-5 text-center transition-all duration-200 shadow-[0_0_20px_rgba(0,0,0,0.5)] anim-note-pop text-white"
+            className="panel rounded-[12px] border border-[#202d24] bg-[#111813] p-4 sm:p-5 text-center transition-all duration-200 shadow-sm anim-note-pop text-white"
             aria-live="polite"
           >
             <p className="font-sans text-base sm:text-lg font-semibold leading-snug text-white">
@@ -675,7 +670,7 @@ export function TrackerIntro({ onDone }: TrackerIntroProps) {
           <button
             type="button"
             onClick={completeIntro}
-            className="btn btn-primary w-full justify-center text-base py-3.5 shadow-[0_0_20px_rgba(34,197,94,0.3)] anim-rise"
+            className="btn btn-primary w-full justify-center text-base py-3.5 shadow-sm anim-rise"
           >
             <Sparkle size={18} weight="fill" />
             <span>→ {introMessages.cta}</span>

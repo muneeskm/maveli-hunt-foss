@@ -67,7 +67,7 @@ export function CountdownTimer({ targetDate, className }: CountdownTimerProps) {
             <Clock size={14} weight="bold" />
           </span>
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-white">
-            {isLive ? "Hunt Kickoff" : "Event Kickoff Countdown"}
+            {isLive ? "Hunt Kickoff" : "Time till Doomsday..."}
           </span>
         </div>
         {isLive && (

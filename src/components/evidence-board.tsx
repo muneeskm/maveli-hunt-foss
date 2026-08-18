@@ -59,7 +59,7 @@ export function EvidenceBoard({ compact }: { compact?: boolean }) {
               <span
                 className={cn(
                   "mt-1.5 h-2 w-2 shrink-0 rounded-full",
-                  done ? "bg-[#22c55e] shadow-[0_0_6px_#22c55e]" : "bg-[#202d24]",
+                  done ? "bg-[#22c55e]" : "bg-[#202d24]",
                 )}
               />
             </div>
