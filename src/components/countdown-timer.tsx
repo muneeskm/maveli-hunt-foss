@@ -13,7 +13,7 @@ interface CountdownTimerProps {
 }
 
 // Default target: August 19, 2026 at 14:40 IST (configurable via NEXT_PUBLIC_EVENT_DATE or settings.eventStartIso)
-const DEFAULT_TARGET_ISO = "2026-08-19T14:40:00+05:30";
+const DEFAULT_TARGET_ISO = "2026-08-23T12:40:00+05:30";
 
 interface TimeLeft {
   days: number;
